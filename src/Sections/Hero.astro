@@ -1,0 +1,49 @@
+---
+// src/Sections/Hero.astro
+import Button from "../components/Buttons/Button.jsx";
+import Heading from "../components/Heading.jsx";
+import { siteData } from "../siteData";
+
+const heroTaglines = [
+  { before: "Get a Website That ", emphasized: "Actually Sells", after: " for Your Business" },
+  { before: "Build Your ", emphasized: "Digital Empire", after: " with Griffin's Web Services" },
+  { before: "Leave Your Competition ", emphasized: "In the Dust", after: " with a Blazing Fast Website" },
+  { before: "Your Business Deserves a ", emphasized: "Professional Website", after: " That Delivers." },
+  { before: "Boost Your Business with a ", emphasized: "Lightning-Fast", after: " Website" },
+  { before: "Get a High-Performing Website That ", emphasized: "Loads in Seconds", after: " — Not Minutes" }
+];
+
+// Pick a random tagline (server-side)
+const currentTagline = Math.floor(Math.random() * heroTaglines.length);
+const tagline = heroTaglines[currentTagline];
+---
+
+<section class="min-h-screen flex items-center justify-center text-center px-5 pt-32 pb-20 bg-bg relative">
+  <div class="absolute inset-0 hero-gradient-bg"></div>
+  <div class="inner-section mx-5 relative z-10 text-left lg:text-center">
+    
+    <Heading
+      tagName="h1"
+      className="mb-2 mr-10 lg:mr-0"
+      before={tagline.before}
+      text={tagline.emphasized}
+      textClass="emphasized-text"
+      after={tagline.after}
+      client:load
+    />
+    <p class="hero-text text-text mb-8 max-w-4xl mx-auto">
+      {siteData.description}
+    </p>
+    
+    <div class="flex flex-col">
+      <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
+        <Button variant="primary" href="#contact" client:load>
+          Get Started Today ✨
+        </Button>
+        <Button variant="secondary" href="#projects" client:load>
+          View Our Work 👀
+        </Button>
+      </div>
+    </div>
+  </div>
+</section>

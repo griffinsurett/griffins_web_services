@@ -1,0 +1,99 @@
+---
+// src/Sections/PortfolioSection.astro
+import { Image } from 'astro:assets';
+import PortfolioCarousel from "../components/Carousels/PortfolioCarousel.jsx";
+import BorderTitle from "../components/BorderTitle.jsx";
+import Heading from "../components/Heading.jsx";
+
+// Import images using Astro's assets
+import ProntoDesktop from "../assets/ProntoJunkRemoval/pronto-desktop.jpg";
+import FariasDesktop from "../assets/FariasDemolition/Farias-Desktop.jpg";
+import JSVDesktop from "../assets/JSV-Quick-Solar/JSV-Desktop.jpg";
+import PablosDesktop from "../assets/PablosPeakRoofing/Pablos-Desktop.jpg";
+import RoonysDesktop from "../assets/RoonysMarketing/Roonys-Desktop.jpg";
+import CleanomaticFl from "../assets/Cleanomatic/cleanomaticfl.com-desktop.jpg";
+
+// Optimized image items with Astro's Image component
+const items = [
+  { 
+    id: 1, 
+    title: "Pronto Junk Removal", 
+    image: ProntoDesktop,
+    alt: "Pronto Junk Removal website screenshot"
+  },
+  { 
+    id: 3, 
+    title: "Roonys Marketing", 
+    image: RoonysDesktop,
+    alt: "Roonys Marketing website screenshot"
+  },
+  { 
+    id: 4, 
+    title: "Faria's Demolition", 
+    image: FariasDesktop,
+    alt: "Faria's Demolition website screenshot"
+  },
+  { 
+    id: 5, 
+    title: "Cleanomatic Fl LLC", 
+    image: CleanomaticFl,
+    alt: "Cleanomatic FL website screenshot"
+  },
+  { 
+    id: 6, 
+    title: "Pablo's Peak Roofing", 
+    image: PablosDesktop,
+    alt: "Pablo's Peak Roofing website screenshot"
+  },
+  { 
+    id: 7, 
+    title: "JSV Quick Solar", 
+    image: JSVDesktop,
+    alt: "JSV Quick Solar website screenshot"
+  },
+];
+
+// Process items for optimized images
+const processedItems = await Promise.all(
+  items.map(async (item) => ({
+    ...item,
+    // Convert ImageMetadata to optimized src for the carousel
+    imageSrc: item.image.src,
+    // Keep original ImageMetadata for potential direct use
+    imageData: item.image,
+  }))
+);
+---
+
+<section
+  id="projects"
+  data-portfolio-section
+  class="w-screen overflow-x-hidden outer-section bg-bg relative"
+>
+  <div class="section-color-border"></div>
+
+  <div class="inner-section">
+    <header class="text-section">
+      <BorderTitle client:idle>Our Projects</BorderTitle>
+      <Heading
+        tagName="h2"
+        className="mb-6"
+        before="Our "
+        text="Portfolio"
+        textClass="emphasized-text"
+        client:load
+      />
+      <p class="large-text mx-auto">
+        Discover the websites we've crafted for businesses across different
+        industries
+      </p>
+    </header>
+
+    <PortfolioCarousel 
+      items={processedItems} 
+      autoAdvanceDelay={6000} 
+      autoplay 
+      client:visible
+    />
+  </div>
+</section>

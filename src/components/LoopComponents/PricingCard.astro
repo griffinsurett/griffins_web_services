@@ -1,0 +1,108 @@
+---
+// src/components/LoopComponents/PricingCard.astro
+import AnimatedBorder from '../AnimatedBorder/AnimatedBorder.jsx';
+import Button from '../Buttons/Button.jsx';
+import CheckListItem from './CheckListItem.astro';
+
+export interface Props {
+  data: {
+    icon: string;
+    title: string;
+    description: string;
+    price?: number | string;
+    period?: string;
+    features: string[];
+    buttonText?: string;
+    buttonVariant?: string;
+  };
+  ringDuration?: number;
+  featured?: boolean;
+  class?: string;
+}
+
+const {
+  data,
+  ringDuration = 800,
+  featured = false,
+  class: className = "",
+} = Astro.props;
+
+const {
+  icon,
+  title,
+  description,
+  price,
+  period = "monthly",
+  features,
+  buttonText = "Choose Plan",
+  buttonVariant = "primary",
+} = data;
+---
+
+<div class={`group relative ${className}`}>
+  <!-- Featured badge -->
+  {featured && (
+    <div class="absolute -top-1.5 left-0 transform z-30">
+      <div class="bg-accent text-primary-dark px-4 py-1 rounded-full text-sm font-semibold">
+        Most Popular
+      </div>
+    </div>
+  )}
+
+  <AnimatedBorder
+    variant="progress-b-f"
+    triggers={featured ? "visible" : "hover"}
+    duration={ringDuration}
+    borderRadius="rounded-3xl"
+    borderWidth={featured ? 3 : 2}
+    color="var(--color-accent)"
+    className={`h-full outer-card-transition !duration-[900ms] ease-out ${
+      featured ? "scale-105" : ""
+    }`}
+    innerClassName="h-full px-8 py-8 lg:px-10 lg:py-10 relative flex flex-col"
+    client:load
+  >
+    <!-- Inner gradient overlay -->
+    <div class="inner-card-style inner-card-transition inner-card-color"></div>
+
+    <div class="relative z-10 flex flex-col h-full">
+      <!-- Header -->
+      <div class="text-center mb-6">
+        <div class="icon-large mb-4 card-icon-color mx-auto">
+          {icon}
+        </div>
+        <h4 class="h3 mb-3">{title}</h4>
+
+        <!-- Price -->
+        {price && (
+          <div class="mb-4">
+            <div class="flex items-baseline justify-center gap-1">
+              <span class="text-4xl lg:text-5xl font-bold text-accent">
+                ${price}
+              </span>
+              <span class="text-lg text-muted">/{period}</span>
+            </div>
+          </div>
+        )}
+
+        <p class="text-text leading-relaxed">{description}</p>
+      </div>
+
+      <!-- Features -->
+      <div class="flex-grow mb-8">
+        <div class="space-y-3">
+          {features.map((feature) => (
+            <CheckListItem>{feature}</CheckListItem>
+          ))}
+        </div>
+      </div>
+
+      <!-- CTA Button -->
+      <div class="mt-auto">
+        <Button variant={buttonVariant} className="w-full justify-center" client:load>
+          {buttonText}
+        </Button>
+      </div>
+    </div>
+  </AnimatedBorder>
+</div>

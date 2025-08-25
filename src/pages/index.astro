@@ -1,11 +1,58 @@
 ---
-import Welcome from '../components/Welcome.astro';
+// src/pages/index.astro - Main homepage
 import Layout from '../layouts/Layout.astro';
+import Header from '../Sections/Header.astro';
+import Hero from '../Sections/Hero.astro';
+import About from '../Sections/About.astro';
+import Benefits from '../Sections/Benefits.astro';
+import WebsiteTypesSection from '../Sections/WebsiteTypesSection.astro';
+import HostingMaintenance from '../Sections/HostingMaintenance.astro';
+import AddOnServices from '../Sections/AddOnServices.astro';
+import PortfolioSection from '../Sections/PortfolioSection.astro';
+import Testimonials from '../Sections/Testimonials.astro';
+import TechStack from '../Sections/TechStack.jsx';
+import FAQ from '../Sections/FAQ.astro';
+import QuoteFormSection from '../Sections/QuoteFormSection.astro';
+import CTASection from '../Sections/CTASection.astro';
+import Stats from '../Sections/Stats.astro';
+import Footer from '../Sections/Footer.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// SEO data
+const pageTitle = "Professional Website Development Services";
+const pageDescription = "Get a lightning-fast, secure, and mobile-first website that converts visitors into customers. Professional web development, hosting, and maintenance services.";
 ---
 
-<Layout>
-	<Welcome />
+<Layout title={pageTitle} description={pageDescription}>
+  <Header />
+  
+  <main id="main-content" class="relative">
+    <Hero />
+    
+    <About />
+    
+    <Benefits />
+    
+    <WebsiteTypesSection />
+    
+    <HostingMaintenance />
+    
+    <AddOnServices />
+    
+    <!-- <PortfolioSection /> -->
+    
+    <!-- <Testimonials /> -->
+    
+    <!-- TechStack stays as React component for complex interactions -->
+    <!-- <TechStack client:visible /> -->
+    
+    <FAQ />
+    
+    <Stats />
+    
+    <QuoteFormSection />
+    
+    <CTASection />
+  </main>
+  
+  <Footer />
 </Layout>

@@ -1,0 +1,33 @@
+---
+// src/components/Socials.astro
+import SocialLink from "./LoopComponents/SocialLink.astro";
+
+const socialMediaLinks = [
+  {
+    name: "LinkedIn",
+    href: "#linkedin",
+    icon: "linkedin",
+  },
+  {
+    name: "Twitter", 
+    href: "#twitter",
+    icon: "twitter",
+  },
+  {
+    name: "GitHub",
+    href: "#github", 
+    icon: "github",
+  },
+  {
+    name: "Instagram",
+    href: "#instagram",
+    icon: "instagram", 
+  },
+];
+---
+
+<div class="flex justify-center gap-5">
+  {socialMediaLinks.map((item) => (
+    <SocialLink data={item} />
+  ))}
+</div>

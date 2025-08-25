@@ -1,0 +1,31 @@
+---
+// src/Sections/AddOnServices.astro
+import BorderTitle from "../components/BorderTitle.jsx";
+import Heading from "../components/Heading.jsx";
+import AddOnServicesContainer from "../components/AddOnServicesContainer.jsx";
+---
+
+<section class="outer-section secondary-bg relative" id="add-ons">
+  <div class="section-color-border"></div>
+  <div class="inner-section">
+    <!-- Section Header -->
+    <div class="text-section">
+      <BorderTitle client:idle>Website Enhancements</BorderTitle>
+      <Heading
+        tagName="h2"
+        className="mb-4"
+        before="Add-On "
+        text="Services"
+        textClass="emphasized-text"
+        client:load
+      />
+      <p class="large-text">
+        Enhance your website with specialized features and support. Choose
+        the categories that best fit your needs.
+      </p>
+    </div>
+
+    <!-- Functional Container -->
+    <AddOnServicesContainer client:visible />
+  </div>
+</section>

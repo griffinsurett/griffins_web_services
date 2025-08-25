@@ -1,0 +1,128 @@
+---
+// src/Sections/Footer.astro
+import IconListItem from "../components/LoopComponents/IconListItem.jsx";
+import SocialLink from "../components/LoopComponents/SocialLink.astro";
+import LogoLink from "../components/Buttons/LogoLink.jsx";
+import { siteData, contactItems, socialMediaLinks } from "../siteData";
+import Logo from "../components/Logo/Logo.astro";
+import Heading from "../components/Heading.jsx";
+
+const year = new Date().getFullYear();
+
+const topfooterContainer = "w-95/100 mx-auto px-6 lg:px-8";
+const mainTopFootContainer = "flex flex-col items-start";
+const menuLabel = "text-text font-semibold text-xl mb-2";
+
+const footerNav = [
+  { label: "Privacy Policy", href: "#privacy-policy" },
+  { label: "Terms of Service", href: "#terms-of-service" },
+  { label: "Cookie Policy", href: "#cookie-policy" },
+  { label: "Contact Us", href: "#contact" },
+];
+---
+
+<footer class="relative w-full bg-bg2 border-t border-accent/10">
+  <!-- Decorative top border -->
+  <div class="section-color-border"></div>
+
+  <!-- Main Footer Content -->
+  <div>
+    <!-- Top Section - Logo, Description, Contact -->
+    <div
+      class={`flex flex-wrap lg:justify-between sm:justify-center justify-start ${topfooterContainer} gap-12 lg:gap-6 py-16 lg:py-20`}
+    >
+      <!-- Logo & Description -->
+      <div class={`${mainTopFootContainer} space-y-3 max-w-md`}>
+        <Logo
+          loading="lazy"
+          trigger="visible"
+          animateOutText={false}
+        />
+        <p class="leading-relaxed text-base pr-8">
+          {siteData.description}
+        </p>
+      </div>
+
+      <!-- Footer Navigation -->
+      <div
+        class="flex flex-col justify-left items-start gap-3 lg:order-2 order-last"
+      >
+        <Heading tagName="h4" className={menuLabel} client:load>
+          Legal
+        </Heading>
+        <nav class="gap-4 flex flex-col">
+          {
+            footerNav.map((item) => (
+              <LogoLink
+                href={item.href}
+                className="text-text/80 hover:text-accent transition-all duration-300 font-medium"
+                client:load
+              >
+                {item.label}
+              </LogoLink>
+            ))
+          }
+        </nav>
+      </div>
+
+      <!-- Contact Information -->
+      <div
+        class={`${mainTopFootContainer} lg:items-end order-2 lg:order-last space-y-5`}
+      >
+        <Heading tagName="h4" className={menuLabel} client:load>
+          Get in Touch
+        </Heading>
+        <nav class="flex flex-col gap-2">
+          {
+            contactItems.map((item) => (
+              <LogoLink
+                href={item.href}
+                className="group flex items-center justify-start lg:justify-end"
+                client:load
+              >
+                <IconListItem
+                  data={{
+                    showIcon: false,
+                    title: item.label,
+                    description: item.label,
+                  }}
+                  layout="horizontal"
+                  alignment="center"
+                  className="gap-3 group"
+                  iconClassName="hidden"
+                  titleClassName="text-text/90 group-hover:text-accent transition-all duration-300 font-medium text-lg"
+                  titleTag="span"
+                  showDescription={false}
+                  containerClassName="flex items-center"
+                  client:load
+                />
+              </LogoLink>
+            ))
+          }
+        </nav>
+        <!-- Social Links -->
+        <div class="flex items-center gap-4">
+          {
+            socialMediaLinks.map((item) => (
+              <div class="transform hover:scale-110 transition-transform duration-200">
+                <SocialLink data={{ ...item, icon: item.name.toLowerCase() }} />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Section -->
+    <div class="py-5 bg-bg2 border-t mx-auto w-90/100 border-accent/20">
+      <div
+        class="flex justify-center items-center text-center space-y-8 lg:space-y-0"
+      >
+        <div class="text-text/60 text-sm lg:text-base">
+          © {year}
+          {siteData.legalName}. All rights reserved.
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

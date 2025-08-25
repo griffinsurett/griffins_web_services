@@ -1,0 +1,350 @@
+@import "tailwindcss";
+/* ───────────────────────────────────────────────────── */
+/* 0. CUSTOM VARIANTS FOR LIGHT + DARK                  */
+/* ───────────────────────────────────────────────────── */
+@custom-variant light  (&:where([data-theme="light"], [data-theme="light"] *));
+@custom-variant dark   (&:where([data-theme="dark"],  [data-theme="dark"]  *));
+
+@theme {
+  /* Base Colors - Raw color definitions */
+  --color-primary-dark: var(--color-black);
+  --color-secondary-dark: var(--color-zinc-950);
+  --color-tertiary-dark: var(--color-zinc-900);
+  --color-primary-light: var(--color-zinc-50);
+  --color-secondary-light: var(--color-zinc-100);
+  --color-tertiary-light: var(--color-zinc-200);
+
+  --main-accent: #5e76f6;
+
+  /* Colors that Tailwind will automatically generate utilities for */
+  /* These follow the --color-{name} pattern */
+  --color-accent: var(--main-accent);
+  --color-primary: var(--color-accent);
+  --color-primary-secondary: color-mix(
+    in srgb,
+    var(--color-primary) 85%,
+    var(--primary-dark)
+  );
+
+  /* Text colors */
+  --color-heading: var(--color-tertiary-dark);
+  --color-text: var(--text-zinc-700);
+  --color-muted: var(--text-zinc-200);
+
+  /* Your custom background colors */
+  --color-bg: var(--color-primary-dark);
+  --color-bg2: var(--color-secondary-dark);
+  --color-bg3: var(--color-tertiary-dark);
+
+  /* Additional utility colors */
+  --color-border-dim: rgba(255, 255, 255, 0.2);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-bg overflow-x-hidden;
+  }
+  ::selection {
+    color: var(--color-accent);
+    transition: all 0.3s ease-in-out;
+  }
+  /* Theme-specific PRIMARY token */
+  [data-theme="light"] {
+    /* primary color */
+    --color-primary: var(--color-zinc-900);
+
+    /* Text colors */
+    --color-heading: var(--color-tertiary-dark);
+    --color-text: var(--text-zinc-700);
+    --color-muted: var(--text-zinc-600);
+
+    /* background colors */
+    --color-bg: var(--color-primary-light);
+    --color-bg2: var(--color-secondary-light);
+    --color-bg3: var(--color-tertiary-light);
+  }
+  [data-theme="dark"] {
+    /* primary color */
+    --color-primary: var(--color-accent);
+
+    /* text colors */
+    --color-heading: var(--color-primary-light);
+    --color-text: var(--color-secondary-light);
+    --color-muted: var(--text-zinc-200);
+
+    /* background colors */
+    --color-bg: var(--color-primary-dark);
+    --color-bg2: var(--color-secondary-dark);
+    --color-bg3: var(--color-tertiary-dark);
+  }
+}
+
+@utility muted-text {
+  @apply dark:text-zinc-200 light:text-zinc-600;
+}
+
+@utility heading-accent-text {
+  color: var(--color-primary);
+}
+
+@utility faded-bg {
+  @apply dark:bg-primary-light/10 dark:hover:bg-primary-light/12;
+  @apply light:bg-primary-dark/10 light:hover:bg-primary-dark/12;
+  @apply transition-all hover:transform main-duration;
+}
+
+@utility faded-bg2 {
+  @apply bg-primary-light/20 hover:bg-primary-dark/50;
+}
+
+@utility faded-accent-border {
+  @apply border border-accent/20;
+}
+
+@utility card-bg {
+  @apply dark:bg-primary-light/5 light:bg-primary-dark/5 faded-accent-border transition-all main-duration;
+}
+
+/* @utility hover-card-bg {
+  @apply hover:bg-transparent hover:border-primary/50;
+} */
+
+@utility border-off-hover {
+    @apply hover:border-transparent;
+}
+
+@utility logo-class {
+  @apply light:invert;
+}
+
+@utility rounded-border {
+  @apply inline-block border border-primary text-primary rounded-full font-medium;
+}
+
+@utility faded-border {
+  @apply border-1 dark:border-white/10 light:border-black/20;
+}
+
+@utility paragraph-spacing {
+  @apply max-w-3xl mx-auto;
+}
+
+@utility main-duration {
+  @apply duration-450;
+}
+
+@utility button-style {
+  @apply px-8 py-4 rounded-full cursor-pointer w-full lg:w-auto;
+}
+
+@utility section-border-styles {
+  @apply absolute top-0 left-0 right-0 h-px;
+}
+
+/* The main form field styling - updated with theme-aware colors */
+@utility form-field {
+  @apply w-full bg-transparent border border-accent/20 rounded-xl px-4 py-3 focus:outline-none main-duration transition-all;
+  @apply dark:focus:bg-primary-dark/70 light:focus:bg-primary-light/70;
+  @apply text-muted;
+
+  &::placeholder {
+    @apply text-muted;
+  }
+
+  /* Fix for select dropdown arrow spacing */
+  &[type="select"],
+  select& {
+    appearance: none;
+  }
+}
+
+@utility form-field-error {
+  @apply border-red-500 focus:border-red-500;
+}
+
+@utility form-option {
+  @apply bg-bg text-heading;
+}
+
+@layer components {
+  .hero-gradient-bg {
+    @apply bg-cover bg-center;
+    background-image: linear-gradient(
+      323.34deg,
+      var(--color-accent) -85.13%,
+      transparent 40.1%
+    );
+  }
+
+  .text-border {
+    -webkit-text-stroke: 2px var(--color-primary);
+  }
+
+  /* section styles */
+  .outer-section {
+    @apply relative py-24 px-2;
+  }
+
+  .inner-section {
+    @apply w-9/10 lg:max-w-6xl mx-auto;
+  }
+
+  .section-box {
+    @apply rounded-3xl p-8 lg:p-12 relative overflow-hidden;
+  }
+
+  .section-dim-border {
+    @apply section-border-styles bg-gradient-to-r from-transparent to-transparent;
+    background-image: linear-gradient(
+      to right,
+      transparent,
+      var(--color-border-dim),
+      transparent
+    );
+  }
+
+  .section-color-border {
+    @apply section-border-styles bg-gradient-to-r from-transparent via-primary to-transparent;
+  }
+
+  .text-section {
+    @apply text-center mb-8;
+  }
+
+  .emphasized-text {
+    @apply font-bold text-accent;
+  }
+
+  /* Card components */
+  .outer-card-transition {
+    @apply transition-all hover:transform main-duration;
+  }
+
+  .outer-card-hover-transition {
+    @apply hover:-translate-y-3;
+  }
+
+  .outer-card-color {
+    @apply card-bg hover:border-primary hover:shadow-primary/20;
+  }
+
+  .outer-card-style {
+    @apply relative overflow-hidden shadow-xl  hover:shadow-2xl rounded-3xl p-9;
+  }
+
+  .inner-card-transition {
+    @apply opacity-0 group-hover:opacity-100 transition-opacity main-duration;
+  }
+
+  .inner-card-style {
+    @apply absolute;
+  }
+
+  .inner-card-color {
+    @apply inset-0 bg-gradient-to-br from-accent/10 to-transparent;
+  }
+
+  .card-icon-color {
+    @apply bg-gradient-to-br from-primary light:to-bg2 dark:to-primary/25 text-black;
+  }
+
+  .max-2-primary {
+    @apply grid lg:grid-cols-2 gap-6 lg:gap-12;
+  }
+
+  .max-3-primary {
+    @apply grid sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:mb-16;
+  }
+
+  .max-3-secondary {
+    @apply grid lg:grid-cols-2 xl:grid-cols-3 gap-8 lg:mb-16;
+  }
+
+  /* Hover modes */
+  .card-hover-large {
+    @apply hover:-translate-y-3 hover:shadow-2xl hover:border-accent;
+  }
+  .card-hover-small {
+    @apply hover:-translate-y-2 hover:shadow-xl hover:border-accent;
+  }
+
+  /* Icon sizing */
+  .icon-large {
+    @apply w-15 h-15 text-xl lg:text-2xl flex items-center justify-center mx-auto rounded-full relative;
+  }
+
+  .icon-medium {
+    @apply w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold;
+  }
+
+  .icon-small {
+    @apply relative rounded-full w-10 h-10 flex items-center justify-center text-xl;
+  }
+
+  .icon-xsmall {
+    @apply w-8 h-8 rounded-full flex items-center justify-center;
+  }
+
+  /* Border styles */
+  .border-title {
+    @apply border-2 px-5 py-2 text-sm uppercase tracking-wider mb-6 rounded-border;
+  }
+
+  .tag-title {
+    @apply px-3 py-1 text-xs uppercase tracking-wider rounded-border;
+  }
+
+  .footer-nav {
+    @apply text-2xl font-bold;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+
+  /* Typography - updated with theme-aware color utilities */
+  .h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight text-heading;
+  }
+  .h2 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-heading;
+  }
+  .h3 {
+    @apply text-xl font-semibold text-heading;
+  }
+  .h4 {
+    @apply font-semibold text-lg text-heading;
+  }
+
+  p {
+    @apply text-text;
+  }
+
+  .hero-heading {
+    @apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl;
+  }
+
+  .hero-text {
+    @apply text-lg sm:text-xl md:text-2xl leading-relaxed;
+  }
+
+  .small-text {
+    @apply text-sm lg:text-base leading-relaxed;
+  }
+
+  .large-text {
+    @apply text-xl lg:text-2xl leading-relaxed paragraph-spacing;
+  }
+
+  .button-transition {
+    @apply transition-all duration-450 hover:transform hover:shadow-2xl;
+  }
+
+  .button-hover-transition {
+    @apply hover:-translate-y-1;
+  }
+}

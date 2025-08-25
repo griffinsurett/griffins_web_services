@@ -1,0 +1,46 @@
+---
+// src/Sections/WebsiteTypesSection.astro
+import BorderTitle from "../components/BorderTitle.jsx";
+import Heading from "../components/Heading.jsx";
+import AnimatedElementWrapper from "../components/AnimatedElementWrapper.jsx";
+import FeatureCard from "../components/LoopComponents/FeatureCard.astro";
+import WEBSITE_TYPES from "../websiteTypes";
+---
+
+<section class="outer-section bg-bg2 relative" id="website-types">
+  <div class="section-dim-border" />
+  <div class="inner-section">
+    <div class="text-section">
+      <BorderTitle client:idle>Website Types</BorderTitle>
+      <Heading
+        tagName="h2"
+        className="mb-6"
+        before="Websites We "
+        text="Build"
+        textClass="emphasized-text"
+        client:load
+      />
+      <p class="large-text">
+        From simple landing pages to complex web applications — we create
+        websites tailored to your specific needs and industry.
+      </p>
+    </div>
+
+    <div class="max-3-secondary">
+      {WEBSITE_TYPES.map((item, idx) => (
+        <AnimatedElementWrapper
+          key={item.key}
+          variant="scale-in"
+          animationDuration={600}
+          animationDelay={idx * 100}
+          threshold={0.1}
+          rootMargin="0px 0px -10px 0px"
+          once={false}
+          client:visible
+        >
+          <FeatureCard data={item} />
+        </AnimatedElementWrapper>
+      ))}
+    </div>
+  </div>
+</section>

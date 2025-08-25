@@ -1,0 +1,75 @@
+---
+// src/Sections/QuoteFormSection.astro
+import BorderTitle from "../components/BorderTitle.jsx";
+import Heading from "../components/Heading.jsx";
+import AnimatedElementWrapper from "../components/AnimatedElementWrapper.jsx";
+import QuoteForm from "../components/Form/QuoteForm.jsx";
+
+export interface Props {
+  id?: string;
+  title?: string;
+  headingBefore?: string;
+  headingText?: string;
+  headingTextClass?: string;
+  blurb?: string;
+  animate?: boolean;
+  variant?: string;
+  animationDuration?: number;
+  animationDelay?: number;
+  threshold?: number;
+  rootMargin?: string;
+  once?: boolean;
+  formProps?: object;
+}
+
+const {
+  id = "contact",
+  title = "Get A Quote",
+  headingBefore = "Ready to Get ",
+  headingText = "Started?",
+  headingTextClass = "heading-accent-text",
+  blurb = "Tell us about your project and we'll provide you with a detailed quote within 24 hours.",
+  animate = true,
+  variant = "scale-in",
+  animationDuration = 800,
+  animationDelay = 120,
+  threshold = 0.2,
+  rootMargin = "0px",
+  once = false,
+  formProps = {},
+} = Astro.props;
+---
+
+<section class="outer-section bg-bg relative" id={id}>
+  <div class="section-color-border"></div>
+  <div class="inner-section">
+    <div class="text-section">
+      <BorderTitle client:idle>{title}</BorderTitle>
+      <Heading
+        tagName="h2"
+        className="mb-6"
+        before={headingBefore}
+        text={headingText}
+        textClass={headingTextClass}
+        client:load
+      />
+      <p class="large-text secondary-text">{blurb}</p>
+    </div>
+
+    {animate ? (
+      <AnimatedElementWrapper
+        variant={variant}
+        animationDuration={animationDuration}
+        animationDelay={animationDelay}
+        threshold={threshold}
+        rootMargin={rootMargin}
+        once={once}
+        client:visible
+      >
+        <QuoteForm {...formProps} client:load />
+      </AnimatedElementWrapper>
+    ) : (
+      <QuoteForm {...formProps} client:load />
+    )}
+  </div>
+</section>

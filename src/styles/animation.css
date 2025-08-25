@@ -1,0 +1,312 @@
+
+/* Add these scale animations to your animation.css */
+
+/* ───────────────────────────────────────────────────── */
+/* SCALE ANIMATIONS (Additional)                         */
+/* ───────────────────────────────────────────────────── */
+
+/* Basic scale in - grows from 0 to full size */
+.scale-in {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: scale(calc(0.5 + (var(--animation-progress-decimal) * 0.5)));
+  transition: all var(--animation-duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Scale in with overshoot */
+.scale-in-overshoot {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: scale(calc(
+    0.5 + (var(--animation-progress-decimal) * 0.55) - 
+    (var(--animation-progress-decimal) * var(--animation-progress-decimal) * 0.05)
+  ));
+  transition: all var(--animation-duration) cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Scale from center */
+.scale-center {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: scale(calc(var(--animation-progress-decimal)));
+  transform-origin: center center;
+  transition: all var(--animation-duration) ease-out;
+}
+
+/* Scale X only */
+.scale-x {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: scaleX(calc(var(--animation-progress-decimal)));
+  transform-origin: left center;
+  transition: all var(--animation-duration) ease-out;
+}
+
+/* Scale Y only */
+.scale-y {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: scaleY(calc(var(--animation-progress-decimal)));
+  transform-origin: top center;
+  transition: all var(--animation-duration) ease-out;
+}
+
+/* Zoom effect (scale + slight blur) */
+.zoom-in {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: scale(calc(0.8 + (var(--animation-progress-decimal) * 0.2)));
+  filter: blur(calc((1 - var(--animation-progress-decimal)) * 2px));
+  transition: all var(--animation-duration) ease-out;
+}
+
+/* Pulse scale (for attention) */
+.scale-pulse {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: scale(calc(
+    0.95 + (var(--animation-progress-decimal) * 0.05) + 
+    (sin(var(--animation-progress-decimal) * 3.14159) * 0.02)
+  ));
+  transition: all var(--animation-duration) ease-in-out;
+}
+
+/* Scale with rotation */
+.scale-rotate {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: 
+    scale(calc(0.5 + (var(--animation-progress-decimal) * 0.5)))
+    rotate(calc((1 - var(--animation-progress-decimal)) * -180deg));
+  transition: all var(--animation-duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Pop in (scale with bounce) */
+.pop-in {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: scale(calc(
+    0.3 + (var(--animation-progress-decimal) * 0.7) +
+    (sin(var(--animation-progress-decimal) * 6.28318) * 0.05 * (1 - var(--animation-progress-decimal)))
+  ));
+  transition: all var(--animation-duration) cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Shrink out (inverse scale) */
+.shrink-out {
+  opacity: calc(1 - var(--animation-progress-decimal));
+  transform: scale(calc(1 - (var(--animation-progress-decimal) * 0.5)));
+  transition: all var(--animation-duration) ease-in;
+}
+
+/* ───────────────────────────────────────────────────── */
+/* STAGGER SUPPORT                                       */
+/* ───────────────────────────────────────────────────── */
+
+/* Add animation delay support for staggered animations */
+.animated-element {
+  animation-delay: var(--animation-delay, 0ms);
+  transition-delay: var(--animation-delay, 0ms);
+}
+/* ───────────────────────────────────────────────────── */
+/* RESPONSIVE SCALE ADJUSTMENTS                         */
+/* ───────────────────────────────────────────────────── */
+
+/* Reduce scale animations on mobile for better performance */
+@media (max-width: 768px) {
+  .scale-in,
+  .scale-in-overshoot,
+  .scale-center,
+  .zoom-in,
+  .scale-rotate,
+  .pop-in {
+    transform: scale(calc(0.8 + (var(--animation-progress-decimal) * 0.2)));
+  }
+  
+  /* Disable complex animations on very small screens */
+  @media (max-width: 480px) {
+    .scale-rotate,
+    .pop-in {
+      transform: scale(calc(0.9 + (var(--animation-progress-decimal) * 0.1)));
+      filter: none;
+    }
+  }
+}
+
+/* ───────────────────────────────────────────────────── */
+/* FADE ANIMATIONS                                       */
+/* ───────────────────────────────────────────────────── */
+
+/* Basic fade in - simple opacity transition */
+.fade-in {
+  opacity: calc(var(--animation-progress-decimal));
+  transition: opacity var(--animation-duration) var(--animation-easing);
+}
+
+/* Fade in from top */
+.fade-in-up {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: translateY(calc(20px * (1 - var(--animation-progress-decimal))));
+  transition: 
+    opacity var(--animation-duration) var(--animation-easing),
+    transform var(--animation-duration) var(--animation-easing);
+}
+
+/* Fade in from bottom */
+.fade-in-down {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: translateY(calc(-20px * (1 - var(--animation-progress-decimal))));
+  transition: 
+    opacity var(--animation-duration) var(--animation-easing),
+    transform var(--animation-duration) var(--animation-easing);
+}
+
+/* Fade in from left */
+.fade-in-left {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: translateX(calc(-30px * (1 - var(--animation-progress-decimal))));
+  transition: 
+    opacity var(--animation-duration) var(--animation-easing),
+    transform var(--animation-duration) var(--animation-easing);
+}
+
+/* Fade in from right */
+.fade-in-right {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: translateX(calc(30px * (1 - var(--animation-progress-decimal))));
+  transition: 
+    opacity var(--animation-duration) var(--animation-easing),
+    transform var(--animation-duration) var(--animation-easing);
+}
+
+/* Fade in with scale */
+.fade-in-scale {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: scale(calc(0.95 + (var(--animation-progress-decimal) * 0.05)));
+  transition: 
+    opacity var(--animation-duration) var(--animation-easing),
+    transform var(--animation-duration) var(--animation-easing);
+}
+
+/* Fade in with blur effect */
+.fade-in-blur {
+  opacity: calc(var(--animation-progress-decimal));
+  filter: blur(calc((1 - var(--animation-progress-decimal)) * 3px));
+  transition: 
+    opacity var(--animation-duration) var(--animation-easing),
+    filter var(--animation-duration) var(--animation-easing);
+}
+
+/* Fade in with rotation */
+.fade-in-rotate {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: rotate(calc((1 - var(--animation-progress-decimal)) * -10deg));
+  transition: 
+    opacity var(--animation-duration) var(--animation-easing),
+    transform var(--animation-duration) var(--animation-easing);
+}
+
+/* Fade in with elastic effect */
+.fade-in-elastic {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: 
+    translateY(calc(25px * (1 - var(--animation-progress-decimal))))
+    scale(calc(0.9 + (var(--animation-progress-decimal) * 0.1)));
+  transition: 
+    opacity var(--animation-duration) cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    transform var(--animation-duration) cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Fade in stagger (for use with staggered delays) */
+.fade-in-stagger {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: translateY(calc(15px * (1 - var(--animation-progress-decimal))));
+  transition: 
+    opacity var(--animation-duration) var(--animation-easing),
+    transform var(--animation-duration) var(--animation-easing);
+}
+
+/* Fade in with perspective flip */
+.fade-in-flip {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: 
+    perspective(1000px) 
+    rotateX(calc((1 - var(--animation-progress-decimal)) * -20deg));
+  transition: 
+    opacity var(--animation-duration) var(--animation-easing),
+    transform var(--animation-duration) var(--animation-easing);
+}
+
+/* Fade in with slide and scale combined */
+.fade-in-slide-scale {
+  opacity: calc(var(--animation-progress-decimal));
+  transform: 
+    translateY(calc(30px * (1 - var(--animation-progress-decimal))))
+    scale(calc(0.8 + (var(--animation-progress-decimal) * 0.2)));
+  transition: 
+    opacity var(--animation-duration) var(--animation-easing),
+    transform var(--animation-duration) var(--animation-easing);
+}
+
+/* Hover-only rolling icon that moves left while rotating (ball-roll) */
+.link-roll {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) translateX(0) rotate(0);
+  opacity: 0;
+  will-change: transform;
+  transition:
+    transform var(--roll-duration, 600ms) var(--roll-ease, cubic-bezier(0.22,1,0.36,1)),
+    opacity 180ms ease-out;
+}
+
+.group:hover .link-roll,
+.group:focus-visible .link-roll {
+  opacity: 1;
+  transform:
+    translateY(-50%)
+    translateX(calc(-1 * var(--roll-dist, 0.9rem)))
+    rotate(calc(-360deg * var(--roll-turns, 1.5)));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link-roll,
+  .group:hover .link-roll,
+  .group:focus-visible .link-roll {
+    transition: none;
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+}
+
+/* Symmetric fade + color swap (both directions) */
+.color-text-fade {
+  /* base + tokens */
+  --ctf-color-hidden: currentColor;           /* inherits from parent (e.g., .text-heading) */
+  --ctf-color-visible: var(--color-primary);  /* your highlight */
+  --ctf-color: var(--ctf-color-hidden);
+  --ctf-color-delay: 0ms;
+
+  opacity: 0;
+  color: var(--ctf-color);
+
+  /* fade opacity normally; change color instantly but only after a delay */
+  transition:
+    opacity var(--animation-duration, 600ms) var(--animation-easing, ease) var(--animation-delay, 0ms),
+    color   0ms                              linear                           var(--ctf-color-delay);
+}
+
+/* ENTER: fade to 1, then switch to primary AFTER the fade-in completes */
+.color-text-fade[data-visible="true"] {
+  opacity: 1;
+  --ctf-color: var(--ctf-color-visible);
+  --ctf-color-delay: calc(var(--animation-delay, 0ms) + var(--animation-duration, 600ms));
+}
+
+/* EXIT (reverse): keep primary while fading out, then switch back to base at the end */
+.color-text-fade[data-visible="false"][data-animation-direction="reverse"] {
+  --ctf-color: var(--ctf-color-hidden);
+  --ctf-color-delay: calc(var(--animation-delay, 0ms) + var(--animation-duration, 600ms));
+}
+
+/* Reduced motion: no animation; just show final color */
+@media (prefers-reduced-motion: reduce) {
+  .color-text-fade {
+    transition: none;
+    opacity: 1;
+    color: var(--ctf-color-visible);
+  }
+}
+

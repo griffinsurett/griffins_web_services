@@ -1,0 +1,64 @@
+---
+// src/Sections/About.astro
+import FeatureCard from "../components/LoopComponents/FeatureCard.astro";
+import Heading from "../components/Heading.jsx";
+import AnimatedElementWrapper from "../components/AnimatedElementWrapper.jsx";
+
+const Services = [
+  {
+    icon: "🎨",
+    title: "Design",
+    description: "Custom web design that reflects your brand and converts visitors into customers. We create beautiful, user-friendly interfaces that make lasting impressions.",
+  },
+  {
+    icon: "⚡",
+    title: "Develop", 
+    description: "Fast, secure, and scalable websites built with modern technology. From simple landing pages to complex e-commerce platforms, we bring your vision to life.",
+  },
+  {
+    icon: "📄",
+    title: "Ongoing Support",
+    description: "Dedicated hosting and maintenance to ensure your website remains up-to-date, secure, and optimized for performance.",
+  },
+];
+---
+
+<section class="outer-section bg-secondary relative" id="about">
+  <div class="section-dim-border"></div>
+  <div class="inner-section">
+    <div class="text-section">
+      <Heading
+        tagName="h2"
+        className="mb-6 h1"
+        before="Websites aren't just something we do. "
+        text="They're our specialty."
+        client:load
+      />
+
+      <p class="text-xl lg:text-2xl leading-relaxed mb-8">
+        While others juggle dozens of services, we've mastered one: building
+        lightning-fast, secure, and scalable sites that turn visitors into
+        customers. Every site delivers peak performance, handles your
+        marketing campaigns, integrates with AI and modern tools, and stands
+        the test of time.
+      </p>
+    </div>
+
+    <div class="max-3-secondary">
+      {Services.map((item, idx) => (
+        <AnimatedElementWrapper
+          key={idx}
+          variant="scale-in"
+          animationDuration={600}
+          animationDelay={idx * 300}
+          threshold={0.2}
+          rootMargin="0px 0px -50px 0px"
+          once={false}
+          client:visible
+        >
+          <FeatureCard data={item} />
+        </AnimatedElementWrapper>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,68 @@
+---
+// src/components/Logo/Logo.astro - Controls image vs Lottie decision
+import LottieLogo from './LottieLogo.jsx';
+import TextLogo from './TextLogo.jsx';
+import { Image } from 'astro:assets';
+import POSTER_SRC from '../../assets/GWS-animated.png';
+
+export interface Props {
+  loading?: 'lazy' | 'eager';
+  trigger?: 'auto' | 'scroll' | 'visible' | 'load';
+  textFadeMs?: number;
+  animateOutText?: boolean;
+  class?: string;
+  useLottie?: boolean; // Override for testing
+}
+
+const {
+  loading = 'lazy',
+  trigger = 'auto', 
+  textFadeMs = 1200,
+  animateOutText = false,
+  class: className = '',
+  useLottie = true, // Default to Lottie
+} = Astro.props;
+
+// Decide between static image and interactive Lottie at build time
+const shouldUseLottie = useLottie && (
+  loading === 'eager' || // Header logos get Lottie
+  trigger === 'scroll' || // Scroll-triggered get Lottie
+  trigger === 'load'     // Load-triggered get Lottie
+);
+
+// Client directive based on loading preference
+const clientDirective = loading === 'eager' ? 'client:load' : 'client:visible';
+---
+
+<a href="/" class={`flex justify-center items-center gap-1.5 ${className}`}>
+  {shouldUseLottie ? (
+    <LottieLogo
+      alt="Griffin's Web Services Animated Logo"
+      loading={loading}
+      trigger={trigger}
+      client:load={loading === 'eager'}
+      client:visible={loading !== 'eager'}
+    />
+  ) : (
+    <Image
+      src={POSTER_SRC}
+      alt="Griffin's Web Services Logo"
+      loading={loading}
+      class="block w-[40px] lg:w-[45px] h-auto"
+      width={45}
+      height={45}
+    />
+  )}
+  
+  <div>
+    <TextLogo
+      title="Griffin's Web Services"
+      className="flex flex-col p-0 m-0"
+      fadeDuration={textFadeMs}
+      animateOutText={animateOutText}
+      loading={loading}
+      client:load={loading === 'eager'}
+      client:visible={loading !== 'eager'}
+    />
+  </div>
+</a>

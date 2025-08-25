@@ -1,0 +1,47 @@
+---
+// src/components/LoopComponents/FeatureCard.astro
+import AnimatedBorder from '../AnimatedBorder/AnimatedBorder.jsx';
+
+export interface Props {
+  data: {
+    icon: string;
+    title: string;
+    description: string;
+    featured?: boolean;
+  };
+  ringDuration?: number;
+  class?: string;
+}
+
+const {
+  data,
+  ringDuration = 800,
+  class: className = "",
+} = Astro.props;
+---
+
+<div class={className}>
+  <AnimatedBorder
+    variant="progress-b-f"
+    triggers="hover"
+    duration={ringDuration}
+    borderRadius="rounded-3xl"
+    borderWidth={2}
+    className="group text-center outer-card-transition outer-card-hover-transition !duration-[900ms] ease-out"
+    innerClassName="h-85 mx-auto px-10 flex flex-col justify-center items-center relative card-bg"
+    client:load
+  >
+    <div class="inner-card-style inner-card-transition inner-card-color"></div>
+    
+    <!-- Icon -->
+    <div class="icon-large z-10 mb-5 card-icon-color flex items-center justify-center">
+      {data.icon}
+    </div>
+    
+    <!-- Title -->
+    <h3 class="h3 mb-3 relative z-10">{data.title}</h3>
+    
+    <!-- Description -->
+    <p class="text-text leading-relaxed relative z-10">{data.description}</p>
+  </AnimatedBorder>
+</div>

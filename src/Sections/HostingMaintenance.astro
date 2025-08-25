@@ -1,0 +1,94 @@
+---
+// src/Sections/HostingMaintenance.astro
+import AnimatedElementWrapper from "../components/AnimatedElementWrapper.jsx";
+import FeatureCard from "../components/LoopComponents/FeatureCard.astro";
+import BorderTitle from "../components/BorderTitle.jsx";
+import Heading from "../components/Heading.jsx";
+
+const hostingFeatures = [
+  {
+    icon: "🛡️",
+    title: "Enterprise Security",
+    description: "SSL certificates, daily backups, malware scanning, and 24/7 security monitoring to keep your website safe from threats and data loss.",
+  },
+  {
+    icon: "⚡",
+    title: "Lightning Fast Performance",
+    description: "Global CDN, optimized servers, and performance monitoring ensure your site loads in under 2 seconds worldwide.",
+  },
+  {
+    icon: "🔄",
+    title: "Automatic Updates",
+    description: "We handle all security patches, plugin updates, and maintenance tasks so your site stays current and secure without any effort from you.",
+  },
+  {
+    icon: "📈",
+    title: "Analytics & Reporting",
+    description: "Monthly performance reports, traffic insights, and recommendations to help you understand and grow your online presence.",
+  },
+  {
+    icon: "🎯",
+    title: "Content Management",
+    description: "Need changes? We handle content updates, new pages, and design tweaks. Just send us your requests and we'll take care of it.",
+  },
+  {
+    icon: "☁️",
+    title: "Reliable Cloud Hosting",
+    description: "99.9% uptime guarantee on premium cloud infrastructure with automatic scaling to handle traffic spikes during busy periods.",
+  },
+];
+---
+
+<section class="outer-section bg-bg relative" id="hosting">
+  <div class="section-color-border"></div>
+  <div class="inner-section">
+    <!-- Header -->
+    <div class="text-section">
+      <BorderTitle client:idle>Ongoing Partnership</BorderTitle>
+      <Heading
+        tagName="h2"
+        className="mb-6"
+        before="We Don't Just "
+        text="Build & Leave"
+        textClass="emphasized-text"
+        client:load
+      />
+      <p class="large-text">
+        Your website is just the beginning. We're your long-term digital
+        partner, providing reliable hosting, security, maintenance, and
+        growth support so you can focus on running your business while we
+        keep your online presence thriving.
+      </p>
+    </div>
+
+    <!-- What's Included -->
+    <div class="mb-20">
+      <div class="text-center mb-12">
+        <Heading tagName="h3" className="h3 mb-4" client:load>
+          What's Included in Every Plan
+        </Heading>
+        <p class="text-text max-w-2xl mx-auto">
+          From security to performance, we handle all the technical details
+          so your website stays fast, secure, and always available.
+        </p>
+      </div>
+
+      <div class="max-3-primary gap-8 align-middle">
+        {hostingFeatures.map((feature, idx) => (
+          <AnimatedElementWrapper
+            key={idx}
+            variant="scale-in"
+            animationDuration={600}
+            animationDelay={idx * 160}
+            threshold={0.2}
+            rootMargin="0px 0px -50px 0px"
+            once={false}
+            client:visible
+          >
+            <FeatureCard data={feature} />
+          </AnimatedElementWrapper>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

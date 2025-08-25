@@ -1,0 +1,42 @@
+---
+// src/components/LoopComponents/SocialLink.astro
+import { Icon } from 'astro-icon/components';
+import AnimatedBorder from '../AnimatedBorder/AnimatedBorder.jsx';
+
+export interface Props {
+  data: {
+    href: string;
+    label: string;
+    icon: string; // lucide icon name
+  };
+}
+
+const { data } = Astro.props;
+const { href, label, icon } = data;
+---
+
+<AnimatedBorder
+  variant="progress-b-f"
+  triggers="hover"
+  duration={800}
+  borderRadius="rounded-full"
+  borderWidth={2}
+  color="var(--color-accent)"
+  className="transition-all duration-450 hover:-translate-y-1"
+  innerClassName="w-12 h-12 flex items-center justify-center"
+  client:load
+>
+  <a
+    href={href}
+    aria-label={label}
+    class="
+      w-full h-full
+      bg-accent/20 border border-accent/30
+      rounded-full flex items-center justify-center
+      text-accent
+      transition-all duration-450
+    "
+  >
+    <Icon name={`lucide:${icon}`} />
+  </a>
+</AnimatedBorder>

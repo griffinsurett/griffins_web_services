@@ -1,0 +1,29 @@
+---
+// src/components/LoopComponents/ContactItem.astro
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+  data: {
+    href: string;
+    label: string; 
+    icon: string; // Lucide icon name
+  };
+}
+
+const { data } = Astro.props;
+const { href, label, icon } = data;
+---
+
+<a 
+  href={href}
+  class="
+    flex items-center gap-3
+    text-text text-xl lg:text-2xl
+    hover:text-accent
+    transition-colors duration-450
+    no-underline
+  "
+>
+  <Icon name={`lucide:${icon}`} />
+  <span>{label}</span>
+</a>

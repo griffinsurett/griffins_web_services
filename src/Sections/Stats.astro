@@ -1,0 +1,26 @@
+---
+// src/Sections/Stats.astro
+import StatisticListing from "../components/LoopComponents/StatisticListing.jsx";
+import BorderTitle from "../components/BorderTitle.jsx";
+
+const Stats = [
+  { number: "500+", label: "Websites Launched" },
+  { number: "98%", label: "Client Satisfaction" },
+  { number: "24/7", label: "Support Available" },
+  { number: "7 Day", label: "Average Delivery" },
+];
+---
+
+<div class="py-20 px-5 relative primary-bg">
+  <div class="absolute top-0 left-0 right-0 h-px"></div>
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-12">
+      <BorderTitle client:idle>Stats</BorderTitle>
+    </div>
+    <div class="grid md:grid-cols-4 gap-10 text-center">
+      {Stats.map((stat, index) => (
+        <StatisticListing key={index} data={stat} client:visible />
+      ))}
+    </div>
+  </div>
+</div>

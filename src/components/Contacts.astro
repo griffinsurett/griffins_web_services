@@ -1,0 +1,25 @@
+---
+// src/components/Contacts.astro
+import ContactItem from "./LoopComponents/ContactItem.astro";
+
+const contactItems = [
+  {
+    type: "email",
+    label: "hello@griffinsweb.com",
+    href: "mailto:hello@griffinsweb.com",
+    icon: "mail",
+  },
+  {
+    type: "phone", 
+    label: "(123) 456-7890",
+    href: "tel:+1234567890",
+    icon: "phone",
+  }
+];
+---
+
+<div class="mb-6 flex justify-center items-center gap-2 md:gap-3 lg:gap-9 xl:gap-15 flex-wrap">
+  {contactItems.map((item) => (
+    <ContactItem data={item} />
+  ))}
+</div>
