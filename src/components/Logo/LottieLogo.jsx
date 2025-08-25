@@ -1,13 +1,14 @@
-// src/components/Logo/LottieLogo.jsx - Performance optimized
-import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+// src/components/Logo/LottieLogo.jsx - Standalone with integrated hooks
+import { useEffect, useMemo, useRef, useState } from "react";
+import lottie from "lottie-web";
 import { useVisibility } from "../../hooks/animations/useVisibility";
 import { useScrollInteraction } from "../../hooks/animations/useInteractions";
 
+// Import Lottie JSON directly
+import LOGO_ANIMATION from "../../Lotties/Animation_logo_small_size.json";
+
 /**
- * Performance-optimized LottieLogo
- * - Lazy loads lottie-web only when needed
- * - Defers animation initialization until interaction
- * - Uses canvas renderer for better performance
+ * Standalone LottieLogo - No wrapper needed, handles its own visibility logic
  */
 export default function LottieLogo({
   alt = "",
@@ -24,7 +25,6 @@ export default function LottieLogo({
   const lastScrollTime = useRef(0);
   
   const [activated, setActivated] = useState(false);
-  const [lottieLoaded, setLottieLoaded] = useState(false);
   const [pageScrollable, setPageScrollable] = useState(false);
 
   // Detect if page can scroll
@@ -33,13 +33,15 @@ export default function LottieLogo({
     setPageScrollable((el?.scrollHeight || 0) > (window.innerHeight || 0) + 1);
   }, []);
 
-  // Resolve effective trigger
+  // Resolve effective trigger (enhanced with load support)
   const effectiveTrigger = useMemo(() => {
     if (trigger === "scroll" || trigger === "visible" || trigger === "load") return trigger;
     
+    // Auto mode: smart detection based on position
     if (typeof window !== 'undefined' && containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
+      // Above fold = immediate load, below fold = scroll triggered
       return rect.top < viewportHeight ? 'load' : 'scroll';
     }
     
@@ -70,35 +72,22 @@ export default function LottieLogo({
   const shouldActivate = prefersReduced
     ? false
     : effectiveTrigger === "load"
-    ? true
+    ? true // Immediate activation for above-fold content
     : effectiveTrigger === "scroll"
     ? seenOnce
     : visible;
 
-  // Lazy load lottie-web library
-  const loadLottie = useCallback(async () => {
-    if (lottieLoaded) return;
+  // Initialize Lottie animation
+  useEffect(() => {
+    if (!shouldActivate || !lottieContainerRef.current || animationRef.current) return;
     
     try {
-      // Dynamic import to avoid blocking main bundle
-      const lottie = (await import('lottie-web')).default;
-      // Dynamic import of animation data
-      const animationData = (await import("../../Lotties/Animation_logo_small_size.json")).default;
-      
-      if (!lottieContainerRef.current) return;
-
       animationRef.current = lottie.loadAnimation({
         container: lottieContainerRef.current,
-        renderer: "canvas", // Canvas is faster than SVG for animations
+        renderer: "svg",
         loop: true,
         autoplay: false,
-        animationData,
-        // Performance optimizations
-        rendererSettings: {
-          clearCanvas: true,
-          progressiveLoad: true,
-          hideOnTransparent: true,
-        }
+        animationData: LOGO_ANIMATION,
       });
 
       animationRef.current.setSpeed(0.5);
@@ -109,23 +98,8 @@ export default function LottieLogo({
         animationRef.current.setDirection(1);
         animationRef.current.play();
       }
-
-      setLottieLoaded(true);
     } catch (error) {
       console.error('Failed to load Lottie:', error);
-    }
-  }, [lottieLoaded, effectiveTrigger]);
-
-  // Initialize Lottie when activated
-  useEffect(() => {
-    if (!shouldActivate) return;
-    
-    // Use requestIdleCallback to defer loading during idle time
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => loadLottie(), { timeout: 2000 });
-    } else {
-      // Fallback for browsers without requestIdleCallback
-      setTimeout(loadLottie, 100);
     }
 
     return () => {
@@ -134,58 +108,63 @@ export default function LottieLogo({
         animationRef.current = null;
       }
     };
-  }, [shouldActivate, loadLottie]);
+  }, [shouldActivate, effectiveTrigger]);
 
-  // Optimized scroll movement handler
-  const handleMovement = useCallback((deltaY) => {
-    if (!lottieLoaded || !animationRef.current) return;
-    
-    const anim = animationRef.current;
-    const now = Date.now();
-    lastScrollTime.current = now;
+  // Scroll movement handler
+  const handleMovement = useMemo(
+    () => (deltaY) => {
+      const anim = animationRef.current;
+      const now = Date.now();
+      lastScrollTime.current = now;
 
-    clearTimeout(pauseTimeout.current);
+      if (!anim) return;
 
-    // First scroll down → activate (for scroll mode)
-    if (!activated && deltaY > 0 && effectiveTrigger === "scroll") {
-      setActivated(true);
-    }
+      clearTimeout(pauseTimeout.current);
 
-    // Skip if not activated in scroll mode
-    if (effectiveTrigger === "scroll" && !activated) return;
-
-    if (deltaY > 0) {
-      anim.setDirection(1);
-      if (anim.isPaused) anim.play();
-    } else if (deltaY < 0) {
-      anim.setDirection(-1);
-      if (anim.isPaused) anim.play();
-    }
-
-    // Pause after scroll stops
-    pauseTimeout.current = setTimeout(() => {
-      if (now === lastScrollTime.current && anim) {
-        anim.pause();
+      // First scroll down → activate (for scroll mode)
+      if (!activated && deltaY > 0 && effectiveTrigger === "scroll") {
+        setActivated(true);
       }
-    }, 200);
-  }, [lottieLoaded, activated, effectiveTrigger]);
 
-  // Scroll interaction setup - only when Lottie is loaded
+      // Skip if not activated in scroll mode
+      if (effectiveTrigger === "scroll" && !activated) return;
+
+      if (deltaY > 0) {
+        // Scrolling down - play forward
+        anim.setDirection(1);
+        if (anim.isPaused) anim.play();
+      } else if (deltaY < 0) {
+        // Scrolling up - play reverse  
+        anim.setDirection(-1);
+        if (anim.isPaused) anim.play();
+      }
+
+      // Pause after scroll stops
+      pauseTimeout.current = setTimeout(() => {
+        if (now === lastScrollTime.current && anim) {
+          anim.pause();
+        }
+      }, 200);
+    },
+    [activated, effectiveTrigger]
+  );
+
+  // Scroll interaction setup
   useScrollInteraction({
     elementRef: null,
     scrollThreshold: 1,
-    debounceDelay: 16, // Reduced for smoother interaction
+    debounceDelay: 8,
     trustedOnly: true,
     wheelSensitivity: 1,
 
-    onScrollActivity: lottieLoaded && ((effectiveTrigger === "scroll" && seenOnce) || effectiveTrigger === "load")
+    onScrollActivity: (effectiveTrigger === "scroll" && seenOnce) || effectiveTrigger === "load"
       ? ({ dir, delta }) => {
           const deltaY = dir === "down" ? delta : -delta;
           handleMovement(deltaY);
         }
       : undefined,
 
-    onWheelActivity: lottieLoaded && ((effectiveTrigger === "scroll" && seenOnce) || effectiveTrigger === "load")
+    onWheelActivity: (effectiveTrigger === "scroll" && seenOnce) || effectiveTrigger === "load"
       ? ({ deltaY }) => {
           handleMovement(deltaY);
         }
@@ -194,21 +173,21 @@ export default function LottieLogo({
 
   // Visibility mode handler
   useEffect(() => {
-    if (effectiveTrigger !== "visible" || !lottieLoaded || !animationRef.current) return;
+    if (effectiveTrigger !== "visible" || !animationRef.current) return;
 
     if (visible) {
       animationRef.current.setDirection(1);
       animationRef.current.play();
     }
-  }, [effectiveTrigger, visible, lottieLoaded]);
+  }, [effectiveTrigger, visible]);
 
   // Initial activation for scroll mode
   useEffect(() => {
-    if (activated && lottieLoaded && animationRef.current && effectiveTrigger === "scroll") {
+    if (activated && animationRef.current && effectiveTrigger === "scroll") {
       animationRef.current.setDirection(1);
       animationRef.current.play();
     }
-  }, [activated, lottieLoaded, effectiveTrigger]);
+  }, [activated, effectiveTrigger]);
 
   // Cleanup
   useEffect(() => {
@@ -223,13 +202,6 @@ export default function LottieLogo({
         ref={lottieContainerRef}
         className={`${className} ${mediaClasses}`}
         aria-label={alt}
-        style={{
-          // Ensure container has dimensions even before Lottie loads
-          width: '45px',
-          height: '45px',
-          minWidth: '40px',
-          minHeight: '40px',
-        }}
       />
     </div>
   );

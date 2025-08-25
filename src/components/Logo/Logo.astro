@@ -40,8 +40,7 @@ const clientDirective = loading === 'eager' ? 'client:load' : 'client:visible';
       alt="Griffin's Web Services Animated Logo"
       loading={loading}
       trigger={trigger}
-      client:idle={loading === 'eager'}
-      client:visible={loading !== 'eager'}
+      client:idle
     />
   ) : (
     <Image
