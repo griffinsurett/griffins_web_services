@@ -15,7 +15,7 @@ export interface Props {
 }
 
 const {
-  loading = 'lazy',
+  loading = 'eager',
   trigger = 'auto', 
   textFadeMs = 1200,
   animateOutText = false,
@@ -36,12 +36,12 @@ const clientDirective = loading === 'eager' ? 'client:load' : 'client:visible';
 
 <a href="/" class={`flex justify-center items-center gap-1.5 ${className}`}>
   {shouldUseLottie ? (
-    // <LottieLogo
-    //   alt="Griffin's Web Services Animated Logo"
-    //   loading={loading}
-    //   trigger={trigger}
-    //   client:idle
-    // />
+    <LottieLogo
+      alt="Griffin's Web Services Animated Logo"
+      loading="lazy"
+      trigger={trigger}
+      client:idle
+    />
     <Image
       src={POSTER_SRC}
       alt="Griffin's Web Services Logo"
