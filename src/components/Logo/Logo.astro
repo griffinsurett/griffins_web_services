@@ -31,18 +31,27 @@ const shouldUseLottie = useLottie && (
 
 <a href="/" class={`flex justify-center items-center gap-1.5 ${className}`}>
   {shouldUseLottie ? (
-    <LottieLogo
-      alt="Griffin's Web Services Animated Logo"
-      loading={loading}
-      trigger={trigger}
-      className="logo-class"
-      mediaClasses="block w-[40px] lg:w-[45px] h-auto"
-      width={45}
-      height={45}
-      client:idle
-    >
-      {/* 🧠 This is the optimized Astro image that paints immediately */}
-      <Image
+    // <LottieLogo
+    //   alt="Griffin's Web Services Animated Logo"
+    //   loading={loading}
+    //   trigger={trigger}
+    //   className="logo-class"
+    //   mediaClasses="block w-[40px] lg:w-[45px] h-auto"
+    //   width={45}
+    //   height={45}
+    //   client:idle
+    // >
+    //   {/* 🧠 This is the optimized Astro image that paints immediately */}
+    //   <Image
+    //     src={POSTER_SRC}
+    //     alt="Griffin's Web Services Logo"
+    //     loading={loading}
+    //     class="block w-[40px] lg:w-[45px] h-auto"
+    //     width={45}
+    //     height={45}
+    //   />
+    // </LottieLogo>
+     <Image
         src={POSTER_SRC}
         alt="Griffin's Web Services Logo"
         loading={loading}
@@ -50,7 +59,6 @@ const shouldUseLottie = useLottie && (
         width={45}
         height={45}
       />
-    </LottieLogo>
   ) : (
     <Image
       src={POSTER_SRC}
