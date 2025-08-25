@@ -36,11 +36,19 @@ const clientDirective = loading === 'eager' ? 'client:load' : 'client:visible';
 
 <a href="/" class={`flex justify-center items-center gap-1.5 ${className}`}>
   {shouldUseLottie ? (
-    <LottieLogo
-      alt="Griffin's Web Services Animated Logo"
+    // <LottieLogo
+    //   alt="Griffin's Web Services Animated Logo"
+    //   loading={loading}
+    //   trigger={trigger}
+    //   client:idle
+    // />
+    <Image
+      src={POSTER_SRC}
+      alt="Griffin's Web Services Logo"
       loading={loading}
-      trigger={trigger}
-      client:idle
+      class="block w-[40px] lg:w-[45px] h-auto"
+      width={45}
+      height={45}
     />
   ) : (
     <Image
