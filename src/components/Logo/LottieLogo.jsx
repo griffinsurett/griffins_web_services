@@ -1,23 +1,33 @@
 // src/components/Logo/LottieLogo.jsx
+// Lazy Lottie + JSON; keeps Astro <Image/> visible until the player is ready.
+// Minimizes render-blocking by deferring heavy work until idle & actually needed.
+
 import { useEffect, useMemo, useRef, useState } from "react";
-import lottie from "lottie-web";
 import { useVisibility } from "../../hooks/animations/useVisibility";
 import { useScrollInteraction } from "../../hooks/animations/useInteractions";
-import LOGO_ANIMATION from "../../Lotties/Animation_logo_small_size.json";
+
+// Helper: run after the browser is idle (fallback to setTimeout)
+const onIdle = (cb) => {
+  if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+    window.requestIdleCallback(cb, { timeout: 1000 });
+  } else {
+    setTimeout(cb, 0);
+  }
+};
 
 export default function LottieLogo({
   alt = "",
   className = "logo-class",
   mediaClasses = "block w-[40px] lg:w-[45px] h-auto",
   loading = "lazy",
-  trigger = "auto",
+  trigger = "auto",              // "auto" | "scroll" | "visible" | "load"
   respectReducedMotion = true,
 
   width = 45,
   height = 45,
   fadeMs = 180,
 
-  children, // 🧒 Astro <Image /> comes in here
+  children,                      // Astro <Image /> passed from parent (poster)
 }) {
   const containerRef = useRef(null);
   const lottieContainerRef = useRef(null);
@@ -29,13 +39,17 @@ export default function LottieLogo({
   const [activated, setActivated] = useState(false);
   const [pageScrollable, setPageScrollable] = useState(false);
 
+  // Detect if page can scroll (affects "auto" trigger)
   useEffect(() => {
     const el = document.documentElement;
     setPageScrollable((el?.scrollHeight || 0) > (window.innerHeight || 0) + 1);
   }, []);
 
+  // Resolve trigger
   const effectiveTrigger = useMemo(() => {
     if (trigger === "scroll" || trigger === "visible" || trigger === "load") return trigger;
+
+    // "auto": above the fold → "load"; below → "scroll"
     if (typeof window !== "undefined" && containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       return rect.top < window.innerHeight ? "load" : "scroll";
@@ -43,14 +57,17 @@ export default function LottieLogo({
     return pageScrollable ? "scroll" : "load";
   }, [trigger, pageScrollable]);
 
+  // Reduced motion guard
   const prefersReduced =
     respectReducedMotion &&
     typeof window !== "undefined" &&
     window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 
+  // Visibility helpers
   const seenOnce = useVisibility(containerRef, { threshold: 0.1, rootMargin: "0px", once: true });
   const visible = useVisibility(containerRef, { threshold: 0, rootMargin: "0px", once: false });
 
+  // Decide if we should even spin up the player
   const shouldActivate = prefersReduced
     ? false
     : effectiveTrigger === "load"
@@ -59,49 +76,65 @@ export default function LottieLogo({
     ? seenOnce
     : visible;
 
-  // Init Lottie, then fade the poster out when ready
+  // Initialize Lottie lazily (player + JSON), then fade out the poster
   useEffect(() => {
     if (!shouldActivate || !lottieContainerRef.current || animationRef.current || prefersReduced) return;
 
-    try {
-      const anim = lottie.loadAnimation({
-        container: lottieContainerRef.current,
-        renderer: "svg",
-        loop: true,
-        autoplay: false,
-        animationData: LOGO_ANIMATION,
-      });
+    let canceled = false;
 
-      animationRef.current = anim;
-      anim.setSpeed(0.5);
-      anim.goToAndStop(0, true);
+    onIdle(async () => {
+      if (canceled) return;
 
-      const onReady = () => {
+      try {
+        // 1) Smaller player build to reduce parse time (try canvas or svg_min if desired)
+        const { default: lottie } = await import("lottie-web/build/player/lottie_light");
+
+        // 2) Fetch JSON at runtime so it doesn't bloat the bundle
+        const res = await fetch(new URL("../../Lotties/Animation_logo_small_size.json", import.meta.url));
+        const animationData = await res.json();
+        if (canceled) return;
+
+        const anim = lottie.loadAnimation({
+          container: lottieContainerRef.current,
+          renderer: "svg",   // consider "canvas" if SVG DOM is heavy
+          loop: true,
+          autoplay: false,
+          animationData,
+        });
+
+        animationRef.current = anim;
+        anim.setSpeed(0.5);
         anim.goToAndStop(0, true);
-        // Ensure SVG is in the DOM before we hide the poster
-        requestAnimationFrame(() => setShowPoster(false));
-        if (effectiveTrigger === "load") {
-          anim.setDirection(1);
-          anim.play();
-        }
-      };
 
-      anim.addEventListener("DOMLoaded", onReady);
-      anim.addEventListener("data_ready", onReady);
+        const ready = () => {
+          // Ensure first frame matches the poster before fading
+          anim.goToAndStop(0, true);
+          // Wait a frame so the SVG is in the DOM, then fade the poster
+          requestAnimationFrame(() => setShowPoster(false));
+          if (effectiveTrigger === "load") {
+            anim.setDirection(1);
+            anim.play();
+          }
+        };
 
-      return () => {
-        anim.removeEventListener("DOMLoaded", onReady);
-        anim.removeEventListener("data_ready", onReady);
-        anim.destroy();
-        animationRef.current = null;
-      };
-    } catch (e) {
-      // Failure → keep poster
-      console.error("Failed to init Lottie", e);
-    }
+        // Some builds may not fire both; guard with microtask too
+        anim.addEventListener("DOMLoaded", ready);
+        anim.addEventListener("data_ready", ready);
+        Promise.resolve().then(() => ready());
+      } catch (err) {
+        // On failure, we simply keep the poster
+        console.error("Lottie lazy init failed:", err);
+      }
+    });
+
+    return () => {
+      canceled = true;
+      animationRef.current?.destroy?.();
+      animationRef.current = null;
+    };
   }, [shouldActivate, effectiveTrigger, prefersReduced]);
 
-  // Scroll / wheel drive (same behavior as before)
+  // Scroll & wheel drive
   const handleMovement = useMemo(
     () => (deltaY) => {
       const anim = animationRef.current;
@@ -131,6 +164,9 @@ export default function LottieLogo({
     [activated, effectiveTrigger]
   );
 
+  // Only attach listeners once Lottie is ready (poster hidden) to keep things lean
+  const lottieReady = !!animationRef.current && !showPoster;
+
   useScrollInteraction({
     elementRef: null,
     scrollThreshold: 1,
@@ -138,15 +174,16 @@ export default function LottieLogo({
     trustedOnly: true,
     wheelSensitivity: 1,
     onScrollActivity:
-      ((effectiveTrigger === "scroll" && seenOnce) || effectiveTrigger === "load")
+      lottieReady && ((effectiveTrigger === "scroll" && seenOnce) || effectiveTrigger === "load")
         ? ({ dir, delta }) => handleMovement(dir === "down" ? delta : -delta)
         : undefined,
     onWheelActivity:
-      ((effectiveTrigger === "scroll" && seenOnce) || effectiveTrigger === "load")
+      lottieReady && ((effectiveTrigger === "scroll" && seenOnce) || effectiveTrigger === "load")
         ? ({ deltaY }) => handleMovement(deltaY)
         : undefined,
   });
 
+  // Visible mode: play when in view (after poster is gone)
   useEffect(() => {
     if (effectiveTrigger !== "visible" || !animationRef.current) return;
     if (!showPoster && visible) {
@@ -155,6 +192,7 @@ export default function LottieLogo({
     }
   }, [effectiveTrigger, visible, showPoster]);
 
+  // Scroll mode: start play after first activation (after poster is gone)
   useEffect(() => {
     if (activated && animationRef.current && effectiveTrigger === "scroll" && !showPoster) {
       animationRef.current.setDirection(1);
@@ -162,7 +200,7 @@ export default function LottieLogo({
     }
   }, [activated, effectiveTrigger, showPoster]);
 
-  // Cleanup
+  // Cleanup timers
   useEffect(() => () => clearTimeout(pauseTimeout.current), []);
 
   const shouldShowPoster = prefersReduced || showPoster;
@@ -173,7 +211,6 @@ export default function LottieLogo({
       aria-label={alt}
       className={`${className} relative ${mediaClasses}`}
       style={{
-        // if width/height are numbers we set explicit size; otherwise your classes handle sizing
         width: typeof width === "number" ? `${width}px` : undefined,
         height: typeof height === "number" ? `${height}px` : undefined,
       }}
@@ -187,10 +224,7 @@ export default function LottieLogo({
         }}
         aria-hidden={!shouldShowPoster}
       >
-        {/* Make any child (the Astro <Image />) fill the box cleanly */}
-        <div className="w-full h-full">
-          {children}
-        </div>
+        <div className="w-full h-full">{children}</div>
       </div>
 
       {/* Lottie layer */}
