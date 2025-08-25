@@ -1,4 +1,4 @@
-// astro.config.mjs - Performance optimized
+// astro.config.mjs
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
@@ -26,24 +26,13 @@ export default defineConfig({
             if (id.includes('@iconify') || id.includes('astro-icon')) {
               return 'icons';
             }
-            // Separate Lottie from main bundle 
-            if (id.includes('lottie-web') || id.includes('Lotties/')) {
-              return 'lottie';
-            }
           },
         },
       },
     },
     optimizeDeps: {
       include: ['lottie-web'],
-      // Don't pre-bundle lottie to allow dynamic importing
-      exclude: ['lottie-web']
     },
-    // Performance optimizations
-    define: {
-      // Reduce bundle size
-      'process.env.NODE_ENV': '"production"'
-    }
   },
   integrations: [
     mdx(),
@@ -89,13 +78,4 @@ export default defineConfig({
       },
     }),
   ],
-  // Performance optimizations
-  experimental: {
-    contentCollectionCache: true,
-  },
-  // Prefetch configuration
-  prefetch: {
-    prefetchAll: false, // Only prefetch on hover/focus
-    defaultStrategy: 'hover'
-  }
 });
