@@ -1,88 +1,70 @@
-// src/components/Logo/LottieLogo.jsx - Standalone with integrated hooks
+// src/components/Logo/LottieLogo.jsx
 import { useEffect, useMemo, useRef, useState } from "react";
 import lottie from "lottie-web";
 import { useVisibility } from "../../hooks/animations/useVisibility";
 import { useScrollInteraction } from "../../hooks/animations/useInteractions";
-
-// Import Lottie JSON directly
 import LOGO_ANIMATION from "../../Lotties/Animation_logo_small_size.json";
 
-/**
- * Standalone LottieLogo - No wrapper needed, handles its own visibility logic
- */
 export default function LottieLogo({
   alt = "",
-  className = "logo-class", 
+  className = "logo-class",
   mediaClasses = "block w-[40px] lg:w-[45px] h-auto",
   loading = "lazy",
   trigger = "auto",
   respectReducedMotion = true,
+
+  width = 45,
+  height = 45,
+  fadeMs = 180,
+
+  children, // 🧒 Astro <Image /> comes in here
 }) {
   const containerRef = useRef(null);
   const lottieContainerRef = useRef(null);
   const animationRef = useRef(null);
   const pauseTimeout = useRef(null);
   const lastScrollTime = useRef(0);
-  
+
+  const [showPoster, setShowPoster] = useState(true);
   const [activated, setActivated] = useState(false);
   const [pageScrollable, setPageScrollable] = useState(false);
 
-  // Detect if page can scroll
   useEffect(() => {
     const el = document.documentElement;
     setPageScrollable((el?.scrollHeight || 0) > (window.innerHeight || 0) + 1);
   }, []);
 
-  // Resolve effective trigger (enhanced with load support)
   const effectiveTrigger = useMemo(() => {
     if (trigger === "scroll" || trigger === "visible" || trigger === "load") return trigger;
-    
-    // Auto mode: smart detection based on position
-    if (typeof window !== 'undefined' && containerRef.current) {
+    if (typeof window !== "undefined" && containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      // Above fold = immediate load, below fold = scroll triggered
-      return rect.top < viewportHeight ? 'load' : 'scroll';
+      return rect.top < window.innerHeight ? "load" : "scroll";
     }
-    
     return pageScrollable ? "scroll" : "load";
   }, [trigger, pageScrollable]);
 
-  // Reduced motion guard
   const prefersReduced =
     respectReducedMotion &&
     typeof window !== "undefined" &&
-    window.matchMedia &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 
-  // Visibility detection hooks
-  const seenOnce = useVisibility(containerRef, {
-    threshold: 0.1,
-    rootMargin: "0px",
-    once: true,
-  });
+  const seenOnce = useVisibility(containerRef, { threshold: 0.1, rootMargin: "0px", once: true });
+  const visible = useVisibility(containerRef, { threshold: 0, rootMargin: "0px", once: false });
 
-  const visible = useVisibility(containerRef, {
-    threshold: 0,
-    rootMargin: "0px", 
-    once: false,
-  });
-
-  // Final activation decision
   const shouldActivate = prefersReduced
     ? false
     : effectiveTrigger === "load"
-    ? true // Immediate activation for above-fold content
+    ? true
     : effectiveTrigger === "scroll"
     ? seenOnce
     : visible;
 
-  // Initialize Lottie animation
+  // Init Lottie, then fade the poster out when ready
   useEffect(() => {
-    if (!shouldActivate || !lottieContainerRef.current || animationRef.current) return;
-    
+    if (!shouldActivate || !lottieContainerRef.current || animationRef.current || prefersReduced) return;
+
     try {
-      animationRef.current = lottie.loadAnimation({
+      const anim = lottie.loadAnimation({
         container: lottieContainerRef.current,
         renderer: "svg",
         loop: true,
@@ -90,118 +72,133 @@ export default function LottieLogo({
         animationData: LOGO_ANIMATION,
       });
 
-      animationRef.current.setSpeed(0.5);
-      animationRef.current.goToAndStop(0, true);
-      
-      // Auto-start for load trigger
-      if (effectiveTrigger === "load") {
-        animationRef.current.setDirection(1);
-        animationRef.current.play();
-      }
-    } catch (error) {
-      console.error('Failed to load Lottie:', error);
-    }
+      animationRef.current = anim;
+      anim.setSpeed(0.5);
+      anim.goToAndStop(0, true);
 
-    return () => {
-      if (animationRef.current) {
-        animationRef.current.destroy();
+      const onReady = () => {
+        anim.goToAndStop(0, true);
+        // Ensure SVG is in the DOM before we hide the poster
+        requestAnimationFrame(() => setShowPoster(false));
+        if (effectiveTrigger === "load") {
+          anim.setDirection(1);
+          anim.play();
+        }
+      };
+
+      anim.addEventListener("DOMLoaded", onReady);
+      anim.addEventListener("data_ready", onReady);
+
+      return () => {
+        anim.removeEventListener("DOMLoaded", onReady);
+        anim.removeEventListener("data_ready", onReady);
+        anim.destroy();
         animationRef.current = null;
-      }
-    };
-  }, [shouldActivate, effectiveTrigger]);
+      };
+    } catch (e) {
+      // Failure → keep poster
+      console.error("Failed to init Lottie", e);
+    }
+  }, [shouldActivate, effectiveTrigger, prefersReduced]);
 
-  // Scroll movement handler
+  // Scroll / wheel drive (same behavior as before)
   const handleMovement = useMemo(
     () => (deltaY) => {
       const anim = animationRef.current;
       const now = Date.now();
       lastScrollTime.current = now;
-
       if (!anim) return;
 
       clearTimeout(pauseTimeout.current);
 
-      // First scroll down → activate (for scroll mode)
       if (!activated && deltaY > 0 && effectiveTrigger === "scroll") {
         setActivated(true);
       }
-
-      // Skip if not activated in scroll mode
       if (effectiveTrigger === "scroll" && !activated) return;
 
       if (deltaY > 0) {
-        // Scrolling down - play forward
         anim.setDirection(1);
         if (anim.isPaused) anim.play();
       } else if (deltaY < 0) {
-        // Scrolling up - play reverse  
         anim.setDirection(-1);
         if (anim.isPaused) anim.play();
       }
 
-      // Pause after scroll stops
       pauseTimeout.current = setTimeout(() => {
-        if (now === lastScrollTime.current && anim) {
-          anim.pause();
-        }
+        if (now === lastScrollTime.current && anim) anim.pause();
       }, 200);
     },
     [activated, effectiveTrigger]
   );
 
-  // Scroll interaction setup
   useScrollInteraction({
     elementRef: null,
     scrollThreshold: 1,
     debounceDelay: 8,
     trustedOnly: true,
     wheelSensitivity: 1,
-
-    onScrollActivity: (effectiveTrigger === "scroll" && seenOnce) || effectiveTrigger === "load"
-      ? ({ dir, delta }) => {
-          const deltaY = dir === "down" ? delta : -delta;
-          handleMovement(deltaY);
-        }
-      : undefined,
-
-    onWheelActivity: (effectiveTrigger === "scroll" && seenOnce) || effectiveTrigger === "load"
-      ? ({ deltaY }) => {
-          handleMovement(deltaY);
-        }
-      : undefined,
+    onScrollActivity:
+      ((effectiveTrigger === "scroll" && seenOnce) || effectiveTrigger === "load")
+        ? ({ dir, delta }) => handleMovement(dir === "down" ? delta : -delta)
+        : undefined,
+    onWheelActivity:
+      ((effectiveTrigger === "scroll" && seenOnce) || effectiveTrigger === "load")
+        ? ({ deltaY }) => handleMovement(deltaY)
+        : undefined,
   });
 
-  // Visibility mode handler
   useEffect(() => {
     if (effectiveTrigger !== "visible" || !animationRef.current) return;
-
-    if (visible) {
+    if (!showPoster && visible) {
       animationRef.current.setDirection(1);
       animationRef.current.play();
     }
-  }, [effectiveTrigger, visible]);
+  }, [effectiveTrigger, visible, showPoster]);
 
-  // Initial activation for scroll mode
   useEffect(() => {
-    if (activated && animationRef.current && effectiveTrigger === "scroll") {
+    if (activated && animationRef.current && effectiveTrigger === "scroll" && !showPoster) {
       animationRef.current.setDirection(1);
       animationRef.current.play();
     }
-  }, [activated, effectiveTrigger]);
+  }, [activated, effectiveTrigger, showPoster]);
 
   // Cleanup
-  useEffect(() => {
-    return () => {
-      clearTimeout(pauseTimeout.current);
-    };
-  }, []);
+  useEffect(() => () => clearTimeout(pauseTimeout.current), []);
+
+  const shouldShowPoster = prefersReduced || showPoster;
 
   return (
-    <div ref={containerRef}>
-      <div 
+    <div
+      ref={containerRef}
+      aria-label={alt}
+      className={`${className} relative ${mediaClasses}`}
+      style={{
+        // if width/height are numbers we set explicit size; otherwise your classes handle sizing
+        width: typeof width === "number" ? `${width}px` : undefined,
+        height: typeof height === "number" ? `${height}px` : undefined,
+      }}
+    >
+      {/* Poster layer (Astro <Image />) */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          transition: `opacity ${fadeMs}ms ease`,
+          opacity: shouldShowPoster ? 1 : 0,
+        }}
+        aria-hidden={!shouldShowPoster}
+      >
+        {/* Make any child (the Astro <Image />) fill the box cleanly */}
+        <div className="w-full h-full">
+          {children}
+        </div>
+      </div>
+
+      {/* Lottie layer */}
+      <div
         ref={lottieContainerRef}
-        className={`${className} ${mediaClasses}`}
-        aria-label={alt}
+        className="absolute inset-0"
+        style={{ visibility: prefersReduced ? "hidden" : "visible" }}
+        aria-hidden={shouldShowPoster}
       />
     </div>
   );

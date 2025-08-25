@@ -1,5 +1,4 @@
 ---
-// src/components/Logo/Logo.astro - Controls image vs Lottie decision
 import LottieLogo from './LottieLogo.jsx';
 import TextLogo from './TextLogo.jsx';
 import { Image } from 'astro:assets';
@@ -16,40 +15,42 @@ export interface Props {
 
 const {
   loading = 'eager',
-  trigger = 'auto', 
+  trigger = 'auto',
   textFadeMs = 1200,
   animateOutText = false,
   class: className = '',
-  useLottie = true, // Default to Lottie
+  useLottie = true,
 } = Astro.props;
 
-// Decide between static image and interactive Lottie at build time
 const shouldUseLottie = useLottie && (
-  loading === 'eager' || // Header logos get Lottie
-  trigger === 'scroll' || // Scroll-triggered get Lottie
-  trigger === 'load'     // Load-triggered get Lottie
+  loading === 'eager' ||
+  trigger === 'scroll' ||
+  trigger === 'load'
 );
-
-// Client directive based on loading preference
-const clientDirective = loading === 'eager' ? 'client:load' : 'client:visible';
 ---
 
 <a href="/" class={`flex justify-center items-center gap-1.5 ${className}`}>
   {shouldUseLottie ? (
     <LottieLogo
       alt="Griffin's Web Services Animated Logo"
-      loading="lazy"
+      loading={loading}
       trigger={trigger}
+      className="logo-class"
+      mediaClasses="block w-[40px] lg:w-[45px] h-auto"
+      width={45}
+      height={45}
       client:idle
-    />
-    // <Image
-    //   src={POSTER_SRC}
-    //   alt="Griffin's Web Services Logo"
-    //   loading={loading}
-    //   class="block w-[40px] lg:w-[45px] h-auto"
-    //   width={45}
-    //   height={45}
-    // />
+    >
+      {/* 🧠 This is the optimized Astro image that paints immediately */}
+      <Image
+        src={POSTER_SRC}
+        alt="Griffin's Web Services Logo"
+        loading={loading}
+        class="block w-[40px] lg:w-[45px] h-auto"
+        width={45}
+        height={45}
+      />
+    </LottieLogo>
   ) : (
     <Image
       src={POSTER_SRC}
@@ -60,7 +61,7 @@ const clientDirective = loading === 'eager' ? 'client:load' : 'client:visible';
       height={45}
     />
   )}
-  
+
   <div>
     <TextLogo
       title="Griffin's Web Services"
