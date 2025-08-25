@@ -1,6 +1,6 @@
 ---
-// src/components/LoopComponents/FeatureCard.astro
-import AnimatedBorder from '../AnimatedBorder/AnimatedBorder.jsx';
+// src/components/LoopComponents/FeatureCard
+import AnimatedBorder from "../AnimatedBorder/AnimatedBorder.jsx";
 
 export interface Props {
   data: {
@@ -13,11 +13,7 @@ export interface Props {
   class?: string;
 }
 
-const {
-  data,
-  ringDuration = 800,
-  class: className = "",
-} = Astro.props;
+const { data, ringDuration = 800, class: className = "" } = Astro.props;
 ---
 
 <div class={className}>
@@ -29,18 +25,20 @@ const {
     borderWidth={2}
     className="group text-center outer-card-transition outer-card-hover-transition !duration-[900ms] ease-out"
     innerClassName="h-85 mx-auto px-10 flex flex-col justify-center items-center relative card-bg"
-    client:load
+    client:visible
   >
     <div class="inner-card-style inner-card-transition inner-card-color"></div>
-    
+
     <!-- Icon -->
-    <div class="icon-large z-10 mb-5 card-icon-color flex items-center justify-center">
+    <div
+      class="icon-large z-10 mb-5 card-icon-color flex items-center justify-center"
+    >
       {data.icon}
     </div>
-    
+
     <!-- Title -->
     <h3 class="h3 mb-3 relative z-10">{data.title}</h3>
-    
+
     <!-- Description -->
     <p class="text-text leading-relaxed relative z-10">{data.description}</p>
   </AnimatedBorder>

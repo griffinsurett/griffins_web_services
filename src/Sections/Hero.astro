@@ -29,7 +29,6 @@ const tagline = heroTaglines[currentTagline];
       text={tagline.emphasized}
       textClass="emphasized-text"
       after={tagline.after}
-      client:load
     />
     <p class="hero-text text-text mb-8 max-w-4xl mx-auto">
       {siteData.description}
@@ -37,10 +36,10 @@ const tagline = heroTaglines[currentTagline];
     
     <div class="flex flex-col">
       <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
-        <Button variant="primary" href="#contact" client:load>
+        <Button variant="primary" href="#contact" client:visible>
           Get Started Today ✨
         </Button>
-        <Button variant="secondary" href="#projects" client:load>
+        <Button variant="secondary" href="#projects" client:visible>
           View Our Work 👀
         </Button>
       </div>

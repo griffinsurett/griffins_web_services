@@ -56,7 +56,7 @@ const footerNav = [
               <LogoLink
                 href={item.href}
                 className="text-text/80 hover:text-accent transition-all duration-300 font-medium"
-                client:load
+                client:visible
               >
                 {item.label}
               </LogoLink>
@@ -78,7 +78,7 @@ const footerNav = [
               <LogoLink
                 href={item.href}
                 className="group flex items-center justify-start lg:justify-end"
-                client:load
+                client:visible
               >
                 <IconListItem
                   data={{
@@ -94,7 +94,7 @@ const footerNav = [
                   titleTag="span"
                   showDescription={false}
                   containerClassName="flex items-center"
-                  client:load
+                  client:visible
                 />
               </LogoLink>
             ))

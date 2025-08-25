@@ -9,8 +9,8 @@ import Heading from "../components/Heading.jsx";
   <div class="section-color-border"></div>
   <div class="inner-section">
     <div class="mb-12">
-      <BorderTitle client:idle>Get Started</BorderTitle>
-      <Heading tagName="h2" className="mb-6" client:load>
+      <BorderTitle client:visible>Get Started</BorderTitle>
+      <Heading tagName="h2" className="mb-6">
         Ready to Transform Your Online Presence?
       </Heading>
       <p class="large-text secondary-text">
@@ -18,7 +18,7 @@ import Heading from "../components/Heading.jsx";
         Services...
       </p>
     </div>
-    <Button variant="primary" className="text-center" href="#contact" client:load>
+    <Button variant="primary" className="text-center" href="#contact" client:visible>
       Start Your Project - 50% Off! 🎉
     </Button>
   </div>

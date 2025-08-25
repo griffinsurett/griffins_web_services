@@ -9,103 +9,121 @@ import AnimatedElementWrapper from "../components/AnimatedElementWrapper.jsx";
 const faqs = [
   {
     question: "How long does it take to build a website?",
-    answer: "Most websites are completed within 7-14 days depending on complexity. Simple landing pages can be done in 3-5 days, while complex e-commerce sites or custom applications may take 2-4 weeks. We'll provide you with a detailed timeline during our initial consultation.",
+    answer:
+      "Most websites are completed within 7-14 days depending on complexity. Simple landing pages can be done in 3-5 days, while complex e-commerce sites or custom applications may take 2-4 weeks. We'll provide you with a detailed timeline during our initial consultation.",
   },
   {
     question: "What's included in your ongoing support?",
-    answer: "Our ongoing support includes 24/7 monitoring, security updates, content updates, technical support, regular backups, performance optimization, and monthly analytics reports. We're basically your dedicated web team, ensuring your site stays fast, secure, and up-to-date.",
+    answer:
+      "Our ongoing support includes 24/7 monitoring, security updates, content updates, technical support, regular backups, performance optimization, and monthly analytics reports. We're basically your dedicated web team, ensuring your site stays fast, secure, and up-to-date.",
   },
   {
-    question: "Can you redesign my current site or do you only build from scratch?",
-    answer: "Both. We'll audit what you have and recommend the fastest path to better results—refresh, rebuild, or migrate.",
+    question:
+      "Can you redesign my current site or do you only build from scratch?",
+    answer:
+      "Both. We'll audit what you have and recommend the fastest path to better results—refresh, rebuild, or migrate.",
   },
   {
     question: "Will my website be mobile-friendly?",
-    answer: "Absolutely. We design mobile-first so your site looks great and converts on phones, tablets, and desktops.",
+    answer:
+      "Absolutely. We design mobile-first so your site looks great and converts on phones, tablets, and desktops.",
   },
   {
     question: "Do you handle hosting and maintenance?",
-    answer: "Yes. We offer managed hosting and ongoing care—security updates, backups, monitoring, and speed tuning—so you don't have to worry about it.",
+    answer:
+      "Yes. We offer managed hosting and ongoing care—security updates, backups, monitoring, and speed tuning—so you don't have to worry about it.",
   },
   {
     question: "Can you help with the words and images?",
-    answer: "Yes. We offer copywriting and content services, plus guidance on images and brand assets. We can also source stock if needed.",
+    answer:
+      "Yes. We offer copywriting and content services, plus guidance on images and brand assets. We can also source stock if needed.",
   },
   {
     question: "Do you set up Google Business and social accounts?",
-    answer: "Yes. We can set up and optimize Google Business, Facebook/Instagram, TikTok Shop, and more so customers can find you.",
+    answer:
+      "Yes. We can set up and optimize Google Business, Facebook/Instagram, TikTok Shop, and more so customers can find you.",
   },
   {
     question: "Do you build online stores?",
-    answer: "Yes. We create secure shops with products, payments, shipping/tax rules, and inventory. We also connect your CRM, email, and analytics.",
+    answer:
+      "Yes. We create secure shops with products, payments, shipping/tax rules, and inventory. We also connect your CRM, email, and analytics.",
   },
   {
     question: "Can you connect forms, bookings, or a CRM?",
-    answer: "Definitely. We build lead forms, bookings, and integrations with CRMs and calendars so data lands where you need it.",
+    answer:
+      "Definitely. We build lead forms, bookings, and integrations with CRMs and calendars so data lands where you need it.",
   },
   {
     question: "Will my site be secure?",
-    answer: "Yes. We use SSL, hardened hosting, regular updates, malware scans, and daily backups. We also recommend best practices for logins and roles.",
+    answer:
+      "Yes. We use SSL, hardened hosting, regular updates, malware scans, and daily backups. We also recommend best practices for logins and roles.",
   },
   {
     question: "Do you do SEO?",
-    answer: "We build SEO-ready sites (clean structure, fast load, on-page best practices) and can provide ongoing SEO and content plans if you want to grow.",
+    answer:
+      "We build SEO-ready sites (clean structure, fast load, on-page best practices) and can provide ongoing SEO and content plans if you want to grow.",
   },
   {
     question: "What about AI SEO and ChatGPT visibility?",
-    answer: "We structure content and metadata so your brand is easier for AI systems to understand and surface, then refine based on real queries.",
+    answer:
+      "We structure content and metadata so your brand is easier for AI systems to understand and surface, then refine based on real queries.",
   },
   {
     question: "How do we get started?",
-    answer: "Send a quick message through the contact form. We'll schedule a short call, outline your options, and deliver a clear plan and quote.",
+    answer:
+      "Send a quick message through the contact form. We'll schedule a short call, outline your options, and deliver a clear plan and quote.",
   },
 ];
 ---
 
 <section class="outer-section bg-bg2 relative">
-  <div class="section-color-border" />
+  <div class="section-color-border"></div>
   <div class="inner-section">
     <div class="text-section">
-      <BorderTitle client:idle>FAQ</BorderTitle>
+      <BorderTitle client:visible>FAQ</BorderTitle>
       <Heading
         tagName="h2"
         className="mb-6"
         before="Frequently Asked "
         text="Questions"
         textClass="emphasized-text"
-        client:load
       />
       <p class="large-text">Got questions? We've got answers...</p>
     </div>
 
-    <div class="space-y-4">
-      {faqs.map((faq, idx) => (
-        <AnimatedElementWrapper
-          key={`faq-${idx}`}
-          variant="fade-in"
-          animationDuration={600}
-          animationDelay={idx * 300}
-          threshold={0.2}
-          rootMargin="0px 0px -50px 0px"
-          once={false}
-          client:visible
-        >
-          <AccordionItem
-            data={faq}
-            name="faq"
-            value={String(idx)}
-            defaultChecked={idx === 0}
-            client:load
-          />
-        </AnimatedElementWrapper>
-      ))}
+    <div class="flex flex-col gap-4">
+      {
+        faqs.map((faq, idx) => (
+          <AnimatedElementWrapper
+            key={`faq-${idx}`}
+            variant="fade-in"
+            animationDuration={600}
+            animationDelay={idx * 300}
+            threshold={0.2}
+            rootMargin="0px 0px -50px 0px"
+            once={false}
+            client:visible
+          >
+            <AccordionItem
+              data={faq}
+              name="faq"
+              value={String(idx)}
+              defaultChecked={idx === 0}
+              client:visible
+            />
+          </AnimatedElementWrapper>
+        ))
+      }
     </div>
 
     <div class="text-center mt-12">
-      <p class="text-text mb-6">
-        Still have questions? We're here to help!
-      </p>
-      <Button variant="primary" href="/#contact" className="text-center" client:load>
+      <p class="text-text mb-6">Still have questions? We're here to help!</p>
+      <Button
+        variant="primary"
+        href="/#contact"
+        className="text-center"
+        client:visible
+      >
         Contact Us Today
       </Button>
     </div>

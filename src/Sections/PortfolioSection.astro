@@ -1,6 +1,6 @@
 ---
 // src/Sections/PortfolioSection.astro
-import { Image } from 'astro:assets';
+import { Image } from "astro:assets";
 import PortfolioCarousel from "../components/Carousels/PortfolioCarousel.jsx";
 import BorderTitle from "../components/BorderTitle.jsx";
 import Heading from "../components/Heading.jsx";
@@ -15,41 +15,41 @@ import CleanomaticFl from "../assets/Cleanomatic/cleanomaticfl.com-desktop.jpg";
 
 // Optimized image items with Astro's Image component
 const items = [
-  { 
-    id: 1, 
-    title: "Pronto Junk Removal", 
+  {
+    id: 1,
+    title: "Pronto Junk Removal",
     image: ProntoDesktop,
-    alt: "Pronto Junk Removal website screenshot"
+    alt: "Pronto Junk Removal website screenshot",
   },
-  { 
-    id: 3, 
-    title: "Roonys Marketing", 
+  {
+    id: 3,
+    title: "Roonys Marketing",
     image: RoonysDesktop,
-    alt: "Roonys Marketing website screenshot"
+    alt: "Roonys Marketing website screenshot",
   },
-  { 
-    id: 4, 
-    title: "Faria's Demolition", 
+  {
+    id: 4,
+    title: "Faria's Demolition",
     image: FariasDesktop,
-    alt: "Faria's Demolition website screenshot"
+    alt: "Faria's Demolition website screenshot",
   },
-  { 
-    id: 5, 
-    title: "Cleanomatic Fl LLC", 
+  {
+    id: 5,
+    title: "Cleanomatic Fl LLC",
     image: CleanomaticFl,
-    alt: "Cleanomatic FL website screenshot"
+    alt: "Cleanomatic FL website screenshot",
   },
-  { 
-    id: 6, 
-    title: "Pablo's Peak Roofing", 
+  {
+    id: 6,
+    title: "Pablo's Peak Roofing",
     image: PablosDesktop,
-    alt: "Pablo's Peak Roofing website screenshot"
+    alt: "Pablo's Peak Roofing website screenshot",
   },
-  { 
-    id: 7, 
-    title: "JSV Quick Solar", 
+  {
+    id: 7,
+    title: "JSV Quick Solar",
     image: JSVDesktop,
-    alt: "JSV Quick Solar website screenshot"
+    alt: "JSV Quick Solar website screenshot",
   },
 ];
 
@@ -74,14 +74,14 @@ const processedItems = await Promise.all(
 
   <div class="inner-section">
     <header class="text-section">
-      <BorderTitle client:idle>Our Projects</BorderTitle>
+      <BorderTitle client:visible>Our Projects</BorderTitle>
       <Heading
         tagName="h2"
         className="mb-6"
         before="Our "
         text="Portfolio"
         textClass="emphasized-text"
-        client:load
+        client:visible
       />
       <p class="large-text mx-auto">
         Discover the websites we've crafted for businesses across different
@@ -89,10 +89,10 @@ const processedItems = await Promise.all(
       </p>
     </header>
 
-    <PortfolioCarousel 
-      items={processedItems} 
-      autoAdvanceDelay={6000} 
-      autoplay 
+    <PortfolioCarousel
+      items={processedItems}
+      autoAdvanceDelay={6000}
+      autoplay
       client:visible
     />
   </div>

@@ -44,14 +44,13 @@ const {
   <div class="section-color-border"></div>
   <div class="inner-section">
     <div class="text-section">
-      <BorderTitle client:idle>{title}</BorderTitle>
+      <BorderTitle client:visible>{title}</BorderTitle>
       <Heading
         tagName="h2"
         className="mb-6"
         before={headingBefore}
         text={headingText}
         textClass={headingTextClass}
-        client:load
       />
       <p class="large-text secondary-text">{blurb}</p>
     </div>
@@ -66,10 +65,10 @@ const {
         once={once}
         client:visible
       >
-        <QuoteForm {...formProps} client:load />
+        <QuoteForm {...formProps} client:visible />
       </AnimatedElementWrapper>
     ) : (
-      <QuoteForm {...formProps} client:load />
+      <QuoteForm {...formProps} client:visible />
     )}
   </div>
 </section>

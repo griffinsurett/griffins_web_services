@@ -60,7 +60,7 @@ const {
       featured ? "scale-105" : ""
     }`}
     innerClassName="h-full px-8 py-8 lg:px-10 lg:py-10 relative flex flex-col"
-    client:load
+    client:visible
   >
     <!-- Inner gradient overlay -->
     <div class="inner-card-style inner-card-transition inner-card-color"></div>
@@ -99,7 +99,7 @@ const {
 
       <!-- CTA Button -->
       <div class="mt-auto">
-        <Button variant={buttonVariant} className="w-full justify-center" client:load>
+        <Button variant={buttonVariant} className="w-full justify-center" client:visible>
           {buttonText}
         </Button>
       </div>

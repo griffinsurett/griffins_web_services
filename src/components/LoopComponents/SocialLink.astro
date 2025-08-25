@@ -24,7 +24,7 @@ const { href, label, icon } = data;
   color="var(--color-accent)"
   className="transition-all duration-450 hover:-translate-y-1"
   innerClassName="w-12 h-12 flex items-center justify-center"
-  client:load
+  client:visible
 >
   <a
     href={href}
@@ -37,6 +37,6 @@ const { href, label, icon } = data;
       transition-all duration-450
     "
   >
-    <Icon name={`lucide:${icon}`} />
+    <Icon name={`lucide:${icon}`} class="w-6 h-6" />
   </a>
 </AnimatedBorder>
