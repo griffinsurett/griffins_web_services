@@ -17,7 +17,7 @@ const SecondaryButton = ({
 }) => {
   const {
     color = "var(--color-accent)",
-    duration = 700,
+    duration = 200,
     borderWidth = 2,
     borderRadius = "rounded-full",
   } = animatedBorder || {};
