@@ -28,7 +28,7 @@ const { href, label, icon } = data;
 >
   <a
     href={href}
-    aria-label={label}
+    aria-label={`Visit our ${label}`}
     class="
       w-full h-full
       bg-accent/20 border border-accent/30
@@ -37,6 +37,6 @@ const { href, label, icon } = data;
       transition-all duration-450
     "
   >
-    <Icon name={`lucide:${icon}`} class="w-6 h-6" />
+    <Icon name={`lucide:${icon}`} class="w-6 h-6" aria-hidden="true" />
   </a>
 </AnimatedBorder>
