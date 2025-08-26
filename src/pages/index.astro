@@ -9,7 +9,7 @@ import WebsiteTypesSection from "../Sections/WebsiteTypesSection.astro";
 import HostingMaintenance from "../Sections/HostingMaintenance.astro";
 import AddOnServices from "../Sections/AddOnServices.astro";
 import PortfolioSection from "../Sections/PortfolioSection.astro";
-import Testimonials from "../Sections/Testimonials.astro";
+import Testimonials from "../Sections/Testimonials.jsx";
 import TechStack from "../Sections/TechStack.jsx";
 import FAQ from "../Sections/FAQ.astro";
 import QuoteFormSection from "../Sections/QuoteFormSection.astro";
@@ -34,7 +34,7 @@ const pageDescription =
 
     <About />
 
-    <!-- <Testimonials /> -->
+    <Testimonials client:visible />
 
     <Benefits />
 

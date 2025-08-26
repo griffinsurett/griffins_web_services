@@ -241,7 +241,7 @@ const SmoothScrollCarousel = forwardRef(
 
         {/* Dev debug */}
         {process.env.NODE_ENV === "development" && (
-          <div className="absolute top-2 right-2 text-xs bg-black/50 text-white p-2 rounded pointer-events-none z-50">
+          <div className="absolute top-2 right-2 text-xs bg-bg/50 text-text p-2 rounded pointer-events-none z-50">
             <div>🎠 Autoplay: {autoplay ? "ON" : "OFF"}</div>
             <div>👁️ InView: {inView ? "YES" : "NO"}</div>
             <div>⏸️ Paused: {isAutoplayPaused ? "YES" : "NO"}</div>

@@ -7,7 +7,7 @@
 
 @theme {
   /* Base Colors - Raw color definitions */
-  --color-primary-dark: var(--color-black);
+  --color-primary-dark: #0f0f0f;
   --color-secondary-dark: var(--color-zinc-950);
   --color-tertiary-dark: var(--color-zinc-900);
   --color-primary-light: var(--color-zinc-50);
@@ -126,7 +126,7 @@
 }
 
 @utility faded-border {
-  @apply border-1 dark:border-white/10 light:border-black/20;
+  @apply border-1 dark:border-text/10 light:border-text/20;
 }
 
 @utility paragraph-spacing {
@@ -176,7 +176,7 @@
     background-image: linear-gradient(
       323.34deg,
       var(--color-accent) -85.13%,
-      transparent 40.1%
+      var(--color-bg) 40.1%
     );
   }
 
@@ -249,7 +249,7 @@
   }
 
   .card-icon-color {
-    @apply bg-gradient-to-br from-primary light:to-bg2 dark:to-primary/25 text-black;
+    @apply bg-gradient-to-br from-primary light:to-bg2 dark:to-primary/25 text-bg;
   }
 
   .max-2-primary {
