@@ -3,7 +3,7 @@ import { useAnimatedElement } from "../../hooks/animations/useViewAnimation";
 
 const PrimaryButton = ({ Base = "button", className = "", ...props }) => {
   const anim = useAnimatedElement({
-    duration: 400,
+    duration: 100,
     delay: 0,
     threshold: 0,
     rootMargin: "0px 0px -15% 0px",

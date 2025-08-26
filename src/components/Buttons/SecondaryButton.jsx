@@ -9,7 +9,7 @@ const SecondaryButton = ({
   fullWidth = true, // match primary sizing on mobile
   animatedBorder = {
     color: "var(--color-accent)",
-    duration: 700,
+    duration: 200,
     borderWidth: 2,
     borderRadius: "rounded-full", // ⬅ match Base's rounded-full so outlines line up
   },
@@ -40,7 +40,6 @@ const SecondaryButton = ({
       borderWidth={borderWidth}
       borderRadius={borderRadius}
       className={containerClasses}
-      // ⬇️ Overwrite AnimatedBorder's default `card-bg` with a truly plain wrapper
       innerClassName={`!bg-transparent !border-transparent shadow-none p-0 ${borderRadius} ${innerWrapWidth}`}
     >
       <Base className={`${innerButtonClasses} ${className}`} {...props} />
