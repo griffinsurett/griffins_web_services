@@ -10,7 +10,7 @@ export interface Props {
   textFadeMs?: number;
   animateOutText?: boolean;
   class?: string;
-  useLottie?: boolean; // Override for testing
+  useLottie?: boolean;
 }
 
 const {
@@ -27,6 +27,10 @@ const shouldUseLottie = useLottie && (
   trigger === 'scroll' ||
   trigger === 'load'
 );
+
+// Match Tailwind: base 40px, lg 45px → provide 1x/2x sources
+const LOGO_WIDTHS = [40, 45, 80, 90]; // 1x + 2x for both sizes
+const LOGO_SIZES = '(min-width: 1024px) 45px, 40px';
 ---
 
 <a href="/" class={`flex justify-center items-center gap-1.5 ${className}`}>
@@ -41,14 +45,18 @@ const shouldUseLottie = useLottie && (
       height={45}
       client:visible
     >
-      {/* 🧠 This is the optimized Astro image that paints immediately */}
+      {/* 🧠 High-DPI poster via responsive widths + sizes */}
       <Image
         src={POSTER_SRC}
         alt="Griffin's Web Services Logo"
         loading={loading}
+        decoding="async"
+        format="webp"
+        widths={LOGO_WIDTHS}
+        sizes={LOGO_SIZES}
+        quality={90}
         class="block w-[40px] lg:w-[45px] h-auto"
-        width={45}
-        height={45}
+        fetchpriority={loading === 'eager' ? 'high' : undefined}
       />
     </LottieLogo>
   ) : (
@@ -56,9 +64,13 @@ const shouldUseLottie = useLottie && (
       src={POSTER_SRC}
       alt="Griffin's Web Services Logo"
       loading={loading}
+      decoding="async"
+      format="webp"
+      widths={LOGO_WIDTHS}
+      sizes={LOGO_SIZES}
+      quality={90}
       class="block w-[40px] lg:w-[45px] h-auto"
-      width={45}
-      height={45}
+      fetchpriority={loading === 'eager' ? 'high' : undefined}
     />
   )}
 
