@@ -1,6 +1,6 @@
 // src/components/Carousels/Carousel.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import useCarouselAutoplay from "./useCarouselAutoplay";
 import { useSideDragNavigation } from "../../hooks/animations/useInteractions";
 
@@ -133,7 +133,7 @@ export default function Carousel({
                          muted-control-bg muted-control-border text-text backdrop-blur-sm
                          muted-control-hover transition"
             >
-              <ChevronLeft className="mx-auto my-auto w-5 h-5 md:w-6 md:h-6" />
+              <FaChevronLeft className="mx-auto my-auto w-5 h-5 md:w-6 md:h-6" />
             </button>
           </div>
         )}
@@ -210,7 +210,7 @@ export default function Carousel({
                          faded-bg text-text backdrop-blur-sm
                          transition"
             >
-              <ChevronRight className="mx-auto my-auto w-5 h-5 md:w-6 md:h-6" />
+              <FaChevronRight className="mx-auto my-auto w-5 h-5 md:w-6 md:h-6" />
             </button>
           </div>
         )}
