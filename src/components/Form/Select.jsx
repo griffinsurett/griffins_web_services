@@ -1,5 +1,5 @@
 // src/components/Form/Select.jsx
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useId } from "react";
 import AnimatedBorder from "../AnimatedBorder/AnimatedBorder";
 
 const Select = ({
@@ -15,9 +15,15 @@ const Select = ({
   borderDuration = 900,
   borderWidth = 2,
   borderRadius = "rounded-xl",
+  id: idProp,
+  label,                 // ✅ accessible label text
+  labelHidden = true,    // ✅ default to visually hidden
+  describedBy,
   ...props
 }) => {
   const [focused, setFocused] = useState(false);
+  const reactId = useId();
+  const id = idProp || `${name || "select"}-${reactId}`;
 
   const handleFocus = useCallback(
     (e) => {
@@ -37,6 +43,16 @@ const Select = ({
 
   return (
     <div className={`space-y-2 ${colSpan}`}>
+      {label && (
+        <label
+          htmlFor={id}
+          className={labelHidden ? "sr-only" : "block text-sm text-text/80"}
+        >
+          {label}
+          {required && <span aria-hidden="true"> *</span>}
+        </label>
+      )}
+
       <AnimatedBorder
         variant="solid"
         triggers="controlled"
@@ -47,23 +63,27 @@ const Select = ({
         color="var(--color-accent)"
         innerClassName={`!bg-transparent !border-transparent p-0 ${borderRadius}`}
       >
-        {/* Wrap in a positioned container so we can draw our own chevron */}
         <div className="relative">
           <select
+            id={id}
             name={name}
             value={value}
             onChange={onChange}
             required={required}
+            aria-required={required || undefined}
+            aria-invalid={error || undefined}
+            aria-describedby={describedBy}
             onFocus={handleFocus}
             onBlur={handleBlur}
             className={`
-              form-field appearance-none pr-10   /* more room for the chevron */
+              form-field appearance-none pr-10
               ${error ? "form-field-error" : ""}
               ${className}
             `}
             {...props}
           >
-            <option value="" className="form-option">
+            {/* Placeholder as first, disabled option */}
+            <option value="" className="form-option" disabled>
               {placeholder}
             </option>
             {options.map((option) => (
@@ -77,7 +97,7 @@ const Select = ({
             ))}
           </select>
 
-          {/* Chevron that follows --color-accent via .text-accent */}
+          {/* Chevron */}
           <svg
             aria-hidden="true"
             className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary"

@@ -74,13 +74,15 @@ export default function QuoteForm({
     >
       <div className="inner-card-style"></div>
 
-      <div className="grid md:grid-cols-2 gap-4 relative z-10">
+     <div className="grid md:grid-cols-2 gap-4 relative z-10">
         <Input
           type="text"
           name="name"
           value={formData.name}
           onChange={handleInputChange}
           placeholder="Full Name *"
+          label="Full Name"
+          labelHidden
           required
         />
         <Input
@@ -89,6 +91,8 @@ export default function QuoteForm({
           value={formData.email}
           onChange={handleInputChange}
           placeholder="Email Address *"
+          label="Email Address"
+          labelHidden
           required
         />
         <Input
@@ -97,6 +101,8 @@ export default function QuoteForm({
           value={formData.phone}
           onChange={handleInputChange}
           placeholder="Phone Number"
+          label="Phone Number"
+          labelHidden
         />
         <Input
           type="text"
@@ -104,12 +110,16 @@ export default function QuoteForm({
           value={formData.company}
           onChange={handleInputChange}
           placeholder="Company Name"
+          label="Company Name"
+          labelHidden
         />
         <Select
           name="websiteType"
           value={formData.websiteType}
           onChange={handleInputChange}
           placeholder="Type of Website *"
+          label="Type of Website"
+          labelHidden
           colSpan="md:col-span-2"
           required
           options={websiteTypeOptions}
@@ -119,6 +129,8 @@ export default function QuoteForm({
           value={formData.budget}
           onChange={handleInputChange}
           placeholder="Project Budget"
+          label="Project Budget"
+          labelHidden
           options={budgetOptions}
         />
         <Select
@@ -126,6 +138,8 @@ export default function QuoteForm({
           value={formData.timeline}
           onChange={handleInputChange}
           placeholder="Project Timeline"
+          label="Project Timeline"
+          labelHidden
           options={timelineOptions}
         />
         <Textarea
@@ -133,12 +147,14 @@ export default function QuoteForm({
           value={formData.message}
           onChange={handleInputChange}
           placeholder="Project Details * - Tell us about your project, goals, and any specific requirements..."
+          label="Project Details"
+          labelHidden
           colSpan="md:col-span-2"
           required
         />
       </div>
 
-      {/* Consent checkbox (full width) */}
+      {/* Consent checkbox already has a visible label */}
       <div className="md:col-span-2 flex items-start lg:items-center gap-2 my-2">
         <input
           id="consent"
