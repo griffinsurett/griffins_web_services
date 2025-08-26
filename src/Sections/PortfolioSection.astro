@@ -86,9 +86,7 @@ const processedItems = await Promise.all(
       id: item.id,
       title: item.title,
       alt: item.alt,
-      // Main image source for the carousel
       image: centerImage.src,
-      // Responsive sources for different sizes
       imageSources: {
         center: centerImage.src,
         side: sideImage.src,
