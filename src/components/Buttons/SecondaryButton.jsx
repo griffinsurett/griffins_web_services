@@ -9,7 +9,7 @@ const SecondaryButton = ({
   fullWidth = true, // match primary sizing on mobile
   animatedBorder = {
     color: "var(--color-accent)",
-    duration: 200,
+    duration: 300,
     borderWidth: 2,
     borderRadius: "rounded-full", // ⬅ match Base's rounded-full so outlines line up
   },
@@ -17,7 +17,7 @@ const SecondaryButton = ({
 }) => {
   const {
     color = "var(--color-accent)",
-    duration = 200,
+    duration = 300,
     borderWidth = 2,
     borderRadius = "rounded-full",
   } = animatedBorder || {};

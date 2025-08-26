@@ -19,6 +19,7 @@ function AccordionItem({
   const uid = React.useId();
   const inputId = `accordion-${name}-${value}-${uid}`;
   const panelId = `${inputId}-panel`;
+  const labelId = `${inputId}-label`;
 
   const inputRef = React.useRef(null);
   const [isOpen, setIsOpen] = React.useState(!!defaultChecked);
@@ -47,6 +48,14 @@ function AccordionItem({
     onToggle?.(checked);
   };
 
+  const handleKeyDown = (e) => {
+    // Make the label act like a button
+    if (e.key === " " || e.key === "Enter") {
+      e.preventDefault();
+      inputRef.current?.click(); // toggles this radio; radio group handles single-open
+    }
+  };
+
   return (
     <div
       className={`group relative ${className}`}
@@ -61,7 +70,7 @@ function AccordionItem({
         value={value}
         defaultChecked={defaultChecked}
         onChange={handleChange}
-        className="absolute -left-[9999px]"
+        className="absolute -left-[9999px]" // visually hidden, not focusable
         tabIndex={-1}
         aria-hidden="true"
         data-accordion-radio
@@ -80,11 +89,15 @@ function AccordionItem({
       >
         {/* Header / toggle */}
         <label
+          id={labelId}
           htmlFor={inputId}
-          className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-card transition-colors main-duration cursor-pointer relative z-20"
+          role="button"                 // ✅ gives valid semantics
+          tabIndex={0}                  // ✅ focusable
+          aria-controls={panelId}       // ✅ points to panel
+          aria-expanded={isOpen}        // ✅ state
+          onKeyDown={handleKeyDown}
           onMouseDown={(e) => e.preventDefault()} // prevent scroll-to-focus jump
-          aria-controls={panelId}
-          aria-expanded={isOpen}
+          className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-card transition-colors main-duration cursor-pointer relative z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-2xl"
         >
           <h3 className="h3 pr-4">{question}</h3>
           <div
@@ -101,6 +114,7 @@ function AccordionItem({
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -115,6 +129,9 @@ function AccordionItem({
         {/* Panel */}
         <div
           id={panelId}
+          role="region"                  // ✅ landmark region
+          aria-labelledby={labelId}      // ✅ ties to the control
+          aria-hidden={!isOpen}          // ✅ hidden to AT when collapsed (keeps CSS transitions working)
           className={`overflow-hidden transition-all main-duration ease-in-out ${
             isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
           }`}
