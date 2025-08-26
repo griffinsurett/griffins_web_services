@@ -1,6 +1,6 @@
 // src/components/Carousels/PortfolioCarousel.jsx
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import useCarouselAutoplay from "./useCarouselAutoplay";
 import { useSideDragNavigation } from "../../hooks/animations/useInteractions";
 import { useAnimatedElement } from "../../hooks/animations/useViewAnimation";
@@ -194,7 +194,7 @@ export default function PortfolioCarousel({
                   className={ArrowClasses}
                   style={{ left: leftCalc, top: "50%", transform: "translate(-50%, -50%)" }}
                 >
-                  <ChevronLeft className="mx-auto my-auto w-5 h-5 md:w-6 md:h-6" />
+                  <FaChevronLeft className="mx-auto my-auto w-5 h-5 md:w-6 md:h-6" />
                 </button>
                 <button
                   onClick={goToNext}
@@ -202,7 +202,7 @@ export default function PortfolioCarousel({
                   className={ArrowClasses}
                   style={{ left: rightCalc, top: "50%", transform: "translate(-50%, -50%)" }}
                 >
-                  <ChevronRight className="mx-auto my-auto w-5 h-5 md:w-6 md:h-6" />
+                  <FaChevronRight className="mx-auto my-auto w-5 h-5 md:w-6 md:h-6" />
                 </button>
               </>
             )}
