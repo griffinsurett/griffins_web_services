@@ -3,7 +3,6 @@ import Placeholder from "./assets/placeholder.jpg";
 
 export const testimonials = [
     {
-      tag: "E-commerce",
       quote:
         "Griffin brought our vision to life! The website captures our services perfectly and has brought in a steady stream of clients.",
       author: "Kenn Faria",
@@ -11,7 +10,7 @@ export const testimonials = [
       avatar: "K",
       rating: 5,
       image: Placeholder,
-      featured: true,
+      featured: false,
     },
    {
       quote:
@@ -31,7 +30,7 @@ export const testimonials = [
       avatar: "D",
       rating: 5,
       image: Placeholder,
-        featured: true,
+        featured: false,
     },
     {
       quote:

@@ -16,6 +16,7 @@ import QuoteFormSection from '../Sections/QuoteFormSection.astro';
 import CTASection from '../Sections/CTASection.astro';
 import Stats from '../Sections/Stats.astro';
 import Footer from '../Sections/Footer.astro';
+import HeroBasic from '../Sections/HeroBasic.astro';
 
 // SEO data
 const pageTitle = "Professional Website Development Services";
@@ -26,20 +27,22 @@ const pageDescription = "Get a lightning-fast, secure, and mobile-first website 
   <Header />
   
   <main id="main-content" class="relative">
-    <Hero />
-    
+    <!-- <Hero /> -->
+
+        <HeroBasic />
+
     <About />
     
     <Benefits />
+
+    <PortfolioSection />
     
     <WebsiteTypesSection />
     
     <HostingMaintenance />
     
     <AddOnServices />
-    
-    <!-- <PortfolioSection /> -->
-    
+        
     <!-- <Testimonials /> -->
     
     <!-- TechStack stays as React component for complex interactions -->

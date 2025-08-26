@@ -1,0 +1,14 @@
+---
+import { Image } from 'astro:assets';
+const { src, alt } = Astro.props;
+---
+<Image
+  src={src}
+  alt={alt}
+  widths={[56]}
+  formats={['avif','webp','jpeg']}
+  placeholder="blur"
+  class="object-cover w-full h-full"
+  fetchpriority="high"
+  loading="eager"
+/>

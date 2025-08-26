@@ -29,7 +29,7 @@ export default function PortfolioItemComponent({
     ? "translate(-50%, 0)"
     : "translate(-50%, -50%)";
 
-  // ✅ Updated to use explicit engagement hook
+  // Use engagement hook
   const auto = useEngagementAutoScroll({
     ref: viewportRef,
     active: isActive,
@@ -42,7 +42,7 @@ export default function PortfolioItemComponent({
     resetOnInactive: true,
   });
 
-  // dev-only progress % (for the overlay, like WebsiteTypes)
+  // dev-only progress %
   const [progressPct, setProgressPct] = useState(0);
   useEffect(() => {
     if (!isActive) return;
@@ -117,6 +117,18 @@ export default function PortfolioItemComponent({
     ? { WebkitOverflowScrolling: "touch", overscrollBehaviorY: "auto" }
     : undefined;
 
+  // Select appropriate image source based on position
+  const getImageSrc = () => {
+    if (item.imageSources) {
+      // If we have responsive sources from Astro
+      if (isActive) return item.imageSources.center || item.image;
+      if (pos === "left" || pos === "right") return item.imageSources.side || item.image;
+      return item.imageSources.mobile || item.image;
+    }
+    // Fallback to single image source
+    return item.image;
+  };
+
   return (
     <div
       className={`${slideBase} ${topClass}`}
@@ -134,15 +146,16 @@ export default function PortfolioItemComponent({
         tabIndex={isActive ? 0 : -1}
       >
         <img
-          src={item.image}
-          alt={item.title}
+          src={getImageSrc()}
+          alt={item.alt || item.title}
           loading="lazy"
           draggable={false}
           className="block w-full h-auto select-none"
+          decoding="async"
         />
       </figure>
 
-      {/* dev overlay — same vibe as WebsiteTypes */}
+      {/* dev overlay */}
       {process.env.NODE_ENV === "development" && isActive && (
         <div className="absolute right-3 top-3 text-xs opacity-75 bg-zinc-800/95 p-3 rounded-lg shadow-lg border border-white/10">
           <div>👁️ In View: {auto.inView ? "✅" : "❌"}</div>

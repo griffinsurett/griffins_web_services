@@ -1,6 +1,6 @@
 ---
 // src/Sections/PortfolioSection.astro
-import { Image } from "astro:assets";
+import { Image, getImage } from "astro:assets";
 import PortfolioCarousel from "../components/Carousels/PortfolioCarousel.jsx";
 import BorderTitle from "../components/BorderTitle.jsx";
 import Heading from "../components/Heading.jsx";
@@ -13,7 +13,7 @@ import PablosDesktop from "../assets/PablosPeakRoofing/Pablos-Desktop.jpg";
 import RoonysDesktop from "../assets/RoonysMarketing/Roonys-Desktop.jpg";
 import CleanomaticFl from "../assets/Cleanomatic/cleanomaticfl.com-desktop.jpg";
 
-// Optimized image items with Astro's Image component
+// Define items with image metadata
 const items = [
   {
     id: 1,
@@ -53,15 +53,54 @@ const items = [
   },
 ];
 
-// Process items for optimized images
+// Process images with Astro's optimization
+// Generate multiple sizes for responsive carousel
 const processedItems = await Promise.all(
-  items.map(async (item) => ({
-    ...item,
-    // Convert ImageMetadata to optimized src for the carousel
-    imageSrc: item.image.src,
-    // Keep original ImageMetadata for potential direct use
-    imageData: item.image,
-  }))
+  items.map(async (item) => {
+    // Generate optimized images for different carousel sizes
+    const centerImage = await getImage({
+      src: item.image,
+      width: 860,
+      height: 540,
+      format: 'webp',
+      quality: 85,
+    });
+    
+    const sideImage = await getImage({
+      src: item.image,
+      width: 520,
+      height: 360,
+      format: 'webp',
+      quality: 80,
+    });
+    
+    const mobileImage = await getImage({
+      src: item.image,
+      width: 340,
+      height: 230,
+      format: 'webp',
+      quality: 80,
+    });
+
+    return {
+      id: item.id,
+      title: item.title,
+      alt: item.alt,
+      // Main image source for the carousel
+      image: centerImage.src,
+      // Responsive sources for different sizes
+      imageSources: {
+        center: centerImage.src,
+        side: sideImage.src,
+        mobile: mobileImage.src,
+      },
+      // Include dimensions for proper aspect ratio
+      dimensions: {
+        width: item.image.width,
+        height: item.image.height,
+      }
+    };
+  })
 );
 ---
 

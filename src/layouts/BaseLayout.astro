@@ -1,0 +1,65 @@
+---
+import "../styles/global.css";
+import "../styles/animation.css";
+
+import HeadTags from "./HeadTags.astro";
+import SEO from "./SEO.astro";
+import Theme from "./Theme.astro";
+import BodyTags from "./BodyTags.astro";
+
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+  noindex?: boolean;
+  ogType?: string;
+}
+
+const {
+  title,
+  description = "Professional website development services. Lightning-fast, secure, and mobile-first websites that convert visitors into customers.",
+  image = "/og-image.jpg",
+  canonical = Astro.url.href,
+  noindex = false,
+  ogType = "website",
+} = Astro.props;
+
+const siteTitle = title.includes("Griffin")
+  ? title
+  : `${title} | Griffin's Web Services`;
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Static head tags & favicons -->
+    <HeadTags canonical={canonical} />
+
+    <!-- SEO / OG / Twitter -->
+    <SEO
+      title={siteTitle}
+      description={description}
+      image={image}
+      canonical={canonical}
+      ogType={ogType}
+    />
+
+    <!-- Theme bootstrap (pre-paint) + theme-color sync -->
+    <Theme />
+
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+  </head>
+
+  <body class="bg-bg text-text antialiased">
+    <!-- Accessibility helpers / global body tags -->
+    <BodyTags />
+
+    <div id="app" class="min-h-screen flex flex-col">
+      <slot />
+    </div>
+  </body>
+</html>

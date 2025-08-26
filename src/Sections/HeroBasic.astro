@@ -3,7 +3,6 @@
 import Button from "../components/Buttons/Button.jsx";
 import Heading from "../components/Heading.jsx";
 import { siteData } from "../siteData";
-import TestimonialCircleSection from "./TestimonialCircleSection.astro";
 
 const heroTaglines = [
   { before: "Get a Website That ", emphasized: "Actually Sells", after: " for Your Business" },
@@ -19,9 +18,9 @@ const currentTagline = Math.floor(Math.random() * heroTaglines.length);
 const tagline = heroTaglines[currentTagline];
 ---
 
-<section class="min-h-screen flex items-center justify-left text-left px-5 pt-32 pb-20 bg-bg relative">
+<section class="min-h-screen flex items-center justify-center text-center px-5 pt-32 pb-20 bg-bg relative">
   <div class="absolute inset-0 hero-gradient-bg"></div>
-  <div class="inner-section mx-5 relative z-10">
+  <div class="inner-section mx-5 relative z-10 text-left lg:text-center">
     
     <Heading
       tagName="h1"
@@ -31,12 +30,12 @@ const tagline = heroTaglines[currentTagline];
       textClass="emphasized-text"
       after={tagline.after}
     />
-    <p class="hero-text text-text mb-8 mx-auto">
+    <p class="hero-text text-text mb-8 max-w-4xl mx-auto">
       {siteData.description}
     </p>
     
-    <div class="flex flex-col gap-6">
-      <div class="flex flex-col sm:flex-row gap-5 justify-left items-center">
+    <div class="flex flex-col">
+      <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
         <Button variant="primary" href="#contact" client:visible>
           Get Started Today ✨
         </Button>
@@ -44,7 +43,6 @@ const tagline = heroTaglines[currentTagline];
           View Our Work 👀
         </Button>
       </div>
-              <TestimonialCircleSection/>
     </div>
   </div>
 </section>

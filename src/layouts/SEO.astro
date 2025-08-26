@@ -1,0 +1,34 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+  ogType?: string; // default "website"
+}
+const {
+  title,
+  description = "",
+  image = "/og-image.jpg",
+  canonical = Astro.url.href,
+  ogType = "website",
+} = Astro.props;
+
+const absoluteImage = new URL(image, Astro.url).href;
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+
+<!-- Open Graph -->
+<meta property="og:type" content={ogType} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={absoluteImage} />
+<meta property="og:url" content={canonical} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={absoluteImage} />

@@ -1,0 +1,52 @@
+---
+// src/components/StaticSections/TestimonialCircleSection.astro
+import CircleImageItem from "@/components/LoopComponents/CircleImageItem/CircleImageItem.astro";
+import Heading from "@/components/Heading";
+import Counter from "@/components/Counter.jsx";
+import { testimonials } from "@/testimonials";
+
+// Show only featured faces in the circle stack (tweak if you want all)
+const faces = testimonials.filter((t) => t.featured);
+---
+<div class="testimonials flex items-center gap-4 lg:gap-6 px-5 md:px-0">
+  <!-- circle “stack” -->
+  <div class="flex justify-center items-center">
+    {faces.map((t, i) => (
+      // Keep the `.circle` class for the heartbeat script
+      <div class="circle -mr-2 lg:-mr-4 first:ml-0">
+        {/* Pass what CircleImageItem needs; commonly image/src + alt/title */}
+        <CircleImageItem src={t.image} alt={t.author} />
+      </div>
+    ))}
+  </div>
+
+  <div class="flex flex-col items-start">
+    <Heading tagName="h3" className="text-heading m-0 p-0 text-3xl lg:text-4xl">
+      <Counter client:load start={1} end={100} duration={200} className="inline-block" />+
+    </Heading>
+    <Heading tagName="p" className="small-text m-0">
+      Happy Clients
+    </Heading>
+  </div>
+</div>
+
+<script client:load>
+  const circles = document.querySelectorAll(".testimonials .circle");
+  let idx = 0;
+
+  function pulse() {
+    // Clear previous
+    const prev = (idx - 1 + circles.length) % circles.length;
+    circles[prev].classList.remove("heartbeat");
+
+    // Add to current
+    circles[idx].classList.add("heartbeat");
+
+    // Advance, wrap if needed
+    idx = (idx + 1) % circles.length;
+  }
+
+  // First pulse immediately, then every 800ms
+  pulse();
+  setInterval(pulse, 1600);
+</script>

@@ -1,6 +1,6 @@
 ---
 // src/Sections/Testimonials.astro
-import TestimonialCard from "../components/LoopComponents/TestimonialCard";
+import TestimonialCard from "../components/LoopComponents/TestimonialCard.jsx";
 import BorderTitle from "../components/BorderTitle.jsx";
 import Carousel from "../components/Carousels/Carousel.jsx";
 import Heading from "../components/Heading.jsx";
@@ -21,7 +21,6 @@ const STAGGER_MS = 120;
         before="What Our "
         text="Clients Say"
         textClass="emphasized-text"
-        client:visible
       />
       <p class="large-text">
         Don't just take our word for it - hear from businesses who've

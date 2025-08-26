@@ -1,0 +1,45 @@
+---
+// src/components/LoopComponents/CircleImageItem/CircleImageItem.astro
+import CircleImageWrapper from "./CircleImageWrapper.jsx";
+import ImagePart from "./ImagePart.astro";
+import ImageFallback from "@/assets/background.svg";
+
+/**
+ * Props (simple mode):
+ *  - src: ImageMetadata (from `import img from '...jpg'`)
+ *  - alt?: string
+ *  - href?: string | null
+ *  - itemClass?: string
+ *
+ * Optional backward-compat:
+ *  - item?: { image?: ImageMetadata; author?: string; data?: { featuredImage?: ImageMetadata; title?: string } }
+ *  - collectionName / HasPage are ignored now (routing handled by caller if needed)
+ */
+const {
+  src = undefined,
+  alt: altProp = "",
+  href = null,
+  itemClass = "",
+  // backward-compat (safe to omit):
+  item = undefined,
+} = Astro.props;
+
+// resolve image & alt
+let imgAsset = src ?? ImageFallback;
+let alt = altProp;
+
+// best-effort fallback if `item` is passed
+if (!src && item) {
+  // support both plain objects and old "content collection" shape
+  imgAsset = item.image ?? item?.data?.featuredImage ?? ImageFallback;
+  alt = altProp || item.author || item?.data?.title || "";
+}
+---
+<CircleImageWrapper
+  client:load
+  href={href}
+  ariaLabel={href ? `View details for ${alt}` : null}
+  itemClass={itemClass}
+>
+  <ImagePart src={imgAsset} alt={alt} />
+</CircleImageWrapper>
