@@ -1,45 +1,45 @@
-// src/components/LoopComponents/AccordionItem.jsx
 import React from "react";
 import AnimatedBorder from "../AnimatedBorder/AnimatedBorder";
 
 /**
- * Radio-driven accordion item.
- * - Uses a native, UNCONTROLLED radio input.
- * - Border animates forward when opened and reverses when closed (progress-b-f).
+ * Accessible radio-driven accordion (single-open) WITHOUT <button>.
+ * - The <input type="radio"> is the interactive control (kept focusable + SR-visible).
+ * - The <label> is purely visual; NO aria-* on it (fixes the audit).
+ * - The panel is role="region" and aria-labelledby -> label's id.
+ * - Uses a safe custom id (no React :r…: tokens).
  */
 function AccordionItem({
   data,
   name = "faq-accordion",
   value = "0",
   defaultChecked = false,
-  onToggle, // optional callback (checked:boolean)
+  onToggle,
   className = "",
 }) {
   const { question, answer } = data;
-  const uid = React.useId();
-  const inputId = `accordion-${name}-${value}-${uid}`;
-  const panelId = `${inputId}-panel`;
-  const labelId = `${inputId}-label`;
+
+  // Safe, simple id (avoid React.useId() tokens like :r0:)
+  const uidRef = React.useRef(Math.random().toString(36).slice(2));
+  const baseId = `acc-${name}-${value}-${uidRef.current}`;
+  const inputId = `${baseId}-input`;
+  const labelId = `${baseId}-label`;
+  const panelId = `${baseId}-panel`;
 
   const inputRef = React.useRef(null);
   const [isOpen, setIsOpen] = React.useState(!!defaultChecked);
+  const [isFocus, setIsFocus] = React.useState(false);
 
-  // Keep local isOpen in sync with the radio group's current checked state
+  // Keep local isOpen synced with the radio group's state
   React.useEffect(() => {
     const radios = Array.from(
       document.querySelectorAll(`input[type="radio"][name="${name}"]`)
     );
     const handleAnyChange = () => {
-      if (inputRef.current) {
-        const checked = !!inputRef.current.checked;
-        setIsOpen(checked);
-      }
+      if (inputRef.current) setIsOpen(!!inputRef.current.checked);
     };
     radios.forEach((r) => r.addEventListener("change", handleAnyChange));
-    // initialize
     handleAnyChange();
-    return () =>
-      radios.forEach((r) => r.removeEventListener("change", handleAnyChange));
+    return () => radios.forEach((r) => r.removeEventListener("change", handleAnyChange));
   }, [name]);
 
   const handleChange = (e) => {
@@ -48,20 +48,13 @@ function AccordionItem({
     onToggle?.(checked);
   };
 
-  const handleKeyDown = (e) => {
-    // Make the label act like a button
-    if (e.key === " " || e.key === "Enter") {
-      e.preventDefault();
-      inputRef.current?.click(); // toggles this radio; radio group handles single-open
-    }
-  };
-
   return (
     <div
       className={`group relative ${className}`}
       data-accordion-item
       data-active={isOpen ? "true" : "false"}
     >
+      {/* Focusable SR-visible control (kept off-screen visually but in tab order) */}
       <input
         ref={inputRef}
         type="radio"
@@ -70,34 +63,29 @@ function AccordionItem({
         value={value}
         defaultChecked={defaultChecked}
         onChange={handleChange}
-        className="absolute -left-[9999px]" // visually hidden, not focusable
-        tabIndex={-1}
-        aria-hidden="true"
-        data-accordion-radio
-        data-active={isOpen ? "true" : "false"}
+        onFocus={() => setIsFocus(true)}
+        onBlur={() => setIsFocus(false)}
+        // SR-only pattern that remains focusable (not display:none)
+        className="sr-only"
+        // no aria-expanded/controls here (not valid on role=radio)
       />
 
       <AnimatedBorder
-        variant="progress-b-f" // forward on open, reverse on close
+        variant="progress-b-f"
         triggers="controlled"
-        active={isOpen}
+        active={isOpen || isFocus}
         borderRadius="rounded-2xl"
         borderWidth={2}
         duration={800}
-        className="cursor-pointer transition-all main-duration overflow-hidden"
+        className="transition-all main-duration overflow-hidden"
         innerClassName="card-bg"
       >
-        {/* Header / toggle */}
+        {/* Visual header (no aria-* here = fixes the audit) */}
         <label
           id={labelId}
           htmlFor={inputId}
-          role="button"                 // ✅ gives valid semantics
-          tabIndex={0}                  // ✅ focusable
-          aria-controls={panelId}       // ✅ points to panel
-          aria-expanded={isOpen}        // ✅ state
-          onKeyDown={handleKeyDown}
-          onMouseDown={(e) => e.preventDefault()} // prevent scroll-to-focus jump
-          className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-card transition-colors main-duration cursor-pointer relative z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-2xl"
+          className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-card transition-colors main-duration cursor-pointer relative z-20 focus-within:outline-none"
+          // keep clicks/keyboard routed to the radio via htmlFor; no extra handlers needed
         >
           <h3 className="h3 pr-4">{question}</h3>
           <div
@@ -106,32 +94,26 @@ function AccordionItem({
                 ? "light:bg-heading dark:bg-primary dark:text-bg rotate-45"
                 : "bg-primary/20 rotate-0"
             }`}
+            aria-hidden="true"
           >
             <svg
-              className={`w-4 h-4 ${
-                isOpen ? "light:text-accent" : "text-primary"
-              }`}
+              className={`w-4 h-4 ${isOpen ? "light:text-accent" : "text-primary"}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
               aria-hidden="true"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
           </div>
         </label>
 
-        {/* Panel */}
+        {/* Panel: associated to the header, hidden to AT when collapsed */}
         <div
           id={panelId}
-          role="region"                  // ✅ landmark region
-          aria-labelledby={labelId}      // ✅ ties to the control
-          aria-hidden={!isOpen}          // ✅ hidden to AT when collapsed (keeps CSS transitions working)
+          role="region"
+          aria-labelledby={labelId}
+          aria-hidden={!isOpen}
           className={`overflow-hidden transition-all main-duration ease-in-out ${
             isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
           }`}
