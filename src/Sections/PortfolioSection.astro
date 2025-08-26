@@ -53,15 +53,14 @@ const items = [
   },
 ];
 
-// Process images with Astro's optimization
-// Generate multiple sizes for responsive carousel
+// Process images - keep original aspect ratios for scrollable screenshots
 const processedItems = await Promise.all(
   items.map(async (item) => {
-    // Generate optimized images for different carousel sizes
+    // Don't crop the images - preserve full height for scrolling
+    // Just optimize them at different widths
     const centerImage = await getImage({
       src: item.image,
       width: 860,
-      height: 540,
       format: 'webp',
       quality: 85,
     });
@@ -69,7 +68,6 @@ const processedItems = await Promise.all(
     const sideImage = await getImage({
       src: item.image,
       width: 520,
-      height: 360,
       format: 'webp',
       quality: 80,
     });
@@ -77,7 +75,6 @@ const processedItems = await Promise.all(
     const mobileImage = await getImage({
       src: item.image,
       width: 340,
-      height: 230,
       format: 'webp',
       quality: 80,
     });
@@ -92,10 +89,10 @@ const processedItems = await Promise.all(
         side: sideImage.src,
         mobile: mobileImage.src,
       },
-      // Include dimensions for proper aspect ratio
+      // Pass original dimensions for aspect ratio
       dimensions: {
-        width: item.image.width,
-        height: item.image.height,
+        width: centerImage.options.width,
+        height: centerImage.options.height,
       }
     };
   })
@@ -109,7 +106,7 @@ const processedItems = await Promise.all(
 >
   <div class="section-color-border"></div>
 
-  <div class="inner-section">
+  <div class="">
     <header class="text-section">
       <BorderTitle client:visible>Our Projects</BorderTitle>
       <Heading

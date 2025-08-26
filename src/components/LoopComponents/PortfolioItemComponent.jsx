@@ -62,7 +62,8 @@ export default function PortfolioItemComponent({
 
   const slideBase =
     "absolute left-1/2 overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] " +
-    "transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] will-change-transform";
+    "transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] will-change-transform " +
+    "bg-gray-900"; // Add background color to prevent flash
 
   let style;
   if (isActive) {
@@ -102,15 +103,18 @@ export default function PortfolioItemComponent({
     };
   }
 
+  // IMPORTANT: Changed viewport classes to handle object-fit
   const viewportClassesActive = `
-    w-full h-full bg-primary-light
+    w-full h-full bg-gray-900
     overflow-y-auto overscroll-auto
     touch-pan-y m-0 p-0
+    relative
   `;
   const viewportClassesInactive = `
-    w-full h-full bg-primary-light
+    w-full h-full bg-gray-900
     overflow-hidden pointer-events-none select-none
     m-0 p-0
+    relative
   `;
 
   const viewportInlineStyle = isActive
@@ -120,13 +124,32 @@ export default function PortfolioItemComponent({
   // Select appropriate image source based on position
   const getImageSrc = () => {
     if (item.imageSources) {
-      // If we have responsive sources from Astro
       if (isActive) return item.imageSources.center || item.image;
       if (pos === "left" || pos === "right") return item.imageSources.side || item.image;
       return item.imageSources.mobile || item.image;
     }
-    // Fallback to single image source
     return item.image;
+  };
+
+  // Calculate if image needs object-fit cover or contain
+  const getImageStyle = () => {
+    // If we have aspect ratio info, we can determine fit
+    if (item.dimensions?.aspectRatio) {
+      const containerAspect = centerW / centerH;
+      const imageAspect = item.dimensions.aspectRatio;
+      
+      // If image is wider than container, use cover to fill height
+      // If image is taller than container, use cover to fill width
+      // This prevents letterboxing
+      return {
+        objectFit: 'cover',
+        objectPosition: 'center top', // Focus on top of webpage screenshots
+      };
+    }
+    return {
+      objectFit: 'cover',
+      objectPosition: 'center top',
+    };
   };
 
   return (
@@ -148,16 +171,17 @@ export default function PortfolioItemComponent({
         <img
           src={getImageSrc()}
           alt={item.alt || item.title}
-          loading="lazy"
+          loading={i === 0 ? "eager" : "lazy"} // Load first image immediately
           draggable={false}
-          className="block w-full h-auto select-none"
+          className="block w-full h-auto min-h-full select-none"
+          style={getImageStyle()}
           decoding="async"
         />
       </figure>
 
       {/* dev overlay */}
       {process.env.NODE_ENV === "development" && isActive && (
-        <div className="absolute right-3 top-3 text-xs opacity-75 bg-zinc-800/95 p-3 rounded-lg shadow-lg border border-white/10">
+        <div className="absolute right-3 top-3 text-xs opacity-75 bg-zinc-800/95 p-3 rounded-lg shadow-lg border border-white/10 z-50">
           <div>👁️ In View: {auto.inView ? "✅" : "❌"}</div>
           <div>⏸️ Autoplay Paused: {auto.paused ? "✅" : "❌"}</div>
           <div>👤 Engaged: {auto.engaged ? "✅" : "❌"}</div>
