@@ -1,5 +1,5 @@
 // src/components/Carousels/PortfolioCarousel.jsx
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import useCarouselAutoplay from "./useCarouselAutoplay";
 import { useSideDragNavigation } from "../../hooks/animations/useInteractions";
@@ -7,10 +7,9 @@ import { useAnimatedElement } from "../../hooks/animations/useViewAnimation";
 import PortfolioItemComponent from "../LoopComponents/PortfolioItemComponent";
 
 /**
- * Starts in the correct geometry on first paint:
- * - Measures real container width via ResizeObserver
- * - Defers stage render until measured (no "start wide then snap" flash)
- * - Uses container width everywhere (not window / SSR guess)
+ * - Avoids hydration mismatches by setting data-autoplay-scope client-only
+ * - Removes "start with space then snap" by measuring the container before render
+ * - Uses container width everywhere (not window guess from SSR)
  */
 export default function PortfolioCarousel({
   items = [],
@@ -25,25 +24,20 @@ export default function PortfolioCarousel({
   const containerRef = useRef(null);
   const [index, setIndex] = useState(defaultIndex);
 
-  // Real container width + "ready" flag (0 until measured)
+  // --- Measure real container width; gate stage render until ready ---
   const [containerW, setContainerW] = useState(0);
   const ready = containerW > 0;
 
-  // Measure before paint and keep in sync
   useLayoutEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-
     const update = () => {
       const w = el.getBoundingClientRect().width;
       if (w && w !== containerW) setContainerW(w);
     };
-
     update(); // first sync (pre-paint)
     const ro = new ResizeObserver(update);
     ro.observe(el);
-
-    // Fallback for some browsers
     window.addEventListener("resize", update);
     return () => {
       ro.disconnect();
@@ -51,7 +45,7 @@ export default function PortfolioCarousel({
     };
   }, [containerW]);
 
-  // Visibility animation hook (safe even if stage is gated by `ready`)
+  // Visibility animation (safe if stage isn't rendered yet)
   const { props: carouselAnimProps } = useAnimatedElement({
     ref: containerRef,
     duration: 500,
@@ -61,7 +55,7 @@ export default function PortfolioCarousel({
     rootMargin: "0px 0px -20% 0px",
   });
 
-  // Autoplay (index management). Works even if stage not yet rendered.
+  // Autoplay; we’ll render its scope attribute client-only to avoid SSR mismatch
   const { scopeId } = useCarouselAutoplay({
     containerRef,
     totalItems: items.length,
@@ -77,7 +71,13 @@ export default function PortfolioCarousel({
     activeItemAttr: "data-active",
   });
 
-  // Geometry derived from the REAL width
+  // Client-only copy of scope id (prevents SSR/client mismatch on data attribute)
+  const [clientScopeId, setClientScopeId] = useState(null);
+  useEffect(() => {
+    setClientScopeId(scopeId);
+  }, [scopeId]);
+
+  // Geometry from real width
   const getSizes = () => {
     const w = containerW;
     if (w < 640)  return { centerW: 280, centerH: 190, sideW: 180, sideH: 120 };
@@ -97,7 +97,6 @@ export default function PortfolioCarousel({
   const { centerW, centerH, sideW, sideH } = ready ? getSizes() : { centerW: 0, centerH: 0, sideW: 0, sideH: 0 };
   const tx = ready ? getTranslateDistance(sideW) : 0;
 
-  // UI helpers
   const goToPrevious = () => setIndex(index === 0 ? items.length - 1 : index - 1);
   const goToNext     = () => setIndex(index === items.length - 1 ? 0 : index + 1);
 
@@ -139,18 +138,16 @@ export default function PortfolioCarousel({
   const ArrowClasses =
     "absolute z-40 w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary-light/10 border border-primary-light/20 text-text backdrop-blur-sm hover:bg-primary-light/20 transition hover:border-primary-light/75";
 
-  // ──────────────────────────────────────────────────────────────────────────
-  // Render
-  // ──────────────────────────────────────────────────────────────────────────
   return (
     <div
       ref={containerRef}
       data-carousel-container
-      data-autoplay-scope={scopeId}
+      // Client-only attribute prevents SSR/client mismatch
+      {...(clientScopeId ? { "data-autoplay-scope": clientScopeId } : {})}
+      suppressHydrationWarning
       className={`w-full ${className}`}
       {...carouselAnimProps}
     >
-      {/* Don’t render the stage until measured: no initial spacing/glitch */}
       {ready && (
         <>
           <div className="relative overflow-visible w-full leading-none" style={{ height: `${centerH}px` }}>

@@ -1,0 +1,38 @@
+---
+import { Icon } from "astro-icon/components";
+import TechStackWrap from "./TechStack.jsx";
+
+const techs = [
+  { name: "Astro", id: "simple-icons:astro" },
+  { name: "Next.js", id: "simple-icons:nextdotjs" },
+  { name: "React", id: "simple-icons:react" },
+  { name: "Gatsby", id: "simple-icons:gatsby" },
+  { name: "Svelte", id: "simple-icons:svelte" },
+  { name: "Shopify", id: "simple-icons:shopify" },
+  { name: "WordPress", id: "simple-icons:wordpress" },
+  { name: "Elementor", id: "simple-icons:elementor" },
+  { name: "PHP", id: "fa6-brands:php" },
+  { name: "Webflow", id: "simple-icons:webflow" },
+  { name: "Figma", id: "fa6-brands:figma" },
+  { name: "Framer", id: "simple-icons:framer" },
+  { name: "Vercel", id: "simple-icons:vercel" },
+  { name: "Cloudflare", id: "fa6-brands:cloudflare" },
+  { name: "GitHub", id: "simple-icons:github" },
+  { name: "Node.js", id: "simple-icons:nodedotjs" },
+  { name: "Python", id: "fa6-brands:python" },
+  { name: "AWS", id: "fa6-brands:aws" },
+];
+---
+
+<!-- Pass names as a serializable prop (for your hover heading),
+     and the icons themselves as CHILDREN so React can render them. -->
+<TechStackWrap techNames={techs.map((t) => t.name)} client:visible>
+  {
+    techs.map((t) => (
+      <span data-tech-name={t.name} class="inline-flex items-center gap-2">
+        <Icon name={t.id} class="w-6 h-6" />
+        <span class="text-sm">{t.name}</span>
+      </span>
+    ))
+  }
+</TechStackWrap>

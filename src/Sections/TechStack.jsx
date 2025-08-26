@@ -1,12 +1,29 @@
-// src/Sections/TechStack.jsx - Updated for unified Astro Icon approach
+// src/Sections/TechStack.jsx
 import React, { useState } from "react";
 import Heading from "../components/Heading";
 import BorderTitle from "../components/BorderTitle";
 import SmoothScrollCarousel from "../components/Carousels/SmoothScrollCarousel";
 import TechStackLabel from "../components/LoopComponents/TechStackLabel";
+// will stay jsx and client visible
 
-// Using Icon component from Astro Icon in React components
-import { Icon } from 'astro-icon/components';
+// imports (keep Simple Icons, add Font Awesome brands)
+import {
+  SiAstro,
+  SiNextdotjs,
+  SiReact,
+  SiGatsby,
+  SiSvelte,
+  SiShopify,
+  SiWordpress,
+  SiElementor,
+  // SiPayloadcms,
+  SiWebflow,
+  SiFramer,
+  SiVercel,
+  SiGithub,
+  SiNodedotjs,
+} from "react-icons/si";
+import { FaAws, FaFigma, FaCloudflare, FaPhp, FaPython } from "react-icons/fa"; // Font Awesome (brands)
 
 const TechStack = () => {
   // Hovered tech label to show in overlay
@@ -14,26 +31,26 @@ const TechStack = () => {
 
   const iconClass = "w-8 h-8"; // adjust globally here
 
-  // Updated to use astro-icon naming convention
   const technologies = [
-    { name: "Astro",       icon: "simple-icons:astro" },
-    { name: "Next.js",     icon: "simple-icons:nextdotjs" },
-    { name: "React",       icon: "simple-icons:react" },
-    { name: "Gatsby",      icon: "simple-icons:gatsby" },
-    { name: "Svelte",      icon: "simple-icons:svelte" },
-    { name: "Shopify",     icon: "simple-icons:shopify" },
-    { name: "WordPress",   icon: "simple-icons:wordpress" },
-    { name: "Elementor",   icon: "simple-icons:elementor" },
-    { name: "PHP",         icon: "fa6-brands:php" },
-    { name: "Webflow",     icon: "simple-icons:webflow" },
-    { name: "Figma",       icon: "fa6-brands:figma" }, 
-    { name: "Framer",      icon: "simple-icons:framer" },
-    { name: "Vercel",      icon: "simple-icons:vercel" },
-    { name: "Cloudflare",  icon: "fa6-brands:cloudflare" },
-    { name: "GitHub",      icon: "simple-icons:github" },
-    { name: "Node.js",     icon: "simple-icons:nodedotjs" },
-    { name: "Python",      icon: "fa6-brands:python" },
-    { name: "AWS",         icon: "fa6-brands:aws" },
+    { name: "Astro",       icon: <SiAstro className={iconClass} aria-hidden /> },
+    { name: "Next.js",     icon: <SiNextdotjs className={iconClass} aria-hidden /> },
+    { name: "React",       icon: <SiReact className={iconClass} aria-hidden /> },
+    { name: "Gatsby",      icon: <SiGatsby className={iconClass} aria-hidden /> },
+    { name: "Svelte",      icon: <SiSvelte className={iconClass} aria-hidden /> },
+    { name: "Shopify",     icon: <SiShopify className={iconClass} aria-hidden /> },
+    { name: "WordPress",   icon: <SiWordpress className={iconClass} aria-hidden /> },
+    { name: "Elementor",   icon: <SiElementor className={iconClass} aria-hidden /> },
+    { name: "PHP",         icon: <FaPhp className={iconClass} aria-hidden /> },
+    // { name: "Payload CMS", icon: <SiPayloadcms className={iconClass} aria-hidden /> },
+    { name: "Webflow",     icon: <SiWebflow className={iconClass} aria-hidden /> },
+    { name: "Figma",       icon: <FaFigma className={iconClass} aria-hidden /> }, // ← FA
+    { name: "Framer",      icon: <SiFramer className={iconClass} aria-hidden /> },
+    { name: "Vercel",      icon: <SiVercel className={iconClass} aria-hidden /> },
+    { name: "Cloudflare",  icon: <FaCloudflare className={iconClass} aria-hidden /> },
+    { name: "GitHub",      icon: <SiGithub className={iconClass} aria-hidden /> },
+    { name: "Node.js",     icon: <SiNodedotjs className={iconClass} aria-hidden /> },
+    { name: "Python",      icon: <FaPython className={iconClass} aria-hidden /> },
+    { name: "AWS",         icon: <FaAws className={iconClass} aria-hidden /> },   // ← FA
   ];
 
   const DEFAULT_BEFORE = "We've mastered ";
@@ -86,6 +103,7 @@ const TechStack = () => {
           </div>
 
           {/* Right side - Smooth Scroll Carousel */}
+          {/* client visible */}
           <SmoothScrollCarousel
             items={technologies}
             startDelay={5000}
