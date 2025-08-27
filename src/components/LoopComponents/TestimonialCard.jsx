@@ -55,7 +55,7 @@ export default function TestimonialCard({
             className="gap-4"
             iconClassName="icon-small card-icon-color hidden"
             titleClassName="h4"
-            titleTag="h4"
+            titleTag="span"
             descriptionClassName="text-text text-sm"
             descriptionTag="p"
           />
