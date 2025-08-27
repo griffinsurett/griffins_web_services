@@ -194,7 +194,7 @@ export default function PortfolioCarousel({
                   className={ArrowClasses}
                   style={{ left: leftCalc, top: "50%", transform: "translate(-50%, -50%)" }}
                 >
-                  <FaChevronLeft className="mx-auto my-auto w-5 h-5 md:w-6 md:h-6" />
+                  <FaChevronLeft className="mx-auto my-auto w-4.5 h-4.5 md:w-6 md:h-6" />
                 </button>
                 <button
                   onClick={goToNext}
@@ -202,7 +202,7 @@ export default function PortfolioCarousel({
                   className={ArrowClasses}
                   style={{ left: rightCalc, top: "50%", transform: "translate(-50%, -50%)" }}
                 >
-                  <FaChevronRight className="mx-auto my-auto w-5 h-5 md:w-6 md:h-6" />
+                  <FaChevronRight className="mx-auto my-auto w-4.5 h-4.5 md:w-6 md:h-6" />
                 </button>
               </>
             )}
@@ -214,7 +214,7 @@ export default function PortfolioCarousel({
                 <button
                   key={i}
                   onClick={() => setIndex(i)}
-                  className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
                     i === index ? "bg-primary scale-[1.30]" : "faded-bg"
                   }`}
                   aria-label={`Go to slide ${i + 1}`}

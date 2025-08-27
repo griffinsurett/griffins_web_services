@@ -133,7 +133,7 @@ export default function Carousel({
                          muted-control-bg muted-control-border text-text backdrop-blur-sm
                          muted-control-hover transition"
             >
-              <FaChevronLeft className="mx-auto my-auto w-5 h-5 md:w-6 md:h-6" />
+              <FaChevronLeft className="mx-auto my-auto w-4.5 h-4.5 md:w-6 md:h-6" />
             </button>
           </div>
         )}
@@ -210,7 +210,7 @@ export default function Carousel({
                          faded-bg text-text backdrop-blur-sm
                          transition"
             >
-              <FaChevronRight className="mx-auto my-auto w-5 h-5 md:w-6 md:h-6" />
+              <FaChevronRight className="mx-auto my-auto w-4.5 h-4.5 md:w-6 md:h-6" />
             </button>
           </div>
         )}
@@ -226,7 +226,7 @@ export default function Carousel({
             <button
               key={i}
               onClick={() => setPageIndex(i)}
-              className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 i === pageIndex ? "bg-primary scale-[1.30]" : "faded-bg"
               }`}
               aria-label={`Go to page ${i + 1}`}
