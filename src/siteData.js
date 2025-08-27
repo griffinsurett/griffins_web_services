@@ -6,8 +6,6 @@ export const siteData = {
   legalName: "Griffin's Web Services LLC",
   description: "Professional website development services. Lightning-fast, secure, and mobile-first websites that convert visitors into customers. Get 50% off your first project!",
   url: `https://${siteDomain}`,
-  email: "griffin@griffinswebservices.com",
-  phone: "(732) 939-1309",
 };
 
 // Contact items using unified astro-icon naming
