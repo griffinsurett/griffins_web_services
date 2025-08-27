@@ -1,15 +1,13 @@
 // src/components/Carousels/PortfolioCarousel.jsx
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { LeftArrow, RightArrow } from "./CarouselArrows";
 import useCarouselAutoplay from "./useCarouselAutoplay";
 import { useSideDragNavigation } from "../../hooks/animations/useInteractions";
 import { useAnimatedElement } from "../../hooks/animations/useViewAnimation";
 import PortfolioItemComponent from "../LoopComponents/PortfolioItemComponent";
 
 /**
- * - Avoids hydration mismatches by setting data-autoplay-scope client-only
- * - Removes "start with space then snap" by measuring the container before render
- * - Uses container width everywhere (not window guess from SSR)
+ * Portfolio carousel with floating arrows positioned around the center slide
  */
 export default function PortfolioCarousel({
   items = [],
@@ -24,7 +22,7 @@ export default function PortfolioCarousel({
   const containerRef = useRef(null);
   const [index, setIndex] = useState(defaultIndex);
 
-  // --- Measure real container width; gate stage render until ready ---
+  // Measure real container width; gate stage render until ready
   const [containerW, setContainerW] = useState(0);
   const ready = containerW > 0;
 
@@ -35,7 +33,7 @@ export default function PortfolioCarousel({
       const w = el.getBoundingClientRect().width;
       if (w && w !== containerW) setContainerW(w);
     };
-    update(); // first sync (pre-paint)
+    update();
     const ro = new ResizeObserver(update);
     ro.observe(el);
     window.addEventListener("resize", update);
@@ -45,7 +43,7 @@ export default function PortfolioCarousel({
     };
   }, [containerW]);
 
-  // Visibility animation (safe if stage isn't rendered yet)
+  // Visibility animation
   const { props: carouselAnimProps } = useAnimatedElement({
     ref: containerRef,
     duration: 500,
@@ -55,7 +53,7 @@ export default function PortfolioCarousel({
     rootMargin: "0px 0px -20% 0px",
   });
 
-  // Autoplay; we’ll render its scope attribute client-only to avoid SSR mismatch
+  // Autoplay
   const { scopeId } = useCarouselAutoplay({
     containerRef,
     totalItems: items.length,
@@ -71,13 +69,13 @@ export default function PortfolioCarousel({
     activeItemAttr: "data-active",
   });
 
-  // Client-only copy of scope id (prevents SSR/client mismatch on data attribute)
+  // Client-only scope id to prevent SSR/client mismatch
   const [clientScopeId, setClientScopeId] = useState(null);
   useEffect(() => {
     setClientScopeId(scopeId);
   }, [scopeId]);
 
-  // Geometry from real width
+  // Geometry calculations
   const getSizes = () => {
     const w = containerW;
     if (w < 640)  return { centerW: 280, centerH: 190, sideW: 180, sideH: 120 };
@@ -97,16 +95,18 @@ export default function PortfolioCarousel({
   const { centerW, centerH, sideW, sideH } = ready ? getSizes() : { centerW: 0, centerH: 0, sideW: 0, sideH: 0 };
   const tx = ready ? getTranslateDistance(sideW) : 0;
 
+  // Navigation functions
   const goToPrevious = () => setIndex(index === 0 ? items.length - 1 : index - 1);
-  const goToNext     = () => setIndex(index === items.length - 1 ? 0 : index + 1);
+  const goToNext = () => setIndex(index === items.length - 1 ? 0 : index + 1);
 
+  // Arrow positioning calculations
   const arrowDiameter = containerW >= 768 ? 48 : 40;
   const arrowRadius = arrowDiameter / 2;
   const gap = containerW >= 1024 ? 20 : 16;
   const isLarge = containerW >= 1280;
 
   const sideOffsetFromCenterSlide = centerW / 2 + arrowRadius + gap;
-  const leftCalc  = isLarge ? `calc(50% - ${tx}px)` : `calc(50% - ${sideOffsetFromCenterSlide}px)`;
+  const leftCalc = isLarge ? `calc(50% - ${tx}px)` : `calc(50% - ${sideOffsetFromCenterSlide}px)`;
   const rightCalc = isLarge ? `calc(50% + ${tx}px)` : `calc(50% + ${sideOffsetFromCenterSlide}px)`;
 
   // Drag zones
@@ -135,14 +135,10 @@ export default function PortfolioCarousel({
   const leftZoneLeftPx = isLarge ? tx : sideOffsetFromCenterSlide;
   const rightZoneLeftPx = isLarge ? tx : sideOffsetFromCenterSlide;
 
-  const ArrowClasses =
-    "absolute z-40 w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary-light/10 border border-primary-light/20 text-text backdrop-blur-sm hover:bg-primary-light/20 transition hover:border-primary-light/75";
-
   return (
     <div
       ref={containerRef}
       data-carousel-container
-      // Client-only attribute prevents SSR/client mismatch
       {...(clientScopeId ? { "data-autoplay-scope": clientScopeId } : {})}
       suppressHydrationWarning
       className={`w-full ${className}`}
@@ -167,6 +163,7 @@ export default function PortfolioCarousel({
               />
             ))}
 
+            {/* Drag zones */}
             {drag && items.length > 1 && (
               <>
                 <div
@@ -186,28 +183,32 @@ export default function PortfolioCarousel({
               </>
             )}
 
+            {/* Floating arrows positioned around center slide */}
             {showArrows && items.length > 1 && (
               <>
-                <button
+                <LeftArrow
                   onClick={goToPrevious}
-                  aria-label="Previous"
-                  className={ArrowClasses}
-                  style={{ left: leftCalc, top: "50%", transform: "translate(-50%, -50%)" }}
-                >
-                  <FaChevronLeft className="mx-auto my-auto w-4.5 h-4.5 md:w-6 md:h-6" />
-                </button>
-                <button
+                  variant="floating"
+                  position={{ 
+                    left: leftCalc, 
+                    top: "50%", 
+                    transform: "translate(-50%, -50%)" 
+                  }}
+                />
+                <RightArrow
                   onClick={goToNext}
-                  aria-label="Next"
-                  className={ArrowClasses}
-                  style={{ left: rightCalc, top: "50%", transform: "translate(-50%, -50%)" }}
-                >
-                  <FaChevronRight className="mx-auto my-auto w-4.5 h-4.5 md:w-6 md:h-6" />
-                </button>
+                  variant="floating"
+                  position={{ 
+                    left: rightCalc, 
+                    top: "50%", 
+                    transform: "translate(-50%, -50%)" 
+                  }}
+                />
               </>
             )}
           </div>
 
+          {/* Pagination dots */}
           {showDots && items.length > 1 && (
             <nav className="mt-6 flex justify-center gap-3" aria-label="Carousel Pagination">
               {items.map((_, i) => (

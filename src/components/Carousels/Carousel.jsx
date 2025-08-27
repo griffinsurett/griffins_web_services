@@ -1,15 +1,12 @@
 // src/components/Carousels/Carousel.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { LeftArrow, RightArrow } from "./CarouselArrows";
 import useCarouselAutoplay from "./useCarouselAutoplay";
 import { useSideDragNavigation } from "../../hooks/animations/useInteractions";
 
 /**
  * Simple 2D carousel that pages through groups of slides.
  * Arrows live OUTSIDE the viewport, left/right of the slides.
- *
- * `slidesPerView` supports responsive breakpoints, e.g.
- *   { base: 1, md: 2, lg: 3 }
  */
 export default function Carousel({
   items = [],
@@ -98,7 +95,7 @@ export default function Carousel({
     return () => clearTimeout(t);
   }, [pageIndex]);
 
-  // DRAG across the whole viewport via two 50% overlays (no handlers on cards)
+  // DRAG across the whole viewport via two 50% overlays
   useSideDragNavigation({
     enabled: drag && pageCount > 1,
     leftElRef: leftZoneRef,
@@ -123,18 +120,14 @@ export default function Carousel({
           withArrows ? "grid-cols-[auto_1fr_auto]" : "grid-cols-1"
         }`}
       >
-        {/* Left arrow (outside) */}
+        {/* Left arrow (outside viewport) */}
         {withArrows && (
           <div className="flex items-center justify-center">
-            <button
+            <LeftArrow
               onClick={goPrev}
-              aria-label="Previous"
-              className="w-10 h-10 md:w-12 md:h-12 rounded-full
-                         muted-control-bg muted-control-border text-text backdrop-blur-sm
-                         muted-control-hover transition"
-            >
-              <FaChevronLeft className="mx-auto my-auto w-4.5 h-4.5 md:w-6 md:h-6" />
-            </button>
+              variant="inline"
+              className="w-10 h-10 md:w-12 md:h-12 rounded-full faded-bg text-text backdrop-blur-sm transition hover:bg-primary-light/20 hover:border-primary-light/50"
+            />
           </div>
         )}
 
@@ -200,18 +193,14 @@ export default function Carousel({
           )}
         </div>
 
-        {/* Right arrow (outside) */}
+        {/* Right arrow (outside viewport) */}
         {withArrows && (
           <div className="flex items-center justify-center">
-            <button
+            <RightArrow
               onClick={goNext}
-              aria-label="Next"
-              className="w-10 h-10 md:w-12 md:h-12 rounded-full
-                         faded-bg text-text backdrop-blur-sm
-                         transition"
-            >
-              <FaChevronRight className="mx-auto my-auto w-4.5 h-4.5 md:w-6 md:h-6" />
-            </button>
+              variant="inline"
+              className="w-10 h-10 md:w-12 md:h-12 rounded-full faded-bg text-text backdrop-blur-sm transition hover:bg-primary-light/20 hover:border-primary-light/50"
+            />
           </div>
         )}
       </div>
