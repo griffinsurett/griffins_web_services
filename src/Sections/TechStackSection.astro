@@ -41,7 +41,7 @@ const technologies = [
 const techWithIcons = technologies.map(tech => ({
   name: tech.name,
   // Pre-render the icon as HTML string that React can use
-  iconHtml: `<astro-icon name="${tech.iconName}" class="w-8 h-8" aria-hidden="true"></astro-icon>`
+  iconHtml: `<astro-icon name="${tech.iconName}" class="w-8 h-8 inline-block tech-icon" aria-hidden="true"></astro-icon>`
 }));
 ---
 
@@ -87,15 +87,3 @@ const techWithIcons = technologies.map(tech => ({
     ))}
   </template>
 </section>
-
-<style>
-  astro-icon {
-    display: inline-block;
-  }
-  
-  /* Ensure icons maintain consistent sizing */
-  astro-icon svg {
-    width: 2rem;
-    height: 2rem;
-  }
-</style>

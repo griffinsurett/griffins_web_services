@@ -14,25 +14,7 @@ const env = loadEnv(
   ''
 );
 
-// Get site domain with proper fallbacks for different environments
-const getSiteUrl = () => {
-  // First, try the loaded .env file variable
-  let domain = env.PUBLIC_SITE_DOMAIN;
-  
-  // If not found in .env, try system environment (for production deployments)
-  if (!domain) {
-    domain = process.env.PUBLIC_SITE_DOMAIN;
-  }
-  
-  // Always use https in production, http for localhost development
-  const protocol = domain.includes('localhost')
-    ? 'http' 
-    : 'https';
-    
-  return `${protocol}://${domain}`;
-};
-
-const siteUrl = getSiteUrl();
+const siteUrl = `https://${env.PUBLIC_SITE_DOMAIN}`;
 console.log(`Site URL: ${siteUrl}`);
 
 export default defineConfig({
