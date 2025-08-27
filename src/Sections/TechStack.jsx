@@ -27,7 +27,7 @@ import {
 } from "react-icons/si";
 import { FaAws, FaFigma, FaCloudflare, FaPhp, FaPython } from "react-icons/fa";
 
-const TechStack = () => {
+export default function TechStack() {
   const [hoveredTech, setHoveredTech] = useState(null);
   const iconClass = "w-8 h-8"; // global icon size
 
@@ -126,5 +126,3 @@ const TechStack = () => {
     </section>
   );
 };
-
-export default TechStack;

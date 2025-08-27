@@ -6,22 +6,22 @@ export const siteData = {
   legalName: "Griffin's Web Services LLC",
   description: "Professional website development services. Lightning-fast, secure, and mobile-first websites that convert visitors into customers. Get 50% off your first project!",
   url: `https://${siteDomain}`,
-  email: "hello@griffinsweb.com",
-  phone: "(123) 456-7890",
+  email: "griffin@griffinswebservices.com",
+  phone: "(732) 939-1309",
 };
 
 // Contact items using unified astro-icon naming
 export const contactItems = [
   {
     type: "email",
-    label: "hello@griffinsweb.com",
-    href: "mailto:hello@griffinsweb.com",
+    label: "griffin@griffinswebservices.com",
+    href: "mailto:griffin@griffinswebservices.com",
     icon: "mail", // lucide icon name
   },
   {
     type: "phone",
-    label: "(123) 456-7890", 
-    href: "tel:+1234567890",
+    label: "(732) 939-1309",
+    href: "tel:+17329391309",
     icon: "phone", // lucide icon name
   },
 ];
@@ -30,22 +30,22 @@ export const contactItems = [
 export const socialMediaLinks = [
   {
     name: "LinkedIn",
-    href: "#linkedin",
+    href: "https://www.linkedin.com/in/griffin-surett/",
     icon: "linkedin", // lucide icon name
   },
   {
     name: "Twitter",
-    href: "#twitter", 
+    href: "https://twitter.com/griffinsurett",
     icon: "twitter", // lucide icon name
   },
   {
     name: "GitHub",
-    href: "#github",
+    href: "https://github.com/griffinsurett",
     icon: "github", // lucide icon name
   },
   {
-    name: "Instagram", 
-    href: "#instagram",
+    name: "Instagram",
+    href: "https://www.instagram.com/griffinsjoshs/",
     icon: "instagram", // lucide icon name
   },
 ];

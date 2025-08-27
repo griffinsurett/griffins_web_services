@@ -7,7 +7,7 @@ import AnimatedElementWrapper from "../components/AnimatedElementWrapper";
 import { testimonials } from "../testimonials";
 // astro ready
 
-const Testimonials = () => {
+export default function Testimonials() {
   const STAGGER_MS = 120;
 
   return (
@@ -59,5 +59,3 @@ const Testimonials = () => {
     </section>
   );
 };
-
-export default Testimonials;
