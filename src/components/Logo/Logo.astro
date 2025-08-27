@@ -28,34 +28,35 @@ const shouldUseLottie = useLottie && (
   trigger === 'load'
 );
 
-// Match Tailwind: base 40px, lg 45px → provide 1x/2x sources
+// Fixed dimensions: 40px on small screens, 45px on large screens
 const LOGO_WIDTHS = [40, 45, 80, 90]; // 1x + 2x for both sizes
 const LOGO_SIZES = '(min-width: 1024px) 45px, 40px';
+
+// Small logo: exactly 40px on small screens, 45px on large screens  
+const logoClasses = "block w-[40px] h-[40px] lg:w-[45px] lg:h-[45px] object-contain";
 ---
 
 <a href="/" class={`flex justify-center items-center gap-1.5 ${className}`}>
   {shouldUseLottie ? (
     <LottieLogo
       alt="Griffin's Web Services Animated Logo"
-      loading="lazy"
+      loading={loading}
       trigger={trigger}
       className="logo-class"
-      mediaClasses="block w-[40px] lg:w-[45px] h-auto"
-      width={45}
-      height={45}
+      mediaClasses={logoClasses}
       client:visible
     >
-      {/* 🧠 High-DPI poster via responsive widths + sizes */}
+      {/* High-DPI poster with consistent sizing */}
       <Image
         src={POSTER_SRC}
         alt="Griffin's Web Services Logo"
-        loading="eager"
+        loading={loading}
         decoding="async"
         format="webp"
         widths={LOGO_WIDTHS}
         sizes={LOGO_SIZES}
         quality={90}
-        class="block w-[40px] lg:w-[45px] h-auto"
+        class={logoClasses}
         fetchpriority={loading === 'eager' ? 'high' : undefined}
       />
     </LottieLogo>
@@ -69,7 +70,7 @@ const LOGO_SIZES = '(min-width: 1024px) 45px, 40px';
       widths={LOGO_WIDTHS}
       sizes={LOGO_SIZES}
       quality={90}
-      class="block w-[40px] lg:w-[45px] h-auto"
+      class={logoClasses}
       fetchpriority={loading === 'eager' ? 'high' : undefined}
     />
   )}

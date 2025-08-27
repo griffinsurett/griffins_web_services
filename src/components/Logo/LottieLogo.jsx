@@ -1,6 +1,6 @@
 // src/components/Logo/LottieLogo.jsx
 // Lazy Lottie + JSON; keeps Astro <Image/> visible until the player is ready.
-// Minimizes render-blocking by deferring heavy work until idle & actually needed.
+// Fixed sizing to prevent CLS and ensure consistency across all screen sizes.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useVisibility } from "../../hooks/animations/useVisibility";
@@ -18,16 +18,13 @@ const onIdle = (cb) => {
 export default function LottieLogo({
   alt = "",
   className = "logo-class",
-  mediaClasses = "block w-[40px] lg:w-[45px] h-auto",
+  mediaClasses = "block w-[40px] h-[40px] lg:w-[45px] lg:h-[45px] object-contain", // Fixed: 40px small, 45px large
   loading = "lazy",
   trigger = "auto",              // "auto" | "scroll" | "visible" | "load"
   respectReducedMotion = true,
-
-  width = 45,
-  height = 45,
+  
   fadeMs = 180,
-
-  children,                      // Astro <Image /> passed from parent (poster)
+  children,          // Astro <Image /> passed from parent (poster)
 }) {
   const containerRef = useRef(null);
   const lottieContainerRef = useRef(null);
@@ -86,7 +83,7 @@ export default function LottieLogo({
       if (canceled) return;
 
       try {
-        // 1) Smaller player build to reduce parse time (try canvas or svg_min if desired)
+        // 1) Smaller player build to reduce parse time
         const { default: lottie } = await import("lottie-web/build/player/lottie_light");
 
         // 2) Fetch JSON at runtime so it doesn't bloat the bundle
@@ -210,10 +207,6 @@ export default function LottieLogo({
       ref={containerRef}
       aria-label={alt}
       className={`${className} relative ${mediaClasses}`}
-      style={{
-        width: typeof width === "number" ? `${width}px` : undefined,
-        height: typeof height === "number" ? `${height}px` : undefined,
-      }}
     >
       {/* Poster layer (Astro <Image />) */}
       <div
