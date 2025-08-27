@@ -37,7 +37,7 @@ const LOGO_SIZES = '(min-width: 1024px) 45px, 40px';
   {shouldUseLottie ? (
     <LottieLogo
       alt="Griffin's Web Services Animated Logo"
-      loading="lazy"
+      loading={loading}
       trigger={trigger}
       className="logo-class"
       mediaClasses="block w-[40px] lg:w-[45px] h-auto"
@@ -49,7 +49,7 @@ const LOGO_SIZES = '(min-width: 1024px) 45px, 40px';
       <Image
         src={POSTER_SRC}
         alt="Griffin's Web Services Logo"
-        loading={loading}
+        loading="eager"
         decoding="async"
         format="webp"
         widths={LOGO_WIDTHS}
