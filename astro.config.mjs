@@ -1,12 +1,24 @@
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
+import { loadEnv } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import icon from 'astro-icon';
 
+const { PUBLIC_SITE_DOMAIN } = loadEnv(
+  process.env.NODE_ENV || 'development', 
+  process.cwd(), 
+  ''
+);
+
+// Get site domain from environment variable
+// const siteDomain = import.meta.env.PUBLIC_SITE_DOMAIN 
+const siteUrl = `https://${PUBLIC_SITE_DOMAIN}`;
+console.log(`Site URL: ${siteUrl}`);
+
 export default defineConfig({
-  site: 'https://griffinswebservices.com',
+  site: siteUrl,
   server: {
     port: 9999,
   },

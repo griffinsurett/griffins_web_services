@@ -1,9 +1,11 @@
 // src/siteData.js - Compatible with both Astro and React
+const siteDomain = import.meta.env.PUBLIC_SITE_DOMAIN || 'griffinswebservices.com';
+
 export const siteData = {
   title: "Griffin's Web Services",
   legalName: "Griffin's Web Services LLC",
   description: "Professional website development services. Lightning-fast, secure, and mobile-first websites that convert visitors into customers. Get 50% off your first project!",
-  url: "https://griffinswebservices.com",
+  url: `https://${siteDomain}`,
   email: "hello@griffinsweb.com",
   phone: "(123) 456-7890",
 };
