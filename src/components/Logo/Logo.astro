@@ -35,18 +35,31 @@ const LOGO_SIZES = '(min-width: 1024px) 45px, 40px';
 
 <a href="/" class={`flex justify-center items-center gap-1.5 ${className}`}>
   {shouldUseLottie ? (
-    <LottieLogo
-      alt="Griffin's Web Services Animated Logo"
-      loading={loading}
-      trigger={trigger}
-      className="logo-class"
-      mediaClasses="block w-[40px] lg:w-[45px] h-auto"
-      width={45}
-      height={45}
-      client:visible
-    >
-      {/* 🧠 High-DPI poster via responsive widths + sizes */}
-      <Image
+    // <LottieLogo
+    //   alt="Griffin's Web Services Animated Logo"
+    //   loading={loading}
+    //   trigger={trigger}
+    //   className="logo-class"
+    //   mediaClasses="block w-[40px] lg:w-[45px] h-auto"
+    //   width={45}
+    //   height={45}
+    //   client:visible
+    // >
+    //   {/* 🧠 High-DPI poster via responsive widths + sizes */}
+    //   <Image
+    //     src={POSTER_SRC}
+    //     alt="Griffin's Web Services Logo"
+    //     loading={loading}
+    //     decoding="async"
+    //     format="webp"
+    //     widths={LOGO_WIDTHS}
+    //     sizes={LOGO_SIZES}
+    //     quality={90}
+    //     class="block w-[40px] lg:w-[45px] h-auto"
+    //     fetchpriority={loading === 'eager' ? 'high' : undefined}
+    //   />
+    // </LottieLogo>
+    <Image
         src={POSTER_SRC}
         alt="Griffin's Web Services Logo"
         loading={loading}
@@ -58,7 +71,6 @@ const LOGO_SIZES = '(min-width: 1024px) 45px, 40px';
         class="block w-[40px] lg:w-[45px] h-auto"
         fetchpriority={loading === 'eager' ? 'high' : undefined}
       />
-    </LottieLogo>
   ) : (
     <Image
       src={POSTER_SRC}
