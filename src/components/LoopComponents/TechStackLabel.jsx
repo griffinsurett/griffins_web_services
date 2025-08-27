@@ -1,9 +1,8 @@
-// src/components/LoopComponents/TechStackIcon.jsx
+// src/components/LoopComponents/TechStackLabel.jsx
 import React, { useState, useRef, useEffect } from "react";
 import AnimatedElementWrapper from "../AnimatedElementWrapper";
-import { useHoverInteraction } from "../../hooks/animations/useInteractions";
 
-const TechStackIcon = ({ 
+const TechStackLabel = ({ 
   name, 
   index, 
   onTechHover, 
@@ -17,16 +16,6 @@ const TechStackIcon = ({
   const mobileTimeoutRef = useRef(null);
   const rootRef = useRef(null);
 
-  // Hover interactions
-  const { handleMouseEnter, handleMouseLeave } = useHoverInteraction({
-    hoverDelay: 0,
-    onHoverStart: (el) => {
-      const techName = el?.dataset?.techName || name;
-      onTechHover?.(techName);
-    },
-    onHoverEnd: () => onTechLeave?.(),
-  });
-
   // Mobile touch handler
   const handleMobileTouch = (techName, itemIndex) => {
     if (mobileTimeoutRef.current) clearTimeout(mobileTimeoutRef.current);
@@ -38,6 +27,17 @@ const TechStackIcon = ({
       setIsMobileActive(false);
       onTechLeave?.();
     }, 2500);
+  };
+
+  // Mouse handlers that don't interfere with parent carousel's engagement system
+  const handleMouseEnter = (e) => {
+    onTechHover?.(name);
+    // Don't stop propagation - let the event bubble up to the carousel wrapper
+  };
+
+  const handleMouseLeave = (e) => {
+    onTechLeave?.();
+    // Don't stop propagation - let the event bubble up to the carousel wrapper
   };
 
   // Cleanup timeout on unmount
@@ -64,9 +64,12 @@ const TechStackIcon = ({
         className={`group flex flex-col items-center flex-shrink-0 ${className}`}
         role="button"
         tabIndex={0}
-        onFocus={() => handleMouseEnter(rootRef.current, index)}
-        onBlur={() => handleMouseLeave(rootRef.current, index)}
         aria-label={name}
+        // Lightweight hover handlers that don't interfere with parent
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onFocus={handleMouseEnter}
+        onBlur={handleMouseLeave}
       >
         {/* Logo container */}
         <div
@@ -80,9 +83,6 @@ const TechStackIcon = ({
           "
           // Mobile touch
           onTouchStart={() => handleMobileTouch(name, index)}
-          // Desktop hover
-          onMouseEnter={() => handleMouseEnter(rootRef.current, index)}
-          onMouseLeave={() => handleMouseLeave(rootRef.current, index)}
         >
           {/* Astro-rendered icon passed as children */}
           <div
@@ -119,4 +119,4 @@ const TechStackIcon = ({
   );
 };
 
-export default TechStackIcon;
+export default TechStackLabel;

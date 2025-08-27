@@ -29,8 +29,11 @@ const SmoothScrollCarousel = forwardRef(
       gradientWidth = { base: 48, md: 80 },
       threshold = 0.3,
       onItemInteraction,
-      resumeDelay = 3000,
+      resumeDelay = 500,
       resumeTriggers = ["scroll", "click-outside", "hover-away"],
+      // Engagement system selectors
+      containerSelector,
+      itemSelector,
       className = "",
       trackClassName = "",
     },
@@ -98,7 +101,7 @@ const SmoothScrollCarousel = forwardRef(
 
     const totalWidth = baseLength * itemWidth;
 
-    // Engagement-aware autoplay
+    // Engagement-aware autoplay with configurable selectors
     const {
       isAutoplayPaused,
       isResumeScheduled,
@@ -112,8 +115,9 @@ const SmoothScrollCarousel = forwardRef(
       autoplayTime: 50,
       resumeDelay,
       resumeTriggers,
-      containerSelector: `[data-autoplay-scope="${scopeId}"]`,
-      itemSelector: `[data-autoplay-scope="${scopeId}"] [data-smooth-item]`,
+      // Use provided selectors or defaults
+      containerSelector: containerSelector || `[data-autoplay-scope="${scopeId}"]`,
+      itemSelector: itemSelector || `[data-autoplay-scope="${scopeId}"] [data-smooth-item]`,
       inView: autoplay && inView,
       pauseOnEngage,
       engageOnlyOnActiveItem: false,

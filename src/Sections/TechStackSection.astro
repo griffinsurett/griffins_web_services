@@ -1,7 +1,9 @@
 ---
-// src/Sections/TechStack.astro
+// src/Sections/TechStackSection.astro
 import { Icon } from 'astro-icon/components';
 import TechStack from './TechStack.jsx';
+import Heading from '../components/Heading';
+import BorderTitle from '../components/BorderTitle';
 
 // Technology data with astro-icon names
 const technologies = [
@@ -11,7 +13,7 @@ const technologies = [
   { name: "JavaScript", iconName: "simple-icons:javascript" },
   
   // Frameworks & Libraries
-  { name: "Astro", iconName: "simple-icons:astro" },
+  { name: "Astro.js", iconName: "simple-icons:astro" },
   { name: "Next.js", iconName: "simple-icons:nextdotjs" },
   { name: "React", iconName: "simple-icons:react" },
   { name: "PHP", iconName: "fa6-brands:php" },
@@ -41,31 +43,39 @@ const technologies = [
 const techWithIcons = technologies.map(tech => ({
   name: tech.name,
   // Pre-render the icon as HTML string that React can use
-  iconHtml: `<astro-icon name="${tech.iconName}" class="w-8 h-8 inline-block tech-icon" aria-hidden="true"></astro-icon>`
+  iconHtml: `<astro-icon name="${tech.iconName}" class="inline-block w-8 h-8" aria-hidden="true"></astro-icon>`
 }));
 ---
 
 <section class="outer-section bg-bg relative overflow-hidden" id="tech-stack">
   <div class="inner-section text-center lg:text-left">
-    <!-- Border title stays in Astro for performance -->
-    <div class="border-title">Our Tech Stack</div>
+    <!-- Use BorderTitle component -->
+    <BorderTitle>Our Tech Stack</BorderTitle>
 
     <div class="flex flex-col lg:grid lg:grid-cols-[1fr_2fr] gap-4 lg:gap-8 items-center">
-      <!-- Left: Static heading -->
+      <!-- Left: Use Heading component with proper structure -->
       <div class="w-sm">
         <div class="relative inline-block mb-6 leading-tight">
-          <h2 class="h2">
-            <span class="text-heading block lg:inline">We've mastered </span>
-            <span id="tech-heading-text" class="text-heading block lg:inline transition-opacity duration-150">
-              the tools that matter.
-            </span>
-          </h2>
+          <!-- Main heading using Heading component -->
+          <div id="tech-heading-main">
+            <Heading
+              tagName="h2"
+              before="We've mastered "
+              beforeClass="text-heading block lg:inline"
+              text="the tools that matter."
+              textClass="text-heading block lg:inline transition-opacity duration-150"
+            />
+          </div>
+          
           <!-- Dynamic heading overlay (controlled by React) -->
           <div id="tech-heading-overlay" class="absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-150">
-            <h2 class="h2">
-              <span class="text-heading block lg:inline">We've mastered </span>
-              <span id="tech-heading-dynamic" class="text-accent block lg:inline"></span>
-            </h2>
+            <Heading
+              tagName="h2"
+              before="We've mastered "
+              beforeClass="text-heading block lg:inline"
+              text=""
+              textClass="text-accent block lg:inline"
+            />
           </div>
         </div>
       </div>

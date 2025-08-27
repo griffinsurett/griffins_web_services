@@ -28,17 +28,17 @@ export default function TechStack({ technologies = [] }) {
 
   // Update Astro-rendered heading when hover state changes
   useEffect(() => {
-    const headingText = document.getElementById('tech-heading-text');
+    const headingMain = document.getElementById('tech-heading-main');
     const headingOverlay = document.getElementById('tech-heading-overlay');
-    const headingDynamic = document.getElementById('tech-heading-dynamic');
+    const headingDynamic = headingOverlay?.querySelector('.text-accent');
     
-    if (headingText && headingOverlay && headingDynamic) {
+    if (headingMain && headingOverlay && headingDynamic) {
       if (hoveredTech) {
-        headingText.style.opacity = '0';
+        headingMain.style.opacity = '0';
         headingOverlay.style.opacity = '1';
         headingDynamic.textContent = hoveredTech;
       } else {
-        headingText.style.opacity = '1';
+        headingMain.style.opacity = '1';
         headingOverlay.style.opacity = '0';
         headingDynamic.textContent = '';
       }
@@ -83,6 +83,19 @@ export default function TechStack({ technologies = [] }) {
       gradientMask={true}
       gradientWidth={{ base: 48, md: 30 }}
       className="relative w-full h-[84px] md:h-[96px]"
+      // Configure selectors for engagement system
+      containerSelector={`[data-autoplay-scope]`}
+      itemSelector={`[data-smooth-item]`}
+      // Handle item interactions to coordinate with engagement system
+      onItemInteraction={(payload, index, type) => {
+        if (type === "hover") {
+          // Extract the tech name from the payload
+          const techName = payload?.node?.props?.children?.props?.name || technologies[index % technologies.length]?.name;
+          if (techName) {
+            handleTechHover(techName);
+          }
+        }
+      }}
     >
       {techElements}
     </SmoothScrollCarousel>
