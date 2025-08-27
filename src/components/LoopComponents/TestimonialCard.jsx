@@ -33,7 +33,7 @@ export default function TestimonialCard({
         borderRadius="rounded-3xl"
         borderWidth={2}
         className="group text-left outer-card-transition !duration-[900ms] ease-out"
-        innerClassName="h-95 lg:h-80 mx-auto px-10 flex flex-col justify-center items-start relative card-bg"
+        innerClassName="h-100 md:h-90 lg:h-80 mx-auto px-10 flex flex-col justify-center items-start relative card-bg"
       >
         <div className="inner-card-style inner-card-transition inner-card-color" />
 
