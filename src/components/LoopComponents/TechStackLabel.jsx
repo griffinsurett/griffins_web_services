@@ -1,9 +1,17 @@
-// src/components/TechStackLabel.jsx
+// src/components/LoopComponents/TechStackIcon.jsx
 import React, { useState, useRef, useEffect } from "react";
 import AnimatedElementWrapper from "../AnimatedElementWrapper";
 import { useHoverInteraction } from "../../hooks/animations/useInteractions";
 
-const TechStackLabel = ({ tech, index, onTechHover, onTechLeave, showName = false, className = "" }) => {
+const TechStackIcon = ({ 
+  name, 
+  index, 
+  onTechHover, 
+  onTechLeave, 
+  showName = false, 
+  className = "",
+  children // This will be the Astro-rendered icon
+}) => {
   // Mobile touch state for this specific item
   const [isMobileActive, setIsMobileActive] = useState(false);
   const mobileTimeoutRef = useRef(null);
@@ -13,8 +21,8 @@ const TechStackLabel = ({ tech, index, onTechHover, onTechLeave, showName = fals
   const { handleMouseEnter, handleMouseLeave } = useHoverInteraction({
     hoverDelay: 0,
     onHoverStart: (el) => {
-      const name = el?.dataset?.techName || tech.name;
-      onTechHover?.(name);
+      const techName = el?.dataset?.techName || name;
+      onTechHover?.(techName);
     },
     onHoverEnd: () => onTechLeave?.(),
   });
@@ -51,14 +59,14 @@ const TechStackLabel = ({ tech, index, onTechHover, onTechLeave, showName = fals
       <div
         ref={rootRef}
         data-tech-item
-        data-tech-name={tech.name}
+        data-tech-name={name}
         data-index={index}
         className={`group flex flex-col items-center flex-shrink-0 ${className}`}
         role="button"
         tabIndex={0}
         onFocus={() => handleMouseEnter(rootRef.current, index)}
         onBlur={() => handleMouseLeave(rootRef.current, index)}
-        aria-label={tech.name}
+        aria-label={name}
       >
         {/* Logo container */}
         <div
@@ -71,19 +79,19 @@ const TechStackLabel = ({ tech, index, onTechHover, onTechLeave, showName = fals
             select-none
           "
           // Mobile touch
-          onTouchStart={() => handleMobileTouch(tech.name, index)}
+          onTouchStart={() => handleMobileTouch(name, index)}
           // Desktop hover
           onMouseEnter={() => handleMouseEnter(rootRef.current, index)}
           onMouseLeave={() => handleMouseLeave(rootRef.current, index)}
         >
-          {/* Icon */}
+          {/* Astro-rendered icon passed as children */}
           <div
             className={`
               relative text-heading transition-opacity duration-300
               ${isMobileActive ? "opacity-100" : "opacity-70 group-hover:opacity-100"}
             `}
           >
-            {tech.icon}
+            {children}
           </div>
         </div>
 
@@ -101,14 +109,14 @@ const TechStackLabel = ({ tech, index, onTechHover, onTechLeave, showName = fals
                 : "opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0"}
             `}
           >
-            {tech.name}
+            {name}
           </div>
         ) : (
-          <span className="sr-only">{tech.name}</span>
+          <span className="sr-only">{name}</span>
         )}
       </div>
     </AnimatedElementWrapper>
   );
 };
 
-export default TechStackLabel;
+export default TechStackIcon;

@@ -6,15 +6,37 @@ import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import icon from 'astro-icon';
 
-const { PUBLIC_SITE_DOMAIN } = loadEnv(
+// Load environment variables from .env files
+const env = loadEnv(
   process.env.NODE_ENV || 'development', 
   process.cwd(), 
   ''
 );
 
-// Get site domain from environment variable
-// const siteDomain = import.meta.env.PUBLIC_SITE_DOMAIN 
-const siteUrl = `https://${PUBLIC_SITE_DOMAIN}`;
+// Get site domain with proper fallbacks for different environments
+const getSiteUrl = () => {
+  // First, try the loaded .env file variable
+  let domain = env.PUBLIC_SITE_DOMAIN;
+  
+  // If not found in .env, try system environment (for production deployments)
+  if (!domain) {
+    domain = process.env.PUBLIC_SITE_DOMAIN;
+  }
+  
+  // Fallback to default domain
+  if (!domain) {
+    domain = 'griffinswebservices.com';
+  }
+  
+  // Always use https in production, http for localhost development
+  const protocol = domain.includes('localhost') || domain.includes('127.0.0.1') 
+    ? 'http' 
+    : 'https';
+    
+  return `${protocol}://${domain}`;
+};
+
+const siteUrl = getSiteUrl();
 console.log(`Site URL: ${siteUrl}`);
 
 export default defineConfig({
@@ -61,9 +83,10 @@ export default defineConfig({
         
         // Simple Icons (for tech brands)
         'simple-icons': [
-          'astro', 'nextdotjs', 'react', 'gatsby', 'svelte',
-          'shopify', 'wordpress', 'elementor', 'webflow',
-          'framer', 'vercel', 'github', 'nodedotjs'
+          'html5', 'css3', 'javascript', 'astro', 'nextdotjs', 
+          'react', 'gatsby', 'svelte', 'shopify', 'wordpress', 
+          'elementor', 'webflow', 'framer', 'vercel', 'github', 
+          'nodedotjs'
         ],
         
         // Font Awesome brands (for missing tech brands)  

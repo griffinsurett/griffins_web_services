@@ -14,13 +14,13 @@ export const contactItems = [
     type: "email",
     label: "griffin@griffinswebservices.com",
     href: "mailto:griffin@griffinswebservices.com",
-    icon: "mail", // lucide icon name
+    icon: "mail",
   },
   {
     type: "phone",
     label: "(732) 939-1309",
     href: "tel:+17329391309",
-    icon: "phone", // lucide icon name
+    icon: "phone",
   },
 ];
 

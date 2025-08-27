@@ -1,0 +1,101 @@
+---
+// src/Sections/TechStack.astro
+import { Icon } from 'astro-icon/components';
+import TechStack from './TechStack.jsx';
+
+// Technology data with astro-icon names
+const technologies = [
+  // Core web platform
+  { name: "HTML", iconName: "simple-icons:html5" },
+  { name: "CSS", iconName: "simple-icons:css3" },
+  { name: "JavaScript", iconName: "simple-icons:javascript" },
+  
+  // Frameworks & Libraries
+  { name: "Astro", iconName: "simple-icons:astro" },
+  { name: "Next.js", iconName: "simple-icons:nextdotjs" },
+  { name: "React", iconName: "simple-icons:react" },
+  { name: "PHP", iconName: "fa6-brands:php" },
+  { name: "Node.js", iconName: "simple-icons:nodedotjs" },
+  { name: "Gatsby", iconName: "simple-icons:gatsby" },
+  { name: "Svelte", iconName: "simple-icons:svelte" },
+  
+  // CMS & Platforms
+  { name: "Shopify", iconName: "simple-icons:shopify" },
+  { name: "WordPress", iconName: "simple-icons:wordpress" },
+  { name: "Elementor", iconName: "simple-icons:elementor" },
+  { name: "Webflow", iconName: "simple-icons:webflow" },
+  
+  // Design & Tools
+  { name: "Figma", iconName: "fa6-brands:figma" },
+  { name: "Framer", iconName: "simple-icons:framer" },
+  
+  // Hosting & Services
+  { name: "Vercel", iconName: "simple-icons:vercel" },
+  { name: "Cloudflare", iconName: "fa6-brands:cloudflare" },
+  { name: "GitHub", iconName: "simple-icons:github" },
+  { name: "AWS", iconName: "fa6-brands:aws" },
+  { name: "Python", iconName: "fa6-brands:python" },
+];
+
+// Create tech objects with Astro-rendered icons
+const techWithIcons = technologies.map(tech => ({
+  name: tech.name,
+  // Pre-render the icon as HTML string that React can use
+  iconHtml: `<astro-icon name="${tech.iconName}" class="w-8 h-8" aria-hidden="true"></astro-icon>`
+}));
+---
+
+<section class="outer-section bg-bg relative overflow-hidden" id="tech-stack">
+  <div class="inner-section text-center lg:text-left">
+    <!-- Border title stays in Astro for performance -->
+    <div class="border-title">Our Tech Stack</div>
+
+    <div class="flex flex-col lg:grid lg:grid-cols-[1fr_2fr] gap-4 lg:gap-8 items-center">
+      <!-- Left: Static heading -->
+      <div class="w-sm">
+        <div class="relative inline-block mb-6 leading-tight">
+          <h2 class="h2">
+            <span class="text-heading block lg:inline">We've mastered </span>
+            <span id="tech-heading-text" class="text-heading block lg:inline transition-opacity duration-150">
+              the tools that matter.
+            </span>
+          </h2>
+          <!-- Dynamic heading overlay (controlled by React) -->
+          <div id="tech-heading-overlay" class="absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-150">
+            <h2 class="h2">
+              <span class="text-heading block lg:inline">We've mastered </span>
+              <span id="tech-heading-dynamic" class="text-accent block lg:inline"></span>
+            </h2>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: React carousel with Astro-rendered icons -->
+      <TechStack 
+        technologies={techWithIcons}
+        client:visible
+      />
+    </div>
+  </div>
+
+  <!-- Pre-render all icons for React to use -->
+  <template id="tech-icons-template">
+    {technologies.map((tech) => (
+      <div key={tech.name} data-tech-name={tech.name}>
+        <Icon name={tech.iconName} class="w-8 h-8" aria-hidden="true" />
+      </div>
+    ))}
+  </template>
+</section>
+
+<style>
+  astro-icon {
+    display: inline-block;
+  }
+  
+  /* Ensure icons maintain consistent sizing */
+  astro-icon svg {
+    width: 2rem;
+    height: 2rem;
+  }
+</style>
