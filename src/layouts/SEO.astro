@@ -32,7 +32,7 @@ const finalCanonicalUrl = canonicalUrl || `${siteUrl}${Astro.url.pathname}`;
 // Default to indexing if no robots directive is passed
 const effectiveRobots = robots ?? "index, follow";
 
-const finalTitle = `${siteData.title}: ${title}`;
+const finalTitle = siteData.title + ": " + title;
 
 if (import.meta.env.DEV) {
   console.log("SEO Data:", {
