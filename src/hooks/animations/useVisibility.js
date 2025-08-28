@@ -1,6 +1,7 @@
 // src/hooks/useVisibility.js
 import { useEffect, useRef, useState } from "react";
 import { useScrollInteraction } from "./useInteractions";
+import { useIntersectionObserver } from "@/utils/IntersectionObserver";
 
 /**
  * useVisibility(ref, options)
@@ -40,27 +41,28 @@ export function useVisibility(
     const el = ref?.current;
     if (!el) return;
 
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        const isIn = entry.isIntersecting;
-        setVisible(isIn);
-        if (isIn) {
-          if (!seen) setSeen(true);
-          onEnter?.(entry);
-          if (once) io.disconnect();
-        } else {
-          onExit?.(entry);
-        }
+    const { isVisible, hasBeenSeen, disconnect } = useIntersectionObserver(el, {
+      threshold,
+      root,
+      rootMargin,
+      once,
+      onEnter: (entry) => {
+        setVisible(true);
+        setSeen(true);
+        onEnter?.(entry);
       },
-      { root, rootMargin, threshold }
-    );
+      onExit: (entry) => {
+        setVisible(false);
+        onExit?.(entry);
+      },
+    });
 
-    io.observe(el);
-    return () => io.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ref, root, rootMargin, threshold, once, onEnter, onExit]);
+    setVisible(isVisible);
+    setSeen(hasBeenSeen);
 
-  // ✅ REFACTORED: Use centralized scroll interaction instead of hardcoded listeners
+    return disconnect;
+  }, [ref, threshold, root, rootMargin, once, onEnter, onExit]);
+
   // Direction-aware scroll handlers (only if callbacks provided)
   const wantsDirection =
     typeof onForward === "function" || typeof onBackward === "function";
