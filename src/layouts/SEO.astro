@@ -32,11 +32,11 @@ const finalCanonicalUrl = canonicalUrl || `${siteUrl}${Astro.url.pathname}`;
 // Default to indexing if no robots directive is passed
 const effectiveRobots = robots ?? "index, follow";
 
-const universalTitleTemplate = `${siteData.title}: ${title}`;
+const finalTitle = `${siteData.title}: ${title}`;
 
 if (import.meta.env.DEV) {
   console.log("SEO Data:", {
-    universalTitleTemplate,
+    finalTitle,
     description,
     image,
     keywords,
@@ -50,8 +50,8 @@ if (import.meta.env.DEV) {
 }
 ---
 <!-- Primary Meta Tags -->
-<title>{universalTitleTemplate}</title>
-<meta name="title" content={universalTitleTemplate} />
+<title>{finalTitle}</title>
+<meta name="title" content={finalTitle} />
 <meta name="description" content={description} />
 
 {finalCanonicalUrl && <link rel="canonical" href={finalCanonicalUrl} />}
@@ -62,7 +62,7 @@ if (import.meta.env.DEV) {
 )}
 
 <!-- Open Graph / Facebook -->
-<meta property="og:title" content={universalTitleTemplate} />
+<meta property="og:title" content={finalTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={image} />
 <meta property="og:type" content={finalOgType} />
@@ -71,7 +71,7 @@ if (import.meta.env.DEV) {
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content={universalTitleTemplate} />
+<meta name="twitter:title" content={finalTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={image} />
 <meta property="twitter:url" content={finalCanonicalUrl} />
