@@ -8,26 +8,10 @@ import Theme from "./Theme.astro";
 import BodyTags from "./BodyTags.astro";
 
 export interface Props {
-  title: string;
-  description?: string;
-  image?: string;
-  canonical?: string;
-  noindex?: boolean;
-  ogType?: string;
+  [key: string]: any; // Allow all props
 }
 
-const {
-  title,
-  description = "Professional website development services. Lightning-fast, secure, and mobile-first websites that convert visitors into customers.",
-  image = "/og-image.jpg",
-  canonical = Astro.url.href,
-  noindex = false,
-  ogType = "website",
-} = Astro.props;
-
-const siteTitle = title.includes("Griffin")
-  ? title
-  : `${title} | Griffin's Web Services`;
+const { ...seoProps } = Astro.props;
 ---
 
 <!doctype html>
@@ -35,29 +19,24 @@ const siteTitle = title.includes("Griffin")
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- Static head tags & favicons -->
-    <HeadTags canonical={canonical} />
-
-    <!-- SEO / OG / Twitter -->
-    <SEO
-      title={siteTitle}
-      description={description}
-      image={image}
-      canonical={canonical}
-      ogType={ogType}
-    />
-
-    <!-- Theme bootstrap (pre-paint) + theme-color sync -->
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- Theme, favicons, and pre-paint scripts -->
     <Theme />
 
-    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <!-- SEO / OG / Twitter -->
+    <SEO {...seoProps} />
+
+    <!-- Additional head tags (if needed in future) -->
+    <HeadTags />
+
+    {seoProps.noindex && <meta name="robots" content="noindex,nofollow" />}
   </head>
 
   <body class="bg-bg text-text antialiased">
-    <!-- Accessibility helpers / global body tags -->
+    <!-- Body tags placeholder -->
     <BodyTags />
-
+    
     <div id="app" class="min-h-screen flex flex-col">
       <slot />
     </div>

@@ -1,34 +1,77 @@
 ---
+import defaultOGImage from "@/assets/GWS-animated.png";
+import { siteData } from "@/siteData";
+
 export interface Props {
   title: string;
   description?: string;
-  image?: string;
-  canonical?: string;
-  ogType?: string; // default "website"
+  canonicalUrl?: string;
+  ogType?: string;
 }
+
 const {
   title,
-  description = "",
-  image = "/og-image.jpg",
-  canonical = Astro.url.href,
-  ogType = "website",
+  description,
+  image = defaultOGImage.src,
+  keywords,
+  canonicalUrl,
+  robots,
+  siteName = siteData.title,
+  ogType,
 } = Astro.props;
 
-const absoluteImage = new URL(image, Astro.url).href;
----
+// Use a fallback value if ogType is falsy
+const finalOgType = ogType || "website";
 
+// Determine your site’s base URL from env or fallback
+const siteUrl = siteData.url;
+
+// Build canonical URL if none provided
+const finalCanonicalUrl = canonicalUrl || `${siteUrl}${Astro.url.pathname}`;
+
+// Default to indexing if no robots directive is passed
+const effectiveRobots = robots ?? "index, follow";
+
+if (import.meta.env.DEV) {
+  console.log("SEO Data:", {
+    title,
+    description,
+    image,
+    keywords,
+    siteName,
+    ogType,
+    finalOgType,
+    finalCanonicalUrl,
+    effectiveRobots,
+    siteUrl
+  });
+}
+---
+<!-- Primary Meta Tags -->
 <title>{title}</title>
+<meta name="title" content={title} />
 <meta name="description" content={description} />
 
-<!-- Open Graph -->
-<meta property="og:type" content={ogType} />
+{finalCanonicalUrl && <link rel="canonical" href={finalCanonicalUrl} />}
+<meta name="robots" content={effectiveRobots} />
+
+{keywords && Array.isArray(keywords) && keywords.length > 0 && (
+  <meta name="keywords" content={keywords.join(", ")} />
+)}
+
+<!-- Open Graph / Facebook -->
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={absoluteImage} />
-<meta property="og:url" content={canonical} />
+<meta property="og:image" content={image} />
+<meta property="og:type" content={finalOgType} />
+<meta property="og:url" content={finalCanonicalUrl} />
+<meta property="og:site_name" content={siteName} />
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={absoluteImage} />
+<meta name="twitter:image" content={image} />
+<meta property="twitter:url" content={finalCanonicalUrl} />
+
+<slot name="structuredData" />

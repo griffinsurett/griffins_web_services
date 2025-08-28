@@ -1,0 +1,57 @@
+---
+// src/layouts/Theme.astro
+---
+
+<!-- Favicons -->
+<link rel="shortcut icon" href="/favicons/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
+<link rel="manifest" href="/favicons/site.webmanifest" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<!-- Color scheme support -->
+<meta name="color-scheme" content="dark light" />
+
+<!-- Theme color (will be updated by script below) -->
+<meta name="theme-color" content="var(--color-bg)" />
+
+<!-- Apple specific -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+<!-- Theme detection script (runs before content loads to prevent FOUC) -->
+<script is:inline>
+  // Prevent FOUC (Flash of Unstyled Content)
+  (function() {
+    try {
+      // Get saved theme or detect from OS preference
+      const savedTheme = localStorage.getItem('theme');
+      const theme = savedTheme || 
+        (window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      
+      // Get saved accent color
+      const accent = localStorage.getItem('accent') || 'var(--main-accent)';
+      
+      // Apply theme immediately
+      const root = document.documentElement;
+      root.setAttribute('data-theme', theme);
+      root.style.setProperty('--color-accent', accent);
+      
+      // Set color-scheme for native elements
+      root.style.colorScheme = theme;
+      
+      // Update theme-color meta tag
+      const computed = getComputedStyle(root).getPropertyValue('--color-bg').trim();
+      if (computed) {
+        let meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) {
+          meta.setAttribute('content', computed);
+        }
+      }
+    } catch (e) {
+      // Fallback to dark theme if anything fails
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>

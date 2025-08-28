@@ -1,8 +1,7 @@
 ---
 // src/pages/index.astro - Main homepage
-import Layout from "../layouts/Layout.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../Sections/Header.astro";
-import Hero from "../Sections/Hero.astro";
 import About from "../Sections/About.astro";
 import Benefits from "../Sections/Benefits.astro";
 import WebsiteTypesSection from "../Sections/WebsiteTypesSection.astro";
@@ -17,45 +16,43 @@ import CTASection from "../Sections/CTASection.astro";
 import Stats from "../Sections/Stats.astro";
 import Footer from "../Sections/Footer.astro";
 import HeroBasic from "../Sections/HeroBasic.astro";
-
-// SEO data
-const pageTitle = "Professional Website Development Services";
-const pageDescription =
-  "Get a lightning-fast, secure, and mobile-first website that converts visitors into customers. Professional web development, hosting, and maintenance services.";
+import { siteData } from "@/siteData";
 ---
 
-<Layout title={pageTitle} description={pageDescription}>
+<BaseLayout 
+  title={`${siteData.title}: Professional Website Development Services`}
+  description="Get a lightning-fast, secure, and mobile-first website that converts visitors into customers. Professional web development, hosting, and maintenance services.";
+  ogType="website"
+>
   <Header />
 
   <main id="main-content" class="relative">
-    <!-- <Hero /> -->
-
+    <!-- Hero Section -->
     <HeroBasic />
+    <!-- Alternative: <Hero /> -->
 
+    <!-- Core Services -->
     <About />
-
     <Benefits />
-
     <WebsiteTypesSection />
 
+    <!-- Portfolio & Social Proof -->
     <PortfolioSection />
-
     <Testimonials client:visible />
 
+    <!-- CTA & Trust Signals -->
     <CTASection />
-
     <Stats />
 
+    <!-- Technical & Services -->
     <TechStackSection />
-
     <HostingMaintenance />
-
     <AddOnServices />
 
+    <!-- Support & Contact -->
     <FAQ />
-
     <QuoteFormSection />
   </main>
 
   <Footer />
-</Layout>
+</BaseLayout>
