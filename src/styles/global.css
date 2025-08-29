@@ -13,7 +13,6 @@
   --color-primary-light: var(--color-zinc-50);
   --color-secondary-light: var(--color-zinc-100);
   --color-tertiary-light: var(--color-zinc-200);
-
   --main-accent: #5e76f6;
 
   /* Colors that Tailwind will automatically generate utilities for */
