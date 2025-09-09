@@ -8,7 +8,7 @@ import { testimonials } from "@/testimonials";
 // Show only featured faces in the circle stack (tweak if you want all)
 const faces = testimonials.filter((t) => t.featured);
 ---
-<div class="testimonials flex items-center gap-4 lg:gap-6 px-5 md:px-0">
+<div class="testimonials flex items-center gap-4 lg:gap-6 px-2 md:px-0">
   <!-- circle “stack” -->
   <div class="flex justify-center items-center">
     {faces.map((t, i) => (
@@ -22,7 +22,7 @@ const faces = testimonials.filter((t) => t.featured);
 
   <div class="flex flex-col items-start">
     <Heading tagName="h3" className="text-heading m-0 p-0 text-3xl lg:text-4xl">
-      <Counter client:load start={1} end={100} duration={200} className="inline-block" />+
+      <Counter client:idle start={1} end={100} duration={200} className="inline-block" />+
     </Heading>
     <Heading tagName="p" className="small-text m-0">
       Happy Clients
@@ -30,7 +30,7 @@ const faces = testimonials.filter((t) => t.featured);
   </div>
 </div>
 
-<script client:load>
+<script client:idle>
   const circles = document.querySelectorAll(".testimonials .circle");
   let idx = 0;
 

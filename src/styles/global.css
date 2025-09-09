@@ -192,6 +192,10 @@
     @apply w-9/10 lg:max-w-6xl mx-auto;
   }
 
+  .inner-section-sm {
+    @apply w-8/10 mx-auto;
+  }
+
   .section-box {
     @apply rounded-3xl p-8 lg:p-12 relative overflow-hidden;
   }

@@ -15,8 +15,9 @@ import QuoteFormSection from "../Sections/QuoteFormSection.astro";
 import CTASection from "../Sections/CTASection.astro";
 import Stats from "../Sections/Stats.astro";
 import Footer from "../Sections/Footer.astro";
-import HeroBasic from "../Sections/HeroBasic.astro";
+// import HeroBasic from "../Sections/HeroBasic.astro";
 import { siteData } from "@/siteData";
+import Hero from "@/Sections/Hero.astro";
 ---
 
 <BaseLayout 
@@ -28,8 +29,9 @@ import { siteData } from "@/siteData";
 
   <main id="main-content" class="relative">
     <!-- Hero Section -->
-    <HeroBasic />
-    <!-- Alternative: <Hero /> -->
+         <Hero />
+    <!-- <HeroBasic /> -->
+
 
     <!-- Core Services -->
     <About />

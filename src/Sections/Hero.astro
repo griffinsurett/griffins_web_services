@@ -1,17 +1,43 @@
 ---
 // src/Sections/Hero.astro
+import { Image } from "astro:assets";
 import Button from "../components/Buttons/Button.jsx";
 import Heading from "../components/Heading.jsx";
 import { siteData } from "../siteData";
 import TestimonialCircleSection from "./TestimonialCircleSection.astro";
+import ComputerGuy from "@/assets/computer-guy.png";
 
 const heroTaglines = [
-  { before: "Get a Website That ", emphasized: "Actually Sells", after: " for Your Business" },
-  { before: "Build Your ", emphasized: "Digital Empire", after: " with Griffin's Web Services" },
-  { before: "Leave Your Competition ", emphasized: "In the Dust", after: " with a Blazing Fast Website" },
-  { before: "Your Business Deserves a ", emphasized: "Professional Website", after: " That Delivers." },
-  { before: "Boost Your Business with a ", emphasized: "Lightning-Fast", after: " Website" },
-  { before: "Get a High-Performing Website That ", emphasized: "Loads in Seconds", after: " — Not Minutes" }
+  {
+    before: "Get a Website That ",
+    emphasized: "Actually Sells",
+    after: " for Your Business",
+  },
+  {
+    before: "Build Your ",
+    emphasized: "Digital Empire",
+    after: " with Griffin's Web Services",
+  },
+  {
+    before: "Leave Your Competition ",
+    emphasized: "In the Dust",
+    after: " with a Blazing Fast Website",
+  },
+  {
+    before: "Your Business Deserves a ",
+    emphasized: "Professional Website",
+    after: " That Delivers.",
+  },
+  {
+    before: "Boost Your Business with a ",
+    emphasized: "Lightning-Fast",
+    after: " Website",
+  },
+  {
+    before: "Get a High-Performing Website That ",
+    emphasized: "Loads in Seconds",
+    after: " — Not Minutes",
+  },
 ];
 
 // Pick a random tagline (server-side)
@@ -19,32 +45,61 @@ const currentTagline = Math.floor(Math.random() * heroTaglines.length);
 const tagline = heroTaglines[currentTagline];
 ---
 
-<section class="min-h-screen flex items-center justify-left text-left px-5 pt-32 pb-20 bg-bg relative">
+<section class="relative min-h-screen bg-bg overflow-hidden">
+  {/* Background gradient */}
   <div class="absolute inset-0 hero-gradient-bg"></div>
-  <div class="inner-section mx-5 relative z-10">
-    
-    <Heading
-      tagName="h1"
-      className="mb-2 mr-10 lg:mr-0"
-      before={tagline.before}
-      text={tagline.emphasized}
-      textClass="emphasized-text"
-      after={tagline.after}
-    />
-    <p class="hero-text text-text mb-8 mx-auto">
-      {siteData.description}
-    </p>
-    
-    <div class="flex flex-col gap-6">
-      <div class="flex flex-col sm:flex-row gap-5 justify-left items-center">
-        <Button variant="primary" href="#contact" client:visible>
-          Get Started Today ✨
-        </Button>
-        <Button variant="secondary" href="#projects" client:visible>
-          View Our Work 👀
-        </Button>
+  
+  {/* Main content container */}
+  <div class="relative z-10 min-h-screen">
+    <div class="w-full h-full">
+      
+      {/* Two-column flex layout */}
+      <div class="h-full mx-auto flex flex-col lg:flex-row items-end lg:justify-between justify-center">
+        
+        {/* Left Column - Text Content */}
+        <div class="basis-4/7 flex flex-col justify-center space-y-6 lg:space-y-8 pt-20 lg:pt-0 md:lg:pl-20 lg:pl-25 w-8/10 mx-auto min-h-[100vh] lg:w-full">
+          <div class="space-y-4">
+            <Heading
+              tagName="h1"
+              className="text-4xl md:text-5xl xl:text-6xl text-heading"
+              before={tagline.before}
+              text={tagline.emphasized}
+              textClass="emphasized-text"
+              after={tagline.after}
+            />
+            
+            <p class="text-lg sm:text-xl md:text-2xl leading-relaxed text-text max-w-2xl">
+              {siteData.description}
+            </p>
+          </div>
+
+          {/* CTA Section */}
+          <div class="flex flex-col gap-6">
+            <div class="flex flex-col lg:flex-row gap-5 items-start">
+              <Button variant="primary" href="#contact" client:visible>
+                Get Started Today ✨
+              </Button>
+            {/* Testimonial Circle */}
+            <TestimonialCircleSection />
+            </div>
+          
+          </div>
+        </div>
+
+        {/* Right Column - Image */}
+        <div class="basis-3/7 h-full flex items-end justify-end">
+          <div class="relative h-full w-full max-w-lg lg:max-w-none flex items-end justify-end">
+            <Image
+              src={ComputerGuy}
+              alt="Professional web developer working on laptop"
+              class="w-full lg:w-auto h-auto max-h-[60vh] md:max-h-[85vh] object-contain object-bottom transform translate-z-0"
+              fetchpriority="high"
+              loading="eager"
+            />
+          </div>
+        </div>
+        
       </div>
-              <TestimonialCircleSection/>
     </div>
   </div>
 </section>
