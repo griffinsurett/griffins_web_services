@@ -1,0 +1,8 @@
+---
+import Testimonials from '@/Sections/Testimonials';
+import { testimonials } from "../testimonials";
+---
+    <section class="outer-section bg-bg relative" id="testimonials">
+      <div class="section-color-border" />
+      <Testimonials data={testimonials} client:visible />
+</section>

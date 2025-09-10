@@ -5,15 +5,13 @@ import BorderTitle from "../components/BorderTitle";
 import Carousel from "../components/Carousels/Carousel";
 import Heading from "../components/Heading";
 import AnimatedElementWrapper from "../components/AnimatedElementWrapper";
-import { testimonials } from "../testimonials";
+
 // astro ready
 
-export default function Testimonials() {
+export default function Testimonials({ data }) {
   const STAGGER_MS = 120;
 
   return (
-    <section className="outer-section bg-bg relative" id="testimonials">
-      <div className="section-color-border" />
       <div className="inner-section">
         <div className="text-section">
           {/* client idle */}
@@ -33,7 +31,7 @@ export default function Testimonials() {
 
         {/* client visible */}
         <Carousel
-          items={testimonials}
+          items={data}
           // If your Carousel passes (item, index) to renderItem, use i for a stagger
           renderItem={(t, i = 0) => (
             // client visible
@@ -57,6 +55,5 @@ export default function Testimonials() {
           drag={false}
         />
       </div>
-    </section>
   );
 };
