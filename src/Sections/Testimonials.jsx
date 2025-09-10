@@ -12,9 +12,9 @@ export default function Testimonials() {
   const STAGGER_MS = 120;
 
   return (
-    <section className="outer-section bg-bg relative">
+    <section className="outer-section bg-bg relative" id="testimonials">
       <div className="section-color-border" />
-      <div className="inner-section" id="testimonials">
+      <div className="inner-section">
         <div className="text-section">
           {/* client idle */}
           <BorderTitle>Testimonials</BorderTitle>
