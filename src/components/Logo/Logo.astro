@@ -24,7 +24,7 @@ const {
 } = Astro.props;
 
 const shouldUseLottie = useLottie && (
-  loading === 'eager' ||
+  loading === 'lazy' ||
   trigger === 'scroll' ||
   trigger === 'load'
 );
