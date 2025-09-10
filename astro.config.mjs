@@ -7,6 +7,8 @@ import react from '@astrojs/react';
 import icon from 'astro-icon';
 import { iconConfig } from './iconsConfig.js';
 
+import partytown from '@astrojs/partytown';
+
 // Load environment variables from .env files
 const env = loadEnv(
   process.env.NODE_ENV || 'development', 
@@ -46,11 +48,14 @@ export default defineConfig({
       include: ['lottie-web'],
     },
   },
-  integrations: [
-    mdx(),
-    react({
-      include: ['**/react/*', '**/components/**/*.jsx', '**/hooks/**/*.js']
-    }),
-    icon(iconConfig),
-  ],
+  integrations: [mdx(), react({
+    include: ['**/react/*', '**/components/**/*.jsx', '**/hooks/**/*.js']
+  }), icon(iconConfig), partytown(
+    {
+      config: {
+        forward: ["dataLayer.push"],
+        debug: process.env.NODE_ENV === 'development'
+      },
+    }
+  )],
 });
