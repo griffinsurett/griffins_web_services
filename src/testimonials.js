@@ -1,5 +1,8 @@
 // src/testimonials.js
 import Placeholder from "./assets/placeholder.jpg";
+import Anthony from "@/assets/Anthony.jpeg";
+import Richard from "@/assets/RichardFaria.png";
+import Arold from "@/assets/arold.jpg"
 
 export const testimonials = [
     {
@@ -17,7 +20,7 @@ export const testimonials = [
       author: "Anthony Gonzales",
       role: "Owner, Pronto Junk Removal",
       rating: 5,
-      image: Placeholder,
+      image: Anthony,
       featured: true,
     },
     {
@@ -35,7 +38,7 @@ export const testimonials = [
       author: "Arold Norelus",
       role: "Best-Selling Author",
       rating: 5,
-      image: Placeholder,
+      image: Arold,
         featured: true,
     },
     {
@@ -53,7 +56,7 @@ export const testimonials = [
       author: "Richard Faria",
       role: "Owner, Koi Roofing and Solar",
       rating: 5,
-      image: Placeholder,
+      image: Richard,
       featured: true,
     },
   ];

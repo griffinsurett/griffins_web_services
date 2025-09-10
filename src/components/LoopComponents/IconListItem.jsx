@@ -13,6 +13,9 @@ export default function IconListItem({
   // Icon styling
   iconClassName = "icon-medium card-icon-color",
   
+  // Image styling and behavior
+  imageClassName = "w-12 h-12 rounded-full object-cover flex-shrink-0",
+  
   // Title styling and behavior
   titleClassName = "h4",
   titleTag = "h4", // h1, h2, h3, h4, h5, h6, div, span, p
@@ -23,10 +26,11 @@ export default function IconListItem({
   
   // Show/hide elements
   showIcon = true,
+  showImage = false,
   showTitle = true,
   showDescription = true
 }) {
-  const { icon, title, description } = data;
+  const { icon, image, title, description } = data;
 
   // Layout configurations
   const layouts = {
@@ -46,9 +50,31 @@ export default function IconListItem({
   const TitleTag = titleTag;
   const DescriptionTag = descriptionTag;
 
+  // Image component - handles ImageMetadata object
+  const ImageComponent = () => {
+    if (!showImage || !image) return null;
+    
+    // Extract src from ImageMetadata object
+    const imageSrc = image?.src || image;
+    const imageAlt = `${title}, ${description}` || title || "";
+    
+    return (
+      <div className={imageClassName}>
+        <img
+          src={imageSrc}
+          alt={imageAlt}
+          className="w-full h-full object-cover"
+        />
+      </div>
+    );
+  };
+
   return (
     <div className={`${layouts[layout]} ${alignments[alignment]} ${className}`}>
-      {showIcon && (
+      {/* Image - show before icon/content for all layouts */}
+      <ImageComponent />
+      
+      {showIcon && !showImage && (
         <div className={iconClassName}>
           {icon}
         </div>

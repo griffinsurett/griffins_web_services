@@ -11,7 +11,7 @@ export default function TestimonialCard({
   animationDuration,
   animationDelay,
 }) {
-  const { tag, quote, author, role, rating } = data;
+  const { tag, quote, author, role, rating, image } = data;
 
   const RatingStar = ({ i }) => (
     <svg
@@ -49,15 +49,23 @@ export default function TestimonialCard({
 
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 relative z-10 w-full">
           <IconListItem
-            data={{ title: author, description: role }}
+            data={{ 
+              image: image,
+              title: author, 
+              description: role 
+            }}
             layout="horizontal"
             alignment="left"
             className="gap-4"
-            iconClassName="icon-small card-icon-color hidden"
+            imageClassName="w-12 h-12 rounded-full overflow-hidden flex-shrink-0"
             titleClassName="h4"
             titleTag="span"
             descriptionClassName="text-text text-sm"
             descriptionTag="p"
+            showIcon={false}
+            showImage={!!image}
+            showTitle={true}
+            showDescription={true}
           />
           <div className="flex gap-1 text-center justify-center items-center">
             {[...Array(rating)].map((_, i) => (

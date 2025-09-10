@@ -14,7 +14,7 @@ export default function Testimonials() {
   return (
     <section className="outer-section bg-bg relative">
       <div className="section-color-border" />
-      <div className="inner-section">
+      <div className="inner-section" id="testimonials">
         <div className="text-section">
           {/* client idle */}
           <BorderTitle>Testimonials</BorderTitle>

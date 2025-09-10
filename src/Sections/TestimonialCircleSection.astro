@@ -8,10 +8,11 @@ import { testimonials } from "@/testimonials";
 // Show only featured faces in the circle stack (tweak if you want all)
 const faces = testimonials.filter((t) => t.featured);
 ---
-<div class="testimonials flex items-center gap-4 lg:gap-6 px-2 md:px-0">
+<a href="/#testimonials" class="testimonials flex items-center gap-4 lg:gap-6 px-2 md:px-0">
   <!-- circle “stack” -->
   <div class="flex justify-center items-center">
     {faces.map((t, i) => (
+      console.log("Rendering CircleImageItem for:", t),
       // Keep the `.circle` class for the heartbeat script
       <div class="circle -mr-2 lg:-mr-4 first:ml-0">
         {/* Pass what CircleImageItem needs; commonly image/src + alt/title */}
@@ -28,7 +29,7 @@ const faces = testimonials.filter((t) => t.featured);
       Happy Clients
     </Heading>
   </div>
-</div>
+</a>
 
 <script client:idle>
   const circles = document.querySelectorAll(".testimonials .circle");
