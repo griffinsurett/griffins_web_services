@@ -23,10 +23,12 @@ const {
   useLottie = true,
 } = Astro.props;
 
+// Only use Lottie for non-eager scenarios or explicit triggers
 const shouldUseLottie = useLottie && (
-  loading === 'lazy' ||
-  trigger === 'scroll' ||
-  trigger === 'load'
+  trigger === 'scroll' ||    // Scroll-triggered - load later
+  trigger === 'visible' ||   // Visibility-triggered
+  trigger === 'load'         // Explicit load
+  // Remove eager loading from auto-Lottie list
 );
 
 // Fixed dimensions: 40px on small screens, 45px on large screens
@@ -39,29 +41,76 @@ const logoClasses = "block w-[40px] h-[40px] lg:w-[45px] lg:h-[45px] object-cont
 
 <a href="/" class={`flex justify-center items-center gap-1.5 ${className}`}>
   {shouldUseLottie ? (
-    <LottieLogo
-      alt="Griffin's Web Services Animated Logo"
-      loading={loading}
-      trigger={trigger}
-      className="logo-class"
-      mediaClasses={logoClasses}
-      client:idle
-    >
-      {/* High-DPI poster with consistent sizing */}
-      <Image
-        src={POSTER_SRC}
-        alt="Griffin's Web Services Logo"
+    <!-- For scroll triggers, use client:idle to defer loading until browser is idle -->
+    {trigger === 'scroll' ? (
+      <LottieLogo
+        alt="Griffin's Web Services Animated Logo"
         loading={loading}
-        decoding="async"
-        format="webp"
-        widths={LOGO_WIDTHS}
-        sizes={LOGO_SIZES}
-        quality={90}
-        class={logoClasses}
-        fetchpriority={loading === 'eager' ? 'high' : undefined}
-      />
-    </LottieLogo>
+        trigger={trigger}
+        className="logo-class"
+        mediaClasses={logoClasses}
+        client:idle
+      >
+        <Image
+          src={POSTER_SRC}
+          alt="Griffin's Web Services Logo"
+          loading={loading}
+          decoding="async"
+          format="webp"
+          widths={LOGO_WIDTHS}
+          sizes={LOGO_SIZES}
+          quality={90}
+          class={logoClasses}
+          fetchpriority={loading === 'eager' ? 'high' : undefined}
+        />
+      </LottieLogo>
+    ) : trigger === 'visible' ? (
+      <LottieLogo
+        alt="Griffin's Web Services Animated Logo"
+        loading={loading}
+        trigger={trigger}
+        className="logo-class"
+        mediaClasses={logoClasses}
+        client:visible
+      >
+        <Image
+          src={POSTER_SRC}
+          alt="Griffin's Web Services Logo"
+          loading={loading}
+          decoding="async"
+          format="webp"
+          widths={LOGO_WIDTHS}
+          sizes={LOGO_SIZES}
+          quality={90}
+          class={logoClasses}
+          fetchpriority={loading === 'eager' ? 'high' : undefined}
+        />
+      </LottieLogo>
+    ) : (
+      <LottieLogo
+        alt="Griffin's Web Services Animated Logo"
+        loading={loading}
+        trigger={trigger}
+        className="logo-class"
+        mediaClasses={logoClasses}
+        client:load
+      >
+        <Image
+          src={POSTER_SRC}
+          alt="Griffin's Web Services Logo"
+          loading={loading}
+          decoding="async"
+          format="webp"
+          widths={LOGO_WIDTHS}
+          sizes={LOGO_SIZES}
+          quality={90}
+          class={logoClasses}
+          fetchpriority={loading === 'eager' ? 'high' : undefined}
+        />
+      </LottieLogo>
+    )}
   ) : (
+    <!-- Static image fallback -->
     <Image
       src={POSTER_SRC}
       alt="Griffin's Web Services Logo"
