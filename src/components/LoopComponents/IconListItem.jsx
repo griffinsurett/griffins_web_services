@@ -15,6 +15,8 @@ export default function IconListItem({
   
   // Image styling and behavior
   imageClassName = "w-12 h-12 rounded-full object-cover flex-shrink-0",
+
+  imageLoading = "lazy", // "lazy" | "eager"
   
   // Title styling and behavior
   titleClassName = "h4",
@@ -64,6 +66,7 @@ export default function IconListItem({
           src={imageSrc}
           alt={imageAlt}
           className="w-full h-full object-cover"
+          loading={imageLoading}
         />
       </div>
     );
