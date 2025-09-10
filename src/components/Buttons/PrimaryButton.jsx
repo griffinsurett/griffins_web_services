@@ -2,12 +2,12 @@ import React from "react";
 import { useAnimatedElement } from "../../hooks/animations/useViewAnimation";
 
 const PrimaryButton = ({ Base = "button", className = "", ...props }) => {
-  const anim = useAnimatedElement({
-    duration: 100,
-    delay: 0,
-    threshold: 0,
-    rootMargin: "0px 0px -15% 0px",
-  });
+  // const anim = useAnimatedElement({
+  //   duration: 100,
+  //   delay: 0,
+  //   threshold: 0,
+  //   rootMargin: "0px 0px -15% 0px",
+  // });
 
   const classes = [
     "button-transition button-hover-transition",
@@ -20,9 +20,9 @@ const PrimaryButton = ({ Base = "button", className = "", ...props }) => {
 
   return (
     <Base
-      ref={anim.ref} // observe THIS element
+      // ref={anim.ref} 
       className={`animated-element zoom-in ${classes} ${className}`}
-      {...anim.props} // adds data-visible & CSS vars
+      // {...anim.props} 
       {...props}
     />
   );
