@@ -4,7 +4,7 @@ import { useScrollTriggeredVideo } from "./useScrollTriggeredVideo";
 import { useVisibility } from "../../hooks/animations/useVisibility";
 
 import POSTER_SRC from "@/assets/GWS-animated.png";
-import VIDEO_SRC from "../../assets/GWS-animated.webm";
+import VIDEO_SRC from "@/assets/GWS-animated.webm";
 
 /**
  * VideoLogo
