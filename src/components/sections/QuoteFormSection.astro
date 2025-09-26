@@ -1,9 +1,9 @@
 ---
 // src/Sections/QuoteFormSection.astro
-import BorderTitle from "../components/BorderTitle.jsx";
-import Heading from "../components/Heading.jsx";
-import AnimatedElementWrapper from "../components/AnimatedElementWrapper.jsx";
-import QuoteForm from "../components/Form/QuoteForm.jsx";
+import BorderTitle from "../BorderTitle.jsx";
+import Heading from "../Heading.jsx";
+import AnimatedElementWrapper from "../AnimatedElementWrapper.jsx";
+import QuoteForm from "../Form/QuoteForm.jsx";
 
 export interface Props {
   id?: string;
@@ -39,6 +39,7 @@ const {
   formProps = {},
 } = Astro.props;
 ---
+
 <section class="outer-section bg-bg relative" id={id}>
   <div class="section-color-border"></div>
   <div class="inner-section">
@@ -54,20 +55,22 @@ const {
       <p class="large-text secondary-text">{blurb}</p>
     </div>
 
-    {animate ? (
-      <AnimatedElementWrapper
-        variant={variant}
-        animationDuration={animationDuration}
-        animationDelay={animationDelay}
-        threshold={threshold}
-        rootMargin={rootMargin}
-        once={once}
-        client:visible
-      >
+    {
+      animate ? (
+        <AnimatedElementWrapper
+          variant={variant}
+          animationDuration={animationDuration}
+          animationDelay={animationDelay}
+          threshold={threshold}
+          rootMargin={rootMargin}
+          once={once}
+          client:visible
+        >
+          <QuoteForm {...formProps} client:visible />
+        </AnimatedElementWrapper>
+      ) : (
         <QuoteForm {...formProps} client:visible />
-      </AnimatedElementWrapper>
-    ) : (
-      <QuoteForm {...formProps} client:visible />
-    )}
+      )
+    }
   </div>
 </section>

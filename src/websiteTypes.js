@@ -16,22 +16,22 @@ export const WEBSITE_TYPES = [
       "High-converting single-page websites designed to capture leads and drive specific actions for your marketing campaigns.",
     videoSrc: demoVideo,
   },
-    {
-    key: "micro-site",
-    icon: "📄",
-    title: "Micro Sites",
-    description:
-      "Single-purpose websites designed to achieve specific marketing goals, often with minimal content and a focused user experience.",
-    videoSrc: demoVideo,
-  },
-  {
-    key: "custom-website",
-    icon: "🛠️",
-    title: "Custom Websites",
-    description:
-      "Fully custom sites built around your brand and workflow—unique UX, motion, integrations, and back-end logic tailored end-to-end.",
-    videoSrc: demoVideo,
-  },
+  //   {
+  //   key: "micro-site",
+  //   icon: "📄",
+  //   title: "Micro Sites",
+  //   description:
+  //     "Single-purpose websites designed to achieve specific marketing goals, often with minimal content and a focused user experience.",
+  //   videoSrc: demoVideo,
+  // },
+  // {
+  //   key: "custom-website",
+  //   icon: "🛠️",
+  //   title: "Custom Websites",
+  //   description:
+  //     "Fully custom sites built around your brand and workflow—unique UX, motion, integrations, and back-end logic tailored end-to-end.",
+  //   videoSrc: demoVideo,
+  // },
   {
     key: "small-business",
     icon: "🏢",

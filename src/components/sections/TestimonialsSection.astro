@@ -1,0 +1,9 @@
+---
+import Testimonials from "@/components/sections/Testimonials";
+import { testimonials } from "../../testimonials";
+---
+
+<section class="outer-section bg-bg relative" id="testimonials">
+  <div class="section-color-border"></div>
+  <Testimonials data={testimonials} client:visible />
+</section>

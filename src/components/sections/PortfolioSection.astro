@@ -1,17 +1,17 @@
 ---
 // src/Sections/PortfolioSection.astro
 import { Image, getImage } from "astro:assets";
-import PortfolioCarousel from "../components/Carousels/PortfolioCarousel.jsx";
-import BorderTitle from "../components/BorderTitle.jsx";
-import Heading from "../components/Heading.jsx";
+import PortfolioCarousel from "../Carousels/PortfolioCarousel.jsx";
+import BorderTitle from "../BorderTitle.jsx";
+import Heading from "../Heading.jsx";
 
 // Import images using Astro's assets
-import ProntoDesktop from "../assets/ProntoJunkRemoval/pronto-desktop.jpg";
-import FariasDesktop from "../assets/FariasDemolition/Farias-Desktop.jpg";
-import JSVDesktop from "../assets/JSV-Quick-Solar/JSV-Desktop.jpg";
-import PablosDesktop from "../assets/PablosPeakRoofing/Pablos-Desktop.jpg";
-import RoonysDesktop from "../assets/RoonysMarketing/Roonys-Desktop.jpg";
-import CleanomaticFl from "../assets/Cleanomatic/cleanomaticfl.com-desktop.jpg";
+import ProntoDesktop from "../../assets/ProntoJunkRemoval/Pronto-Desktop.jpg";
+import FariasDesktop from "../../assets/FariasDemolition/Farias-Desktop.jpg";
+import JSVDesktop from "../../assets/JSV-Quick-Solar/JSV-Desktop.jpg";
+import PablosDesktop from "../../assets/PablosPeakRoofing/Pablos-Desktop.jpg";
+import RoonysDesktop from "../../assets/RoonysMarketing/Roonys-Desktop.jpg";
+import CleanomaticFl from "../../assets/Cleanomatic/cleanomaticfl.com-desktop.jpg";
 
 // Define items with image metadata
 const items = [
@@ -61,21 +61,21 @@ const processedItems = await Promise.all(
     const centerImage = await getImage({
       src: item.image,
       width: 860,
-      format: 'webp',
+      format: "webp",
       quality: 85,
     });
-    
+
     const sideImage = await getImage({
       src: item.image,
       width: 520,
-      format: 'webp',
+      format: "webp",
       quality: 80,
     });
-    
+
     const mobileImage = await getImage({
       src: item.image,
       width: 340,
-      format: 'webp',
+      format: "webp",
       quality: 80,
     });
 
@@ -93,7 +93,7 @@ const processedItems = await Promise.all(
       dimensions: {
         width: centerImage.options.width,
         height: centerImage.options.height,
-      }
+      },
     };
   })
 );

@@ -1,8 +1,8 @@
 ---
 // src/Sections/CTASection.astro
-import Button from "../components/Buttons/Button.jsx";
-import BorderTitle from "../components/BorderTitle.jsx";
-import Heading from "../components/Heading.jsx";
+import Button from "../Buttons/Button.jsx";
+import BorderTitle from "../BorderTitle.jsx";
+import Heading from "../Heading.jsx";
 ---
 
 <section class="outer-section hero-gradient-bg bg-bg text-center relative">
@@ -18,7 +18,12 @@ import Heading from "../components/Heading.jsx";
         Services...
       </p>
     </div>
-    <Button variant="primary" className="text-center" href="#contact" client:visible>
+    <Button
+      variant="primary"
+      className="text-center"
+      href="#contact"
+      client:visible
+    >
       Start Your Project - 50% Off! 🎉
     </Button>
   </div>

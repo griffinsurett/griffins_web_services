@@ -1,9 +1,9 @@
 ---
 // src/Sections/Hero.astro
 import { Image } from "astro:assets";
-import Button from "../components/Buttons/Button.jsx";
-import Heading from "../components/Heading.jsx";
-import { siteData } from "../siteData";
+import Button from "../Buttons/Button.jsx";
+import Heading from "../Heading.jsx";
+import { siteData } from "../../siteData.js";
 import TestimonialCircleSection from "./TestimonialCircleSection.astro";
 import ComputerGuy from "@/assets/computer-guy.png";
 
@@ -48,16 +48,18 @@ const tagline = heroTaglines[currentTagline];
 <section class="relative min-h-screen bg-bg overflow-hidden">
   {/* Background gradient */}
   <div class="absolute inset-0 hero-gradient-bg"></div>
-  
+
   {/* Main content container */}
   <div class="relative z-10 min-h-screen">
     <div class="w-full h-full">
-      
       {/* Two-column flex layout */}
-      <div class="h-full mx-auto flex flex-col lg:flex-row items-end lg:justify-between justify-center">
-        
+      <div
+        class="h-full mx-auto flex flex-col lg:flex-row items-end lg:justify-between justify-center"
+      >
         {/* Left Column - Text Content */}
-        <div class="basis-4/7 flex flex-col justify-center space-y-6 lg:space-y-8 pt-20 lg:pt-0 md:lg:pl-20 lg:pl-25 w-8/10 mx-auto min-h-[100vh] lg:w-full">
+        <div
+          class="basis-4/7 flex flex-col justify-center space-y-6 lg:space-y-8 pt-20 lg:pt-0 md:lg:pl-20 lg:pl-25 w-8/10 mx-auto min-h-[100vh] lg:w-full"
+        >
           <div class="space-y-4">
             <Heading
               tagName="h1"
@@ -67,7 +69,7 @@ const tagline = heroTaglines[currentTagline];
               textClass="emphasized-text"
               after={tagline.after}
             />
-            
+
             <p class="text-lg sm:text-xl leading-relaxed text-text max-w-2xl">
               {siteData.description}
             </p>
@@ -79,16 +81,17 @@ const tagline = heroTaglines[currentTagline];
               <Button variant="primary" href="#contact" client:visible>
                 Get Started Today ✨
               </Button>
-            {/* Testimonial Circle */}
-            <TestimonialCircleSection />
+              {/* Testimonial Circle */}
+              <TestimonialCircleSection />
             </div>
-          
           </div>
         </div>
 
         {/* Right Column - Image */}
         <div class="basis-3/7 h-full flex items-end justify-end">
-          <div class="relative h-full w-full max-w-lg lg:max-w-none flex items-end justify-end">
+          <div
+            class="relative h-full w-full max-w-lg lg:max-w-none flex items-end justify-end"
+          >
             <Image
               src={ComputerGuy}
               alt="Professional web developer working on laptop"
@@ -98,7 +101,6 @@ const tagline = heroTaglines[currentTagline];
             />
           </div>
         </div>
-        
       </div>
     </div>
   </div>

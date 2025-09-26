@@ -1,11 +1,11 @@
 ---
 // src/Sections/Footer.astro
-import IconListItem from "../components/LoopComponents/IconListItem.jsx";
-import SocialLink from "../components/LoopComponents/SocialLink.astro";
-import LogoLink from "../components/Buttons/LogoLink.jsx";
-import { siteData, contactItems, socialMediaLinks } from "../siteData";
-import Logo from "../components/Logo/Logo.astro";
-import Heading from "../components/Heading.jsx";
+import IconListItem from "../LoopComponents/IconListItem.jsx";
+import SocialLink from "../LoopComponents/SocialLink.astro";
+import LogoLink from "../Buttons/LogoLink.jsx";
+import { siteData, contactItems, socialMediaLinks } from "../../siteData.js";
+import Logo from "../Logo/Logo.astro";
+import Heading from "../Heading.jsx";
 
 const year = new Date().getFullYear();
 
@@ -33,11 +33,7 @@ const footerNav = [
     >
       <!-- Logo & Description -->
       <div class={`${mainTopFootContainer} space-y-3 max-w-md`}>
-        <Logo
-          loading="lazy"
-          trigger="visible"
-          animateOutText={false}
-        />
+        <Logo loading="lazy" trigger="visible" animateOutText={false} />
         <p class="leading-relaxed text-base pr-8">
           {siteData.description}
         </p>

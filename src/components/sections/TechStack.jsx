@@ -1,7 +1,7 @@
 // src/Sections/TechStack.jsx
 import React, { useState, useEffect } from "react";
-import SmoothScrollCarousel from "../components/Carousels/SmoothScrollCarousel";
-import TechStackLabel from "../components/LoopComponents/TechStackLabel";
+import SmoothScrollCarousel from "../Carousels/SmoothScrollCarousel";
+import TechStackLabel from "../LoopComponents/TechStackLabel";
 
 export default function TechStack({ technologies = [] }) {
   const [hoveredTech, setHoveredTech] = useState(null);
@@ -9,38 +9,40 @@ export default function TechStack({ technologies = [] }) {
 
   // Extract Astro-rendered icons from template on mount
   useEffect(() => {
-    const template = document.getElementById('tech-icons-template');
+    const template = document.getElementById("tech-icons-template");
     if (template) {
-      const icons = Array.from(template.content.querySelectorAll('[data-tech-name]'));
+      const icons = Array.from(
+        template.content.querySelectorAll("[data-tech-name]")
+      );
       const iconMap = {};
-      
-      icons.forEach(iconEl => {
+
+      icons.forEach((iconEl) => {
         const techName = iconEl.dataset.techName;
         if (techName) {
           // Clone the icon element for React to use
           iconMap[techName] = iconEl.innerHTML;
         }
       });
-      
+
       setIconElements(iconMap);
     }
   }, []);
 
   // Update Astro-rendered heading when hover state changes
   useEffect(() => {
-    const headingMain = document.getElementById('tech-heading-main');
-    const headingOverlay = document.getElementById('tech-heading-overlay');
-    const headingDynamic = headingOverlay?.querySelector('.text-accent');
-    
+    const headingMain = document.getElementById("tech-heading-main");
+    const headingOverlay = document.getElementById("tech-heading-overlay");
+    const headingDynamic = headingOverlay?.querySelector(".text-accent");
+
     if (headingMain && headingOverlay && headingDynamic) {
       if (hoveredTech) {
-        headingMain.style.opacity = '0';
-        headingOverlay.style.opacity = '1';
+        headingMain.style.opacity = "0";
+        headingOverlay.style.opacity = "1";
         headingDynamic.textContent = hoveredTech;
       } else {
-        headingMain.style.opacity = '1';
-        headingOverlay.style.opacity = '0';
-        headingDynamic.textContent = '';
+        headingMain.style.opacity = "1";
+        headingOverlay.style.opacity = "0";
+        headingDynamic.textContent = "";
       }
     }
   }, [hoveredTech]);
@@ -61,7 +63,7 @@ export default function TechStack({ technologies = [] }) {
       {iconElements[tech.name] ? (
         <div
           dangerouslySetInnerHTML={{
-            __html: iconElements[tech.name]
+            __html: iconElements[tech.name],
           }}
         />
       ) : (
@@ -90,7 +92,9 @@ export default function TechStack({ technologies = [] }) {
       onItemInteraction={(payload, index, type) => {
         if (type === "hover") {
           // Extract the tech name from the payload
-          const techName = payload?.node?.props?.children?.props?.name || technologies[index % technologies.length]?.name;
+          const techName =
+            payload?.node?.props?.children?.props?.name ||
+            technologies[index % technologies.length]?.name;
           if (techName) {
             handleTechHover(techName);
           }

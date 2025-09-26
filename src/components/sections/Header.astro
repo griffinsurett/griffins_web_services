@@ -1,9 +1,9 @@
 ---
 // src/Sections/Header.astro
-import HamburgerIcon from "../components/Menu/HamburgerIcon.jsx";
-import HamburgerMenu from "../components/Menu/HamburgerMenu.jsx";
-import Logo from "../components/Logo/Logo.astro";
-import ThemeControls from "../components/ThemeControls/ThemeControls.jsx";
+import HamburgerIcon from "../Menu/HamburgerIcon.jsx";
+import HamburgerMenu from "../Menu/HamburgerMenu.jsx";
+import Logo from "../Logo/Logo.astro";
+import ThemeControls from "../ThemeControls/ThemeControls.jsx";
 
 const checkboxId = "nav-toggle";
 ---
@@ -13,11 +13,7 @@ const checkboxId = "nav-toggle";
     class="fixed inset-x-0 top-0 bg-transparent z-[99999] w-19/20 lg:9/10 mx-auto"
   >
     <div class="flex items-center justify-between py-2">
-      <Logo
-        loading="eager"
-        trigger="scroll"
-        animateOutText={true}
-      />
+      <Logo loading="eager" trigger="scroll" animateOutText={true} />
 
       <!-- Hidden checkbox for state -->
       <input id={checkboxId} type="checkbox" class="hidden" />

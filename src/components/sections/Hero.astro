@@ -1,9 +1,9 @@
 ---
 // src/Sections/Hero.astro
 import { Image } from "astro:assets";
-import Button from "../components/Buttons/Button.jsx";
-import Heading from "../components/Heading.jsx";
-import { siteData } from "../siteData";
+import Button from "../Buttons/Button.jsx";
+import Heading from "../Heading.jsx";
+import { siteData } from "../../siteData.js";
 import TestimonialCircleSection from "./TestimonialCircleSection.astro";
 import ComputerGuy from "@/assets/computer-guy.png";
 
@@ -45,50 +45,54 @@ const currentTagline = Math.floor(Math.random() * heroTaglines.length);
 const tagline = heroTaglines[currentTagline];
 ---
 
-<section class="min-h-screen bg-bg flex items-center justify-center relative overflow-hidden">
+<section
+  class="min-h-screen bg-bg flex items-center justify-center relative overflow-hidden"
+>
   {/* Background gradient */}
   <div class="absolute inset-0 hero-gradient-bg"></div>
-  
+
   {/* Main content container */}
   <div class="relative z-10 min-h-screen inner-section flex">
     <!-- <div class="w-full flex flex-col xl:flex-row items-center justify-center"> -->
-      
-      {/* Left side - Text content (centered vertically) */}
-      <div class="min-h-screen xl:h-auto inner-section mx-auto flex flex-col justify-center items-center">
-        <div class="flex flex-col justify-left items-start lg:justify-center lg:items-center lg:text-center">
-          
-          {/* Main headline with emphasized text */}
-          <Heading
-            tagName="h1"
-            className="hero-heading mb-6 leading-tight"
-            before={tagline.before}
-            text={tagline.emphasized}
-            textClass="emphasized-text"
-            after={tagline.after}
-          />
-          
-          {/* Longer, more detailed description */}
-          <p class="text-text mb-8 text-xl max-w-3xl leading-relaxed">
-            We specialize in crafting scalable, secure, and AI-optimized digital experiences. 
-            From responsive websites and dynamic data platforms to AI and seamless 
-            automations—so you can focus on growing your business while we handle the 
-            technology.
-          </p>
 
-          <div class="flex flex-col lg:flex-row items-center gap-6">
-              <Button variant="secondary" href="#contact" client:visible>
-                Book An Intro Call
-              </Button>
+    {/* Left side - Text content (centered vertically) */}
+    <div
+      class="min-h-screen xl:h-auto inner-section mx-auto flex flex-col justify-center items-center"
+    >
+      <div
+        class="flex flex-col justify-left items-start lg:justify-center lg:items-center lg:text-center"
+      >
+        {/* Main headline with emphasized text */}
+        <Heading
+          tagName="h1"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-3 leading-tight"
+          before={tagline.before}
+          text={tagline.emphasized}
+          textClass="emphasized-text"
+          after={tagline.after}
+        />
 
-                          {/* Testimonial circles */}
-            <TestimonialCircleSection />
-            
-          </div>
+        {/* Longer, more detailed description */}
+        <p class="text-text mb-4 lg:mb-6 text-lg max-w-3xl leading-relaxed">
+          We specialize Professional website design and development services.
+          Lightning-fast, secure, and mobile-first websites that convert
+          visitors into customers. Websites are what we do best, we will not
+          just build you a fast website but also manage it for the long term.
+        </p>
+
+        <div class="flex flex-col lg:flex-row items-center gap-6">
+          <Button variant="primary" href="#contact" client:idle>
+            Book An Intro Call
+          </Button>
+
+          {/* Testimonial circles */}
+          <TestimonialCircleSection />
         </div>
       </div>
-      
-      {/* Right side - Taller Image (hugging bottom) */}
-      <!-- <div class="flex relative h-full">
+    </div>
+
+    {/* Right side - Taller Image (hugging bottom) */}
+    <!-- <div class="flex relative h-full">
         <div class="xl:absolute bottom-0 right-0 w-full h-auto flex justify-end pl-20 lg:pl-30 xl:pl-40">
           <Image
             src={ComputerGuy}
@@ -99,7 +103,7 @@ const tagline = heroTaglines[currentTagline];
           />
         </div>
       </div> -->
-      
+
     <!-- </div> -->
   </div>
 </section>
