@@ -8,7 +8,6 @@ import icon from 'astro-icon';
 import { iconConfig } from './iconsConfig.js';
 
 import partytown from '@astrojs/partytown';
-import vercel from '@astrojs/vercel/static';
 
 // Load environment variables from .env files
 const env = loadEnv(
