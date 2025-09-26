@@ -6,15 +6,13 @@ import HeadTags from "./HeadTags.astro";
 import SEO from "./SEO.astro";
 import Theme from "./Theme.astro";
 import BodyTags from "./BodyTags.astro";
-import  SpeedInsights  from "@vercel/speed-insights/astro"
-
 export interface Props {
   [key: string]: any; // Allow all props
 }
 
 const { ...seoProps } = Astro.props;
 ---
-<SpeedInsights/>
+
 <!doctype html>
 <html lang="en" class="scroll-smooth">
   <head>
