@@ -25,10 +25,9 @@
   // Prevent FOUC (Flash of Unstyled Content)
   (function() {
     try {
-      // Get saved theme or detect from OS preference
+      // Get saved theme; default to dark unless user picked light
       const savedTheme = localStorage.getItem('theme');
-      const theme = savedTheme || 
-        (window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const theme = (savedTheme === 'light' || savedTheme === 'dark') ? savedTheme : 'dark';
       
       // Get saved accent color
       const accent = localStorage.getItem('accent') || 'var(--main-accent)';

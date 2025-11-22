@@ -6,21 +6,13 @@ import useLocalStorageState from "../useLocalStorageState";
  * Theme hook:
  * - Sets `data-theme` and `color-scheme` on <html>
  * - Updates <meta name="theme-color"> from computed --color-bg (no manual var writes)
- * - Persists user choice; follows OS when no stored preference
+ * - Persists user choice; defaults to dark until user opts into light
  */
 export function UseMode() {
-  // Initial: localStorage > OS preference (dark?) > dark fallback
+  // Initial: localStorage > dark fallback
   const [theme, setTheme] = useLocalStorageState(
     "theme",
-    () => {
-      try {
-        return window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
-      } catch {
-        return "dark";
-      }
-    },
+    () => "dark",
     { raw: true, validate: (v) => v === "light" || v === "dark" }
   );
 
@@ -51,28 +43,6 @@ export function UseMode() {
       meta.setAttribute("content", computed);
     }
   }, [isLight]);
-
-  // Follow OS changes only if user hasn't explicitly saved a preference
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const handler = (e) => {
-      try {
-        const stored = localStorage.getItem("theme");
-        // Only auto-switch when no explicit stored preference
-        if (stored !== "light" && stored !== "dark") {
-          setTheme(e.matches ? "dark" : "light");
-        }
-      } catch {}
-    };
-    // Modern addEventListener; fallback for older Safari
-    if (mq.addEventListener) mq.addEventListener("change", handler);
-    else if (mq.addListener) mq.addListener(handler);
-
-    return () => {
-      if (mq.removeEventListener) mq.removeEventListener("change", handler);
-      else if (mq.removeListener) mq.removeListener(handler);
-    };
-  }, [setTheme]);
 
   return [isLight, setIsLight];
 }
