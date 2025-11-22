@@ -1,7 +1,7 @@
 // src/components/OptimizedLottie.jsx
 // Performance-optimized Lottie component with very conservative loading
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useVisibility } from "../hooks/animations/useVisibility";
 import { useScrollInteraction } from "../hooks/animations/useInteractions";
 
@@ -13,6 +13,15 @@ const onIdle = (cb) => {
     setTimeout(cb, 0);
   }
 };
+
+const getCurrentFrame = (anim) => {
+  if (!anim) return 0;
+  if (typeof anim.currentFrame === "number") return anim.currentFrame;
+  if (typeof anim.currentRawFrame === "number") return anim.currentRawFrame;
+  return 0;
+};
+
+const SCROLL_TOP_THRESHOLD = 2;
 
 export default function OptimizedLottie({
   // Animation source (provide one of these)
@@ -27,6 +36,7 @@ export default function OptimizedLottie({
   // Behavior options
   trigger = "load",            // "auto" | "scroll" | "visible" | "load"
   respectReducedMotion = true,
+  rewindToStartOnTop = false,
   
   // Animation options
   loop = true,
@@ -48,10 +58,22 @@ export default function OptimizedLottie({
   const animationRef = useRef(null);
   const pauseTimeout = useRef(null);
   const lastScrollTime = useRef(0);
+  const topResetHandlerRef = useRef(null);
+  const resettingToStartRef = useRef(false);
+  const wasAtTopRef = useRef(true);
 
   const [showFallback, setShowFallback] = useState(true);
   const [shouldLoadLottie, setShouldLoadLottie] = useState(false); // NEW: Gate Lottie loading
   const [pageScrollable, setPageScrollable] = useState(false);
+
+  const cancelTopReset = useCallback(() => {
+    const anim = animationRef.current;
+    if (anim && topResetHandlerRef.current) {
+      anim.removeEventListener("enterFrame", topResetHandlerRef.current);
+    }
+    topResetHandlerRef.current = null;
+    resettingToStartRef.current = false;
+  }, []);
 
   // Detect if page can scroll (affects "auto" trigger)
   useEffect(() => {
@@ -100,6 +122,59 @@ export default function OptimizedLottie({
     }
   }, [effectiveTrigger, visible, prefersReduced]);
 
+  const handleMovement = useCallback(
+    (deltaY) => {
+      const anim = animationRef.current;
+      const now = Date.now();
+      lastScrollTime.current = now;
+      if (!anim) return;
+
+      cancelTopReset();
+      clearTimeout(pauseTimeout.current);
+
+      if (deltaY > 0) {
+        anim.setDirection(1);
+        if (anim.isPaused) anim.play();
+      } else if (deltaY < 0) {
+        anim.setDirection(-1);
+        if (anim.isPaused) anim.play();
+      }
+
+      pauseTimeout.current = setTimeout(() => {
+        if (now === lastScrollTime.current && anim) anim.pause();
+      }, 200);
+    },
+    [cancelTopReset]
+  );
+
+  const animateBackToStart = useCallback(() => {
+    if (!rewindToStartOnTop) return;
+    const anim = animationRef.current;
+    if (!anim || resettingToStartRef.current) return;
+
+    const currentFrame = getCurrentFrame(anim);
+    if (currentFrame <= 0) {
+      anim.goToAndStop(0, true);
+      return;
+    }
+
+    resettingToStartRef.current = true;
+    clearTimeout(pauseTimeout.current);
+
+    const stopAtStart = () => {
+      if (getCurrentFrame(anim) <= 0.5) {
+        anim.pause();
+        anim.goToAndStop(0, true);
+        cancelTopReset();
+      }
+    };
+
+    topResetHandlerRef.current = stopAtStart;
+    anim.addEventListener("enterFrame", stopAtStart);
+    anim.setDirection(-1);
+    anim.play();
+  }, [rewindToStartOnTop, cancelTopReset]);
+
   // Scroll interaction for scroll-triggered loading
   useScrollInteraction({
     elementRef: null, // Use window
@@ -130,6 +205,26 @@ export default function OptimizedLottie({
       }
     } : undefined,
   });
+
+  // Detect when the page scroll position returns to the very top and rewind
+  useEffect(() => {
+    if (!rewindToStartOnTop || effectiveTrigger !== "scroll") return;
+    if (typeof window === "undefined") return;
+
+    wasAtTopRef.current = (window.scrollY || 0) <= SCROLL_TOP_THRESHOLD;
+
+    const maybeRewind = () => {
+      const pos = window.scrollY || 0;
+      const isAtTop = pos <= SCROLL_TOP_THRESHOLD;
+      if (!wasAtTopRef.current && isAtTop) {
+        animateBackToStart();
+      }
+      wasAtTopRef.current = isAtTop;
+    };
+
+    window.addEventListener("scroll", maybeRewind, { passive: true });
+    return () => window.removeEventListener("scroll", maybeRewind);
+  }, [rewindToStartOnTop, effectiveTrigger, animateBackToStart]);
 
   // Initialize Lottie lazily - ONLY when shouldLoadLottie becomes true
   useEffect(() => {
@@ -200,37 +295,11 @@ export default function OptimizedLottie({
 
     return () => {
       canceled = true;
+      cancelTopReset();
       animationRef.current?.destroy?.();
       animationRef.current = null;
     };
-  }, [shouldLoadLottie, effectiveTrigger, animationData, animationUrl, renderer, loop, autoplay, speed]);
-
-  // Movement handler for scroll interactions
-  const handleMovement = useMemo(
-    () => (deltaY) => {
-      const anim = animationRef.current;
-      const now = Date.now();
-      lastScrollTime.current = now;
-      if (!anim) return;
-
-      clearTimeout(pauseTimeout.current);
-
-      // Control playback direction based on scroll
-      if (deltaY > 0) {
-        anim.setDirection(1);
-        if (anim.isPaused) anim.play();
-      } else if (deltaY < 0) {
-        anim.setDirection(-1);
-        if (anim.isPaused) anim.play();
-      }
-
-      // Pause after inactivity
-      pauseTimeout.current = setTimeout(() => {
-        if (now === lastScrollTime.current && anim) anim.pause();
-      }, 200);
-    },
-    []
-  );
+  }, [shouldLoadLottie, effectiveTrigger, animationData, animationUrl, renderer, loop, autoplay, speed, cancelTopReset]);
 
   // Visible mode: play when in view
   useEffect(() => {

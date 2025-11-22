@@ -22,6 +22,7 @@ export default function LottieLogo({
       trigger={trigger}
       respectReducedMotion={respectReducedMotion}
       fadeMs={fadeMs}
+      rewindToStartOnTop
       
       // Animation settings optimized for logo
       loop={true}

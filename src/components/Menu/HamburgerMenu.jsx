@@ -4,7 +4,7 @@ import Modal from "../Modal";
 import LogoLink from "../Buttons/LogoLink";
 
 const navItems = [
-  { label: "Home", href: "/#home" },
+  { label: "Home", href: "/" },
   { label: "About", href: "/#about" },
   { label: "Website Solutions", href: "/#website-types" },
   { label: "Web Hosting", href: "/#hosting" },
