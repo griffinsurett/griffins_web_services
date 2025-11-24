@@ -378,6 +378,10 @@
     @apply hover:-translate-y-1;
   }
 
+  .primary-button-transition {
+    @apply transition-all duration-700 ease-out hover:-translate-y-1 hover:shadow-2xl;
+  }
+
   /* Animated border skin */
   .animated-border-overlay {
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);

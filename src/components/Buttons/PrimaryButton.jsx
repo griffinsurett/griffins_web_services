@@ -10,7 +10,7 @@ const PrimaryButton = ({ Base = "button", className = "", ...props }) => {
   });
 
   const classes = [
-    "button-transition button-hover-transition",
+    "primary-button-transition",
     "border-2 border-primary",
     "bg-primary text-bg",
     "hover:text-zinc-900",
@@ -19,12 +19,12 @@ const PrimaryButton = ({ Base = "button", className = "", ...props }) => {
   ].join(" ");
 
   return (
-    <Base
-      ref={anim.ref} // observe THIS element
-      className={`animated-element zoom-in ${classes} ${className}`}
-      // {...anim.props} 
-      {...props}
-    />
+    <span
+      ref={anim.ref}
+      className="inline-flex w-full lg:w-auto animated-element zoom-in"
+    >
+      <Base className={`${classes} ${className}`} {...props} />
+    </span>
   );
 };
 

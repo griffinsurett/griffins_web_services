@@ -22,13 +22,13 @@ const SecondaryButton = ({
     borderRadius = "rounded-full",
   } = animatedBorder || {};
 
-  const containerClasses = fullWidth
+  const containerClasses = `primary-button-transition ${fullWidth
     ? "block w-full lg:w-auto"
-    : "inline-block";
+    : "inline-block"}`;
   const innerWrapWidth = fullWidth ? "w-full" : "";
 
   const innerButtonClasses =
-    `bg-transparent text-heading${borderRadius} ` +
+    `bg-transparent text-heading ${borderRadius} ` +
     `hover:bg-accent hover:text-primary-dark`;
 
   return (
