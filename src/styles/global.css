@@ -1,12 +1,13 @@
 @import "tailwindcss";
-/* ───────────────────────────────────────────────────── */
-/* 0. CUSTOM VARIANTS FOR LIGHT + DARK                  */
-/* ───────────────────────────────────────────────────── */
+
+/* ============================================================
+ * 1. COLOR MODES & TOKENS
+ * ============================================================ */
 @custom-variant light  (&:where([data-theme="light"], [data-theme="light"] *));
 @custom-variant dark   (&:where([data-theme="dark"],  [data-theme="dark"]  *));
 
 @theme {
-  /* Base Colors - Raw color definitions */
+  /* Base palette */
   --color-primary-dark: #0f0f0f;
   --color-secondary-dark: var(--color-zinc-950);
   --color-tertiary-dark: var(--color-zinc-900);
@@ -15,8 +16,7 @@
   --color-tertiary-light: var(--color-zinc-200);
   --main-accent: #5e76f6;
 
-  /* Colors that Tailwind will automatically generate utilities for */
-  /* These follow the --color-{name} pattern */
+  /* Semantic colors (generate Tailwind utilities) */
   --color-accent: var(--main-accent);
   --color-primary: var(--color-accent);
   --color-primary-secondary: color-mix(
@@ -30,18 +30,26 @@
   --color-text: var(--text-zinc-700);
   --color-muted: var(--text-zinc-200);
 
-  /* Your custom background colors */
+  /* Background surfaces */
   --color-bg: var(--color-primary-dark);
   --color-bg2: var(--color-secondary-dark);
   --color-bg3: var(--color-tertiary-dark);
 
-  /* Additional utility colors */
+  /* Extras */
   --color-border-dim: rgba(255, 255, 255, 0.2);
-
   --font-header: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-body: "Open Sans", Helvetica, Arial, sans-serif;
 }
 
+@property --ab-progress {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* ============================================================
+ * 2. BASE LAYER & THEME SWITCHING
+ * ============================================================ */
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -55,37 +63,34 @@
     color: var(--color-accent);
     transition: all 0.3s ease-in-out;
   }
-  /* Theme-specific PRIMARY token */
-  [data-theme="light"] {
-    /* primary color */
-    --color-primary: var(--color-zinc-900);
 
-    /* Text colors */
+  /* Theme-specific overrides */
+  [data-theme="light"] {
+    --color-primary: var(--color-zinc-900);
     --color-heading: var(--color-tertiary-dark);
     --color-text: var(--text-zinc-700);
     --color-muted: var(--text-zinc-600);
-
-    /* background colors */
     --color-bg: var(--color-primary-light);
     --color-bg2: var(--color-secondary-light);
     --color-bg3: var(--color-tertiary-light);
   }
-  [data-theme="dark"] {
-    /* primary color */
-    --color-primary: var(--color-accent);
 
-    /* text colors */
+  [data-theme="dark"] {
+    --color-primary: var(--color-accent);
     --color-heading: var(--color-primary-light);
     --color-text: var(--color-secondary-light);
     --color-muted: var(--text-zinc-200);
-
-    /* background colors */
     --color-bg: var(--color-primary-dark);
     --color-bg2: var(--color-secondary-dark);
     --color-bg3: var(--color-tertiary-dark);
   }
 }
 
+/* ============================================================
+ * 3. UTILITY SHORTCUTS
+ * ============================================================ */
+
+/* Text & color helpers */
 @utility muted-text {
   @apply dark:text-zinc-200 light:text-zinc-600;
 }
@@ -94,6 +99,11 @@
   color: var(--color-primary);
 }
 
+@utility logo-class {
+  @apply light:invert;
+}
+
+/* Background & border helpers */
 @utility faded-bg {
   @apply dark:bg-primary-light/10 dark:hover:bg-primary-light/12;
   @apply light:bg-primary-dark/10 light:hover:bg-primary-dark/12;
@@ -117,11 +127,7 @@
 } */
 
 @utility border-off-hover {
-    @apply hover:border-transparent;
-}
-
-@utility logo-class {
-  @apply light:invert;
+  @apply hover:border-transparent;
 }
 
 @utility rounded-border {
@@ -132,12 +138,9 @@
   @apply border-1 dark:border-text/10 light:border-text/20;
 }
 
+/* Layout & spacing */
 @utility paragraph-spacing {
   @apply max-w-3xl mx-auto;
-}
-
-@utility main-duration {
-  @apply duration-450;
 }
 
 @utility button-style {
@@ -148,7 +151,11 @@
   @apply absolute top-0 left-0 right-0 h-px;
 }
 
-/* The main form field styling - updated with theme-aware colors */
+@utility main-duration {
+  @apply duration-450;
+}
+
+/* Form controls */
 @utility form-field {
   @apply w-full bg-transparent border border-accent/20 rounded-xl px-4 py-3 focus:outline-none main-duration transition-all;
   @apply dark:focus:bg-primary-dark/70 light:focus:bg-primary-light/70;
@@ -158,7 +165,6 @@
     @apply text-muted;
   }
 
-  /* Fix for select dropdown arrow spacing */
   &[type="select"],
   select& {
     appearance: none;
@@ -173,7 +179,11 @@
   @apply bg-bg text-heading;
 }
 
+/* ============================================================
+ * 4. COMPONENT PATTERNS
+ * ============================================================ */
 @layer components {
+  /* Hero & decorative elements */
   .hero-gradient-bg {
     @apply bg-cover bg-center;
     background-image: linear-gradient(
@@ -187,7 +197,7 @@
     -webkit-text-stroke: 2px var(--color-primary);
   }
 
-  /* section styles */
+  /* Section scaffolding */
   .outer-section {
     @apply relative py-24 px-2;
   }
@@ -226,7 +236,7 @@
     @apply font-bold text-accent;
   }
 
-  /* Card components */
+  /* Card shells */
   .outer-card-transition {
     @apply transition-all hover:transform main-duration;
   }
@@ -240,7 +250,7 @@
   }
 
   .outer-card-style {
-    @apply relative overflow-hidden shadow-xl  hover:shadow-2xl rounded-3xl p-9;
+    @apply relative overflow-hidden shadow-xl hover:shadow-2xl rounded-3xl p-9;
   }
 
   .inner-card-transition {
@@ -259,6 +269,7 @@
     @apply bg-gradient-to-br from-primary light:to-bg2 dark:to-primary/25 text-bg;
   }
 
+  /* Grid helpers */
   .max-2-primary {
     @apply grid lg:grid-cols-2 gap-6 lg:gap-12;
   }
@@ -271,10 +282,11 @@
     @apply grid lg:grid-cols-2 xl:grid-cols-3 gap-8 lg:mb-16;
   }
 
-  /* Hover modes */
+  /* Card hover modes */
   .card-hover-large {
     @apply hover:-translate-y-3 hover:shadow-2xl hover:border-accent;
   }
+
   .card-hover-small {
     @apply hover:-translate-y-2 hover:shadow-xl hover:border-accent;
   }
@@ -296,7 +308,7 @@
     @apply w-8 h-8 rounded-full flex items-center justify-center;
   }
 
-  /* Border styles */
+  /* Border callouts */
   .border-title {
     @apply border-2 px-5 py-2 text-sm uppercase tracking-wider mb-6 rounded-border;
   }
@@ -313,21 +325,27 @@
     @apply cursor-pointer;
   }
 
-  /* Typography - updated with theme-aware color utilities */
+  /* Typography helpers */
   .h1 {
     @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight text-heading;
   }
+
   .h2 {
     @apply text-3xl md:text-4xl lg:text-5xl font-bold text-heading;
   }
+
   .h3 {
     @apply text-xl font-semibold text-heading;
   }
+
   .h4 {
     @apply font-semibold text-lg text-heading;
   }
 
-  .h1,.h2,.h3,.h4 {
+  .h1,
+  .h2,
+  .h3,
+  .h4 {
     @apply font-header;
   }
 
@@ -351,6 +369,7 @@
     @apply text-xl lg:text-2xl leading-relaxed paragraph-spacing;
   }
 
+  /* Buttons */
   .button-transition {
     @apply transition-all duration-450 hover:transform hover:shadow-2xl;
   }
@@ -358,5 +377,52 @@
   .button-hover-transition {
     @apply hover:-translate-y-1;
   }
+
+  /* Animated border skin */
+  .animated-border-overlay {
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+    padding: var(--ab-border-width, 2px);
+    background: conic-gradient(
+      from 0deg,
+      var(--ab-color, var(--color-accent)) 0deg,
+      var(--ab-color, var(--color-accent)) var(--ab-progress, 0deg),
+      transparent var(--ab-progress, 0deg),
+      transparent 360deg
+    );
+  }
+
+  .animated-border-overlay.is-solid {
+    background: var(--ab-color, var(--color-accent));
+  }
+
+  .animated-border-overlay.progress {
+    transition:
+      opacity var(--ab-fade-duration, 220ms) cubic-bezier(.2, 0, 0, 1),
+      --ab-progress var(--ab-duration, 2000ms) cubic-bezier(.4, 0, .2, 1);
+  }
+
+  .animated-border-overlay.progress-b-f {
+    transition: --ab-progress var(--ab-duration, 2000ms) cubic-bezier(.45, 0, .25, 1);
+  }
+
+  .animated-border-overlay.progress-infinite {
+    animation: ab-border-progress var(--ab-duration, 2000ms) linear infinite;
+  }
 }
 
+/* ============================================================
+ * 5. ANIMATIONS
+ * ============================================================ */
+@keyframes ab-border-progress {
+  0% {
+    --ab-progress: 0deg;
+  }
+  100% {
+    --ab-progress: 360deg;
+  }
+}
